@@ -222,6 +222,17 @@ def runtime_environment(state: Path, config: dict, password: str, host: str, por
                  "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY",
                  "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "NODE_EXTRA_CA_CERTS"}
     env = {key: value for key, value in os.environ.items() if key.upper() in inherited}
+    # Nekowork: merge optional <state>/nekowork.env (mode 0600) into the hub
+    # environment. The launcher deliberately ignores ambient env vars; this file
+    # is the curated opt-in for gateway credentials and survives source sync.
+    nekowork_env = state / "nekowork.env"
+    if nekowork_env.is_file():
+        for line in nekowork_env.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            env[key.strip()] = value.strip()
     home = state / "home"
     for subdir in (home, home / "AppData/Roaming", home / "AppData/Local",
                    home / 'Documents', home / 'Downloads', home / 'Desktop', state / "runtime"):

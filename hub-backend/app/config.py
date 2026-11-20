@@ -206,6 +206,14 @@ class Settings(BaseSettings):
     # Different tasks may independently require automatic progression or manual acceptance.
     ms_auto_tick_seconds: int = 90
 
+    # Nekowork: New API (llm.nekotekno.xyz) gateway integration. The admin access
+    # token + user id enable management calls; never password-login from automation.
+    newapi_base_url: str = "https://llm.nekotekno.xyz"
+    newapi_admin_access_token: str = ""
+    newapi_admin_access_user_id: str = ""
+    newapi_token_group: str = "default"
+    newapi_user_password_secret: str = ""
+
     service_name: str = "soduwork-hub"
     version: str = "0.1.0"
 

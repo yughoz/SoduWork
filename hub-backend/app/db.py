@@ -93,6 +93,7 @@ async def init_db() -> None:
     from . import repository_issue_models  # noqa: F401
     from . import task_notification_models  # noqa: F401
     from . import im_models  # noqa: F401  opt-in IM transport receipts
+    from . import nekowork_models  # noqa: F401  Nekowork New API gateway mapping
     from . import model_runtime_models  # noqa: F401  indexed model admission leases and metrics
     from .schema_migrations import migrate_database
 
