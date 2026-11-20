@@ -63,13 +63,23 @@ User Nekowork = user Hub (auth existing SoduWork). Roles: `member` dan `admin` (
 | [modul_mcp.md](modul_mcp.md) | MCP Nekowork: port 8 tools Super MCP (6 lolos v1) |
 | [modul_token_dashboard.md](modul_token_dashboard.md) | Dashboard saldo/usage, console + client app |
 
+## 5b. IM Telegram (native upstream, tanpa build baru)
+
+Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan SoduWork** (`services/im_provider_registry.py`, `im_adapters.py` — webhook secret `x-telegram-bot-api-secret-token`, chat pribadi langsung, grup pakai `/pair@bot` & `/soduwork@bot`, dedup `update_id`). Yang perlu dilakukan cuma **aktivasi**:
+
+1. Bikin bot via BotFather → `bot_token` + `webhook_secret` disimpan NekoVault (`api/nekowork-telegram-bot`), gak pernah plaintext di chat.
+2. Set webhook ke URL publik Hub — hub lokal loopback, jadi butuh tunnel (infra cloudflared lelevo sudah ada) atau diisi pas Phase 5 deploy.
+3. Admin isi koneksi IM di console (field `bot_token`, `bot_username`, `bot_id`, `webhook_secret`), member pair pakai kode pairing.
+4. Hint setup bawaan masih zh → masuk cleanup i18n (Phase 5).
+5.catatan: fitur IM upstream gak di-hide sama sekali (keputusan diskusi) — adapter DingTalk/WeCom/Feishu/Teams/Slack dibiarkan utuh.
+
 ## 6. Milestone
 
 - **Phase 1 — Gateway (≈ pekan 1):** tabel `newapi_accounts`, provisioning, generate/reset/revoke token, saldo live. Batis dari semua modul lain.
 - **Phase 2 — Dashboard (≈ pekan 1):** page saldo/usage di console + app di client. Bareng gateway biar langsung keliatan hasilnya.
 - **Phase 3 — Asana (≈ pekan 2):** cache users/projects, `user_integrations`, create/complete task via Maton.
 - **Phase 4 — MCP (≈ pekan 2):** endpoint `/mcp`, `mcp_tokens`, 6 tools, audit, smoke test dari Hermes/Maus.
-- **Phase 5 — Rebrand & deploy (≈ pekan 3):** cleanup i18n (bug NW-1 #1), harness Hermes, deploy ke server (keputusan deploy masih open).
+- **Phase 5 — Rebrand & deploy (≈ pekan 3):** cleanup i18n (bug NW-1 #1), harness Hermes, aktivasi IM Telegram (lihat §5b), deploy ke server (keputusan deploy masih open).
 
 ## 7. Out of scope v1
 
@@ -79,6 +89,7 @@ User Nekowork = user Hub (auth existing SoduWork). Roles: `member` dan `admin` (
 - GitLab activity sync — konsekuensinya 2 tool MCP (`repo_activity`, `daily_digest`) gak ikut v1
 - Ops gateway lanjutan: daily balance reset otomatis, nekopro window policy engine
 - OAuth per-agent token MCP, allowlist tool per-token, Sentry, cat-park
+- Hide/cabut fitur upstream (legal, update channel, IM adapters lain, remote_screen, mail) — dibiarkan utuh (keputusan 2026-11-20); GitLab native sync, meeting plugin, dan MCP self-service token gak masuk roadmap saat ini
 
 ## 8. Open questions
 
