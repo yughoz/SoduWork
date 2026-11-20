@@ -268,6 +268,11 @@ export const api = {
     if (agent) query.set('agent', agent)
     return call('GET', '/admin/usage/overview?' + query.toString())
   },
+  nekoworkUsageMe: (force = false) => call('GET', '/nekowork/usage/me' + (force ? '?force=true' : '')),
+  nekoworkUsageAll: (force = false) => call('GET', '/nekowork/usage' + (force ? '?force=true' : '')),
+  nekoworkGenerateToken: () => call('POST', '/nekowork/tokens/me', {}),
+  nekoworkResetToken: () => call('POST', '/nekowork/tokens/me/reset', {}),
+  nekoworkRevokeToken: () => call('DELETE', '/nekowork/tokens/me'),
   adminRunners: () => call('GET', '/admin/runners'),
   cloudRunnerAssignees: (q = '') => call('GET', '/admin/cloud-runners/assignees?q=' + encodeURIComponent(q)),
   cloudRunnerAvailability: (row, enabled) => call('POST', '/admin/cloud-runners/' +

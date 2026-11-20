@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..db import get_session
 from ..deps import current_user
 from ..models import User
-from ..services import nekowork_newapi
+from ..services import nekowork_newapi, nekowork_usage
 from ..services.nekowork_newapi import NewApiError
 
 log = logging.getLogger(__name__)
@@ -97,5 +97,30 @@ async def list_tokens(user: User = Depends(current_user),
         raise HTTPException(status_code=403, detail="Hanya super admin")
     try:
         return {"items": await nekowork_newapi.list_all_accounts(session)}
+    except NewApiError as exc:
+        raise _http_error(exc) from exc
+
+
+@router.get("/usage/me")
+async def my_usage(force: bool = False,
+                   user: User = Depends(current_user),
+                   session: AsyncSession = Depends(get_session)) -> dict:
+    """Own balance + 14-day usage (console and client app, PRD modul_token_dashboard)."""
+    try:
+        status = await nekowork_newapi.account_status(session, user)
+        usage = await nekowork_usage.usage_for(status.get("username") or "", force=force)
+    except NewApiError as exc:
+        raise _http_error(exc) from exc
+    return {"token": status, "usage": usage}
+
+
+@router.get("/usage")
+async def all_usage(force: bool = False,
+                    user: User = Depends(current_user),
+                    session: AsyncSession = Depends(get_session)) -> dict:
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    try:
+        return {"items": await nekowork_usage.usage_all(session, force=force)}
     except NewApiError as exc:
         raise _http_error(exc) from exc
