@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..db import get_session
 from ..deps import current_user
 from ..models import User
-from ..services import nekowork_newapi, nekowork_usage
+from ..services import nekowork_asana, nekowork_newapi, nekowork_usage
 from ..services.nekowork_newapi import NewApiError
 
 log = logging.getLogger(__name__)
@@ -124,3 +124,107 @@ async def all_usage(force: bool = False,
         return {"items": await nekowork_usage.usage_all(session, force=force)}
     except NewApiError as exc:
         raise _http_error(exc) from exc
+
+
+class AsanaTaskBody(StrictBody):
+    name: str
+    notes: str | None = None
+    assignee_user: str | None = None
+    project_gid: str | None = None
+    due_on: str | None = None
+    for_ai: bool = False
+
+
+class AsanaCompleteBody(StrictBody):
+    completed: bool
+
+
+class AsanaIdentityBody(StrictBody):
+    user_id: str
+    external_id: str
+    provider_email: str | None = None
+    provider_name: str | None = None
+    status: str = "manual"
+
+
+@router.get("/asana/projects")
+async def asana_projects(ai_only: bool = False,
+                         user: User = Depends(current_user),
+                         session: AsyncSession = Depends(get_session)) -> dict:
+    """Member sees AI-enabled projects only; admin can list all (PRD §3)."""
+    try:
+        items = await nekowork_asana.list_projects(session, ai_only=ai_only or not user.is_super)
+    except nekowork_asana.AsanaError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+    return {"items": items}
+
+
+@router.post("/asana/tasks")
+async def asana_create_task(body: AsanaTaskBody,
+                            user: User = Depends(current_user),
+                            session: AsyncSession = Depends(get_session)) -> dict:
+    try:
+        result = await nekowork_asana.create_task(session, user, body.model_dump(),
+                                                  for_ai=body.for_ai)
+        await session.commit()
+    except nekowork_asana.AsanaError as exc:
+        await session.rollback()
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+    return result
+
+
+@router.put("/asana/tasks/{task_gid}")
+async def asana_complete_task(task_gid: str, body: AsanaCompleteBody,
+                              user: User = Depends(current_user),
+                              session: AsyncSession = Depends(get_session)) -> dict:
+    try:
+        result = await nekowork_asana.set_task_completed(session, user, task_gid, body.completed)
+        await session.commit()
+    except nekowork_asana.AsanaError as exc:
+        await session.rollback()
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+    return result
+
+
+@router.post("/asana/sync")
+async def asana_sync(user: User = Depends(current_user),
+                     session: AsyncSession = Depends(get_session)) -> dict:
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    try:
+        return await nekowork_asana.sync_cache(session)
+    except nekowork_asana.AsanaError as exc:
+        await session.rollback()
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
+@router.get("/asana/identities")
+async def asana_list_identities(user: User = Depends(current_user),
+                                session: AsyncSession = Depends(get_session)) -> dict:
+    return {"items": await nekowork_asana.list_identities(session, user, own_only=not user.is_super)}
+
+
+@router.post("/asana/identities")
+async def asana_set_identity(body: AsanaIdentityBody,
+                             user: User = Depends(current_user),
+                             session: AsyncSession = Depends(get_session)) -> dict:
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    try:
+        result = await nekowork_asana.set_identity(session, user, **body.model_dump())
+        await session.commit()
+    except nekowork_asana.AsanaError as exc:
+        await session.rollback()
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+    return result
+
+
+@router.delete("/asana/identities/{identity_id}")
+async def asana_delete_identity(identity_id: int,
+                                user: User = Depends(current_user),
+                                session: AsyncSession = Depends(get_session)) -> dict:
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    removed = await nekowork_asana.delete_identity(session, user, identity_id)
+    await session.commit()
+    return {"removed": removed}

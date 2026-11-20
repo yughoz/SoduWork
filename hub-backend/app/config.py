@@ -214,6 +214,12 @@ class Settings(BaseSettings):
     newapi_token_group: str = "default"
     newapi_user_password_secret: str = ""
 
+    # Nekowork: Asana via Maton gateway (same verified path as Nekorp MCP M4).
+    maton_base_url: str = "https://api.maton.ai/asana/api/1.0"
+    maton_api_key: str = ""
+    maton_asana_connection_id: str = ""
+    asana_workspace_gid: str = ""
+
     service_name: str = "soduwork-hub"
     version: str = "0.1.0"
 
