@@ -14,6 +14,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
 2. **Integrasi ke Asana** — create/complete task, resolve assignee via email mapping, cache users/projects.
 3. **MCP Nekowork** — port Super MCP Nekorp (`/api/mcp`) jadi MCP endpoint di Hub, konsumen lama (Hermes, Maus, Cursor) tetap jalan.
 4. **Dashboard sisa token** — user lihat saldo/usage token; tampil di admin console dan di desktop client (sebagai app).
+5. **Titen memory embedded** — server Titen milik Nekowork di dalam Hub (bukan instance eksternal), key per-user dikelola admin, client auto-setup pas login.
 
 ## 2. Keputusan terkunci (2026-11-20)
 
@@ -34,6 +35,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
 | LLM gateway | New API `llm.nekotekno.xyz` (HTTP management API) |
 | Asana | Via Maton gateway (`MATON_API_KEY` + connection id), sama seperti Nekorp |
 | MCP | Streamable HTTP di Hub, `mcp` python SDK |
+| Memory | Titen (`titen-memory`, Bun + SQLite) — child process Hub, loopback :18787, proxy `/api/v1/titen/mcp` |
 | Port | Tetap 18989 (loopback) — semua fitur numpang Hub, gak ada port baru |
 
 ## 4. Arsitektur
@@ -49,6 +51,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
                   ├─ modul_gateway   → New API (provisioning, token CRUD, saldo)
                   ├─ modul_asana     → Maton (task write, cache users/projects)
                   ├─ modul_mcp       → /mcp streamable HTTP (6 tools)
+                  ├─ modul_titen     → titen serve embedded + proxy /titen/mcp + key per-user
                   └─ modul_token_dashboard → UI saldo (console + client app)
 ```
 
@@ -61,6 +64,7 @@ User Nekowork = user Hub (auth existing SoduWork). Roles: `member` dan `admin` (
 | [modul_gateway.md](modul_gateway.md) | Provisioning user + token lifecycle di New API |
 | [modul_asana.md](modul_asana.md) | Integrasi Asana via Maton + cache + identity mapping |
 | [modul_mcp.md](modul_mcp.md) | MCP Nekowork: port 8 tools Super MCP (6 lolos v1) |
+| [modul_titen.md](modul_titen.md) | Titen memory embedded: server, key per-user, management, client auto-setup |
 | [modul_token_dashboard.md](modul_token_dashboard.md) | Dashboard saldo/usage, console + client app |
 
 ## 5b. IM Telegram (native upstream, tanpa build baru)
@@ -79,6 +83,7 @@ Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan SoduWork** (`servi
 - **Phase 2 — Dashboard (≈ pekan 1):** page saldo/usage di console + app di client. Bareng gateway biar langsung keliatan hasilnya.
 - **Phase 3 — Asana (≈ pekan 2):** cache users/projects, `user_integrations`, create/complete task via Maton.
 - **Phase 4 — MCP (≈ pekan 2):** endpoint `/mcp`, `mcp_tokens`, 6 tools, audit, smoke test dari Hermes/Maus.
+- **Phase 4b — Titen memory (≈ pekan 2-3):** `titen serve` embedded, key per-user + fence project, management admin, auto-setup client via personal MCP, proxy `/api/v1/titen/mcp` (lihat modul_titen.md).
 - **Phase 5 — Rebrand & deploy (≈ pekan 3):** cleanup i18n (bug NW-1 #1), harness Hermes, aktivasi IM Telegram (lihat §5b), deploy ke server (keputusan deploy masih open).
 
 ## 7. Out of scope v1
@@ -97,6 +102,7 @@ Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan SoduWork** (`servi
 2. Branding final: nama/logo/domain (corp.nekoding.xyz pindah atau domain baru?).
 3. Data lama Nekorp (PocketBase :8091): migrasi `user_integrations` + cache Asana ke Hub DB, atau fresh start? (Rekomendasi: migrasi `user_integrations` aja, cache di-refresh.)
 4. Model group default buat token baru (Nekorp pakai `AssignedModelPolicy` per corporate; v1 usul satu policy global: `nekolite` default).
+5. Titen: project shared antar user (`org`) diaktifin dari awal atau per-user aja dulu? (Rekomendasi: per-user aja; shared belakangan kalau diminta.)
 
 ## 9. Glossary
 
