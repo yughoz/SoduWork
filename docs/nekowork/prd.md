@@ -102,7 +102,7 @@ Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan SoduWork** (`servi
 2. Branding final: nama/logo/domain (corp.nekoding.xyz pindah atau domain baru?).
 3. Data lama Nekorp (PocketBase :8091): migrasi `user_integrations` + cache Asana ke Hub DB, atau fresh start? (Rekomendasi: migrasi `user_integrations` aja, cache di-refresh.)
 4. Model group default buat token baru (Nekorp pakai `AssignedModelPolicy` per corporate; v1 usul satu policy global: `nekolite` default).
-5. Titen: project shared antar user (`org`) diaktifin dari awal atau per-user aja dulu? (Rekomendasi: per-user aja; shared belakangan kalau diminta.)
+5. ~~Titen: project shared antar user~~ — dijawab 2026-11-20: **didukung** (shared project + membership + auto-rotate fence, lihat modul_titen.md §Project shared); default tetap per-user, shared dibuat per-project saat admin perlukan.
 
 ## 9. Glossary
 

@@ -13,7 +13,8 @@ Tiap user Nekowork dapat memory Titen **pribadi** yang jalan **di dalam Nekowork
 | Keputusan | Nilai | Alasan |
 |---|---|---|
 | Topologi | **Satu** `titen serve` child process milik Hub, DB `titen.db` di data dir Hub | Titen multi-user native (org/workspace/project + authz pre-retrieval); N DB terpisah gak perlu |
-| Isolasi user | 1 project Titen per user (auto-create saat mint key) + key dengan fence `--projects <project-user>` | `read_graph` baca semua yang diizinkan — fence mencegah user lihat memory user lain. Project shared `org` opsional belakangan |
+| Isolasi user | 1 project Titen per user (auto-create saat mint key) + key dengan fence `--projects <project-user>` | `read_graph` baca semua yang diizinkan — fence nahan write lintas user; read ditutup visibility `private` (default) |
+| Project shared | Admin bisa bikin project shared (mis. `kopdes`) + set member; `default-visibility organization`; fence key member = project sendiri + shared-nya. Perubahan membership → auto-rotate key | Sharing 3-user native Titen: read via visibility, write via fence; rotation transparan karena auto-setup device re-sync |
 | Runtime | Bun + `titen-memory` (installer `titen.dev`), di-setup **manual sekali** di host Hub | Hub gak auto-download script; kalau belum ada, status modul = `unavailable` + panduan setup |
 | Port | `127.0.0.1:18787` (default, konfigurable) — loopback, gak di-expose | Satu ingress tetap Hub :18989 |
 | Akses client | **Proxy Hub** `GET/POST /api/v1/titen/mcp` → forward JSON-RPC ke titen serve, header `Authorization: Bearer` di-pass-through | Client cuma kenal Hub; validasi key tetap di Titen (hash-only di Hub) |
@@ -34,6 +35,9 @@ Tabel `nekowork_titen_key` (Alembic baru, revisi setelah `0093_newapi_accounts`)
 | key_hash | String(64) | SHA-256 hex, buat verifikasi pass-through |
 | status | Enum `active/revoked` | |
 | created_at / revoked_at | DateTime | |
+| projects | JSON list | fence lengkap key ini: project sendiri + id project shared yang jadi membernya |
+
+Tabel `nekowork_titen_shared_project` (id, reference `owner/repo`, created_by, created_at) dan `nekowork_titen_shared_member` (shared_project_id, user_id, unique pair). Membership berubah → key semua member di-rotate (fence dibake saat mint; "revoke + replacement" pola resmi Titen) dan entry personal MCP device di-update pas sync berikutnya.
 
 Settings baru: `titen_enabled` (bool, default true), `titen_base_url` (default `http://127.0.0.1:18787`), `titen_db_path` (default `<data dir>/titen.db`), `titen_org_name` (`Nekowork`).
 
@@ -47,6 +51,9 @@ Admin (`/api/v1/titen/...`, role super admin):
 | `GET /keys` | semua key per user (masked, tanpa plaintext) |
 | `POST /keys/{user_id}` | mint / rotate (revoke lama + mint baru) + auto-create project user |
 | `DELETE /keys/{user_id}` | revoke key + hapus entry personal MCP di device user |
+| `GET /shared-projects` | daftar project shared + member |
+| `POST /shared-projects` | bikin project shared (`titen project create` + `--default-visibility organization`) |
+| `POST /shared-projects/{id}/members` / `DELETE .../members` | tambah/hapus member → rotate fence key member terkait |
 
 User (member, data sendiri):
 
@@ -64,6 +71,12 @@ User (member, data sendiri):
 4. Harness/agent di client langsung punya tools `titen_*` tanpa config manual. Tasks yang jalan di Hub juga ke-inject entry yang sama ("only into the owner's tasks").
 5. Rotate/revoke → entry device di-update/dihapus di sync berikutnya.
 
+## Project shared antar user (case: 1 project dikerjakan beberapa user)
+
+Titen authz: **read** di-gate visibility (`private` default = cuma penulis; `organization` = se-porg), **write** di-gate fence key. Claims inherit visibility tersempit evidence-nya — konsolidasi gak bisa bikin catatan private bocor jadi shared. Catatan: di release sekarang visibility `team` belum dibedakan dari `organization` di retrieval (workspace join belum masuk) — buat single-org Nekowork pakai `organization`, aman.
+
+Alur contoh Kopdes: admin bikin shared project → tambah 3 user → fence key ketiganya jadi `<own>,<kopdes>` (auto-rotate) → memory di `kopdes` kebaca/ke-compile ke-tiganya; project pribadi masing-masing tetap tertutup (default `private`, non-readable = 404).
+
 ## Keamanan
 
 - Fence per project di key (bukan cuma konvensi nama subject).
@@ -76,10 +89,10 @@ User (member, data sendiri):
 
 - Unit: mint/rotate/revoke + hash mapping; unique per user; fence flag benar saat invoke `titen key create` (argv di-mock).
 - Integration: proxy pass-through (mock titen serve): header diteruskan, 401 Titen → 401 ke client, sesi hub gak valid → 401 tanpa nyentuh Titen.
-- E2E (host dengan titen terpasang): `initialize` JSON-RPC via proxy → 200 `serverInfo`; negative: key user A coba baca project user B → kosong/ditolak.
+- E2E (host dengan titen terpasang): `initialize` JSON-RPC via proxy → 200 `serverInfo`; negative: key user A coba baca project user B → kosong/ditolak; shared: observasi di project `kopdes` (visibility org) kebaca via key ketiga member, write ke `kopdes` dari key non-member ditolak fence.
 
 ## Out of scope modul ini
 
-- Project shared antar user (org-wide) + visibility default — belakangan kalau diminta.
 - Auto-install bun/titen dari Hub (setup manual, terdokumentasi).
 - Dashboard/inspeksi isi graph di console (pakai CLI/dashboard Titen sendiri kalau perlu).
+- Workspace boundaries lintas-org / visibility `team` eksplisit (nunggu join retrieval di upstream; single-org pakai `organization`).
