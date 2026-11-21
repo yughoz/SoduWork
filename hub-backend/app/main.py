@@ -25,6 +25,7 @@ from .api import model_capabilities as model_capabilities_api
 from .api import jiyong_data
 from .api import nekowork
 from .api import nekowork_mcp
+from .api import nekowork_titen
 from .api import config as config_api
 from .api import retired_endpoints, operations, plugin_activity, plugin_client_catalog, plugin_client_runs, plugin_permissions, plugin_publishers, plugins, release, reports, repositories, repository_issues, runner_ws, task_mcp, task_options, tasks, term, trace, usage, ws
 from .api import work_catalog as work_catalog_api
@@ -350,7 +351,7 @@ for _r in (cloud_execution_sync.router, legal_documents.router, legal_documents.
            trace.router, trace.admin_router, evolution.router, evolution.admin_router, task_mcp.router,
            operations.router, identity.router, reports.router,
            capabilities.router, capabilities.admin_router, jiyong_data.router,
-           nekowork.router, nekowork_mcp.router):
+           nekowork.router, nekowork_mcp.router, nekowork_titen.router):
     app.include_router(_r)
 app.include_router(personal_conversation_relay.router)
 app.include_router(conversation_content_migrations.router)

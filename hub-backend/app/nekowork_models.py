@@ -85,3 +85,40 @@ class McpToken(Base):
     enabled: Mapped[bool] = mapped_column(Boolean, default=True)
     last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class TitenKey(Base):
+    """Per-user Titen API key metadata. Raw key is show-once; only SHA-256 stored."""
+    __tablename__ = "nekowork_titen_key"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(String(36), index=True)   # Hub app_user.id
+    key_id: Mapped[str] = mapped_column(String(64), unique=True)   # titen key_xxx
+    key_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    label: Mapped[str] = mapped_column(String(120), default="")
+    status: Mapped[str] = mapped_column(String(16), default="active")  # active | revoked
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    rotated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+
+class TitenSharedProject(Base):
+    """Admin-managed shared Titen project (organization-visible memory)."""
+    __tablename__ = "nekowork_titen_shared_project"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    project_gid: Mapped[str] = mapped_column(String(64), unique=True)  # titen project_xxx
+    name: Mapped[str] = mapped_column(String(120))
+    reference: Mapped[str] = mapped_column(String(120), default="")
+    created_by: Mapped[str] = mapped_column(String(36), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class TitenSharedMember(Base):
+    __tablename__ = "nekowork_titen_shared_member"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    project_row_id: Mapped[int] = mapped_column(Integer, index=True)
+    user_id: Mapped[str] = mapped_column(String(36), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (UniqueConstraint("project_row_id", "user_id", name="uq_nw_titen_shared_member"),)

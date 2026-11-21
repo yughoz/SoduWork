@@ -220,6 +220,11 @@ class Settings(BaseSettings):
     maton_asana_connection_id: str = ""
     asana_workspace_gid: str = ""
 
+    # Nekowork: embedded Titen memory server (PRD 4b).
+    titen_bin: str = ""
+    titen_port: int = 18787
+    titen_base_url: str = "http://127.0.0.1:18787"
+
     service_name: str = "soduwork-hub"
     version: str = "0.1.0"
 
