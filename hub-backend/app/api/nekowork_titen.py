@@ -58,7 +58,7 @@ async def titen_ensure(user: User = Depends(current_user)) -> dict:
 
 async def _resolve_user(session: AsyncSession, ref: str) -> User:
     found = (await session.execute(
-        select(User).where((User.id == ref) | (User.email == ref)))).scalars().first()
+        select(User).where((User.id == ref) | (User.email == ref) | (User.username == ref)))).scalars().first()
     if not found:
         raise HTTPException(status_code=404, detail="User tidak ditemukan")
     return found

@@ -3,6 +3,7 @@ shared projects, client auto-setup. Secrets live in a 0600 meta file, never in D
 import asyncio
 import hashlib
 import json
+import os
 import re
 import secrets
 import shutil
@@ -19,7 +20,7 @@ from ..nekowork_models import TitenKey, TitenSharedMember, TitenSharedProject
 from .nekowork_newapi import NewApiError
 
 KERNEL_SCOPES = ["projects:resolve", "observations:write", "claims:write",
-                 "context:compile", "feedback:write", "evidence:read"]
+                 "context:compile", "feedback:write", "evidence:read", "mcp:call"]
 DB_NAME = "titen.db"
 META_NAME = "titen-meta.json"
 _MCP_ENTRY = "nekowork-titen"
@@ -44,7 +45,20 @@ def _meta() -> dict:
 
 
 def _bin() -> str:
-    return get_settings().titen_bin or shutil.which("titen") or str(Path.home() / ".bun/bin/titen")
+    """Resolve titen binary. Hub sandboxes HOME (relative), so fall back to the
+    passwd home, not Path.home()."""
+    configured = get_settings().titen_bin
+    if configured:
+        return configured
+    found = shutil.which("titen")
+    if found:
+        return found
+    try:
+        import pwd
+        real_home = Path(pwd.getpwuid(os.getuid()).pw_dir)
+    except (KeyError, ImportError):
+        real_home = Path.home().resolve()
+    return str(real_home / ".bun/bin/titen")
 
 
 def _run(args: list[str]) -> str:
@@ -63,7 +77,7 @@ async def _api(method: str, path: str, token: str | None = None, json_body=None)
             msg = resp.json()["error"]["message"]
         except Exception:
             msg = resp.text[:200]
-        raise NewApiError(resp.status_code, f"titen: {msg}")
+        raise NewApiError(f"titen: {msg}", status=resp.status_code)
     return resp.json().get("data", {})
 
 
@@ -76,13 +90,55 @@ async def _healthy() -> bool:
         return False
 
 
+async def _spawn_and_wait() -> None:
+    global _proc
+    _proc = subprocess.Popen(
+        [_bin(), "serve", "--db", str(_db_path()), "--port", str(get_settings().titen_port), "--quiet"],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    for _ in range(20):
+        await asyncio.sleep(0.5)
+        if await _healthy():
+            return
+    raise NewApiError("titen serve tidak kunjung healthy", status=502)
+
+
+async def _complete_bootstrap(org_id: str, temp_pw: str) -> None:
+    """Server must be healthy: staged dashboard session -> real owner password
+    -> full session -> hub service key -> 0600 meta file."""
+    staged = (await _api("POST", "/v1/dashboard-sessions",
+                         json_body={"username": "owner", "password": temp_pw}))["api_key"]
+    owner_pw = secrets.token_urlsafe(24)
+    await _api("PATCH", "/v1/operator-accounts/current/password",
+               token=staged, json_body={"password": owner_pw})
+    full = (await _api("POST", "/v1/dashboard-sessions",
+                       json_body={"username": "owner", "password": owner_pw}))["api_key"]
+    hub = await _api("POST", "/v1/keys", token=full,
+                     json_body={"label": "nekowork-hub", "principal_kind": "service",
+                                "scopes": ["*"], "max_trust": "policy_approved"})
+    # Derived keys intersect with the ISSUER's grants: without this the hub
+    # service principal has no grants and every minted user key 404s on write.
+    await _api("POST", "/v1/grants", token=full,
+               json_body={"principal_id": hub["principal_id"],
+                          "permissions": ["read", "write", "approve", "admin"],
+                          "target_type": "organization"})
+    meta = {"org_id": org_id, "owner_username": "owner", "owner_password": owner_pw,
+            "hub_key": hub["api_key"], "hub_key_id": hub["key_id"]}
+    _meta_path().write_text(json.dumps(meta, indent=1))
+    _meta_path().chmod(0o600)
+
+
 async def ensure_server() -> dict:
     """Bootstrap (first run) + spawn `titen serve` as a child process. Idempotent."""
-    global _proc
     async with _lock:
         if await _healthy():
             return {"running": True, "spawned": False, **_meta_meta()}
         db = _db_path()
+        org_id = temp_pw = None
+        if db.exists() and not _meta().get("hub_key"):
+            # Half-finished bootstrap from a crashed run: no valuable data inside
+            # (fresh org, owner key never minted) — wipe and redo cleanly.
+            for suffix in ("", "-wal", "-shm"):
+                Path(str(db) + suffix).unlink(missing_ok=True)
         if not db.exists():
             out = _run(["bootstrap", "--db", str(db), "--org", "Nekowork",
                         "--username", "owner", "--label", "owner"])
@@ -91,31 +147,9 @@ async def ensure_server() -> dict:
             if not (m_org and m_pw):
                 raise NewApiError("bootstrap: output tidak bisa di-parse", status=500)
             org_id, temp_pw = m_org.group(1), m_pw.group(1)
-            # Staged dashboard session -> set a real owner password -> full session -> hub service key.
-            staged = (await _api("POST", "/v1/dashboard-sessions",
-                                 json_body={"username": "owner", "password": temp_pw}))["api_key"]
-            owner_pw = secrets.token_urlsafe(24)
-            await _api("PATCH", "/v1/operator-accounts/current/password",
-                       token=staged, json_body={"password": owner_pw})
-            full = (await _api("POST", "/v1/dashboard-sessions",
-                               json_body={"username": "owner", "password": owner_pw}))["api_key"]
-            hub = await _api("POST", "/v1/keys", token=full,
-                             json_body={"label": "nekowork-hub", "kind": "service",
-                                        "scopes": ["*"], "max_trust": "policy_approved"})
-            meta = {"org_id": org_id, "owner_username": "owner", "owner_password": owner_pw,
-                    "hub_key": hub["api_key"], "hub_key_id": hub["key_id"]}
-            _meta_path().write_text(json.dumps(meta, indent=1))
-            _meta_path().chmod(0o600)
-        meta = _meta()
-        _proc = subprocess.Popen(
-            [_bin(), "serve", "--db", str(db), "--port", str(get_settings().titen_port), "--quiet"],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
-        for _ in range(20):
-            await asyncio.sleep(0.5)
-            if await _healthy():
-                break
-        else:
-            raise NewApiError("titen serve tidak kunjung healthy", status=502)
+        await _spawn_and_wait()
+        if temp_pw:
+            await _complete_bootstrap(org_id, temp_pw)
         return {"running": True, "spawned": True, **_meta_meta()}
 
 
@@ -168,7 +202,8 @@ async def _clear_clients(session: AsyncSession, user_id: str) -> None:
 
 
 async def _mint_raw(label: str, write_projects: list[str]) -> tuple[str, str]:
-    body = {"label": label, "kind": "agent", "scopes": KERNEL_SCOPES, "max_trust": "asserted"}
+    body = {"label": label, "principal_kind": "agent", "scopes": KERNEL_SCOPES,
+            "max_trust": "asserted"}
     if write_projects:
         body["write_projects"] = write_projects
     data = await _api("POST", "/v1/keys", token=await _hub_key(), json_body=body)
@@ -218,10 +253,14 @@ async def revoke_user_key(session: AsyncSession, user_id: str) -> int:
     return len(rows)
 
 
-async def create_shared_project(session: AsyncSession, name: str, admin_id: str) -> dict:
+async def create_shared_project(session: AsyncSession, name: str, admin_id: str):
     await ensure_server()
     slug = re.sub(r"[^a-z0-9-]+", "-", name.lower()).strip("-") or "shared"
     reference = f"shared/{slug}"
+    existing = (await session.execute(
+        select(TitenSharedProject).where(TitenSharedProject.reference == reference))).scalar_one_or_none()
+    if existing:
+        return existing  # idempotent: same shared project, no duplicate row
     pid = await _ensure_project(reference, default_visibility="organization")
     row = TitenSharedProject(project_gid=pid, name=name, reference=reference, created_by=admin_id)
     session.add(row)

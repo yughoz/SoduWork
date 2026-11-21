@@ -38,10 +38,13 @@ class FakeTiten:
             return {"api_key": f"sess-{self.key_seq}", "organization_id": "org_test"}
         if path == "/v1/operator-accounts/current/password":
             return {}
+        if path == "/v1/grants" and method == "POST":
+            return {"grant_id": "grant_probe"}
         if path == "/v1/keys" and method == "POST":
+            assert "kind" not in json_body, "use principal_kind"
             self.key_seq += 1
             return {"api_key": f"titen_sk_raw{self.key_seq}", "key_id": f"key_{self.key_seq:03d}",
-                    "principal_id": "p1"}
+                    "principal_id": f"agent_{self.key_seq:012d}"}
         if path == "/v1/projects/resolve":
             ref = json_body["reference"]
             if ref not in self.projects_by_ref:
@@ -127,8 +130,12 @@ class TitenTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(meta["org_id"], "org_abc123def456")
         self.assertEqual((self.tmp / "titen-meta.json").stat().st_mode & 0o777, 0o600)
         self.assertNotEqual(meta["owner_password"], "temp-secret")  # new generated password set
-        # staged login -> password change -> full login -> hub key
+        # staged login -> password change -> full login -> hub key -> org grant
         self.assertEqual(len(self.fake.calls_to("/v1/dashboard-sessions")), 2)
+        grants = self.fake.calls_to("/v1/grants")
+        self.assertEqual(len(grants), 1)
+        self.assertEqual(grants[0][2]["permissions"], ["read", "write", "approve", "admin"])
+        self.assertEqual(grants[0][2]["target_type"], "organization")
         self.assertTrue(any(c[1] == "/v1/keys" and c[2].get("scopes") == ["*"]
                             for c in self.fake.calls_to("/v1/keys")))
 
