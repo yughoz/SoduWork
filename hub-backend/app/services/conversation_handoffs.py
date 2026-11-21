@@ -35,7 +35,7 @@ _NS = uuid.UUID("a48e2601-e8bc-4836-9098-ec16a67ae5fa")
 
 def identity(client_id, transfer_id):
     if not _ID.fullmatch(str(transfer_id)):
-        raise HTTPException(400, "交接编号格式不正确")
+        raise HTTPException(400, "Invalid handoff ID format.")
     return str(uuid.uuid5(_NS, str(client_id) + ":" + transfer_id))
 
 
@@ -46,7 +46,7 @@ def dispatch_id(row):
 async def owner(session, client):
     user = await session.get(User, client.user_ref or "")
     if not user or not user.is_active or client.auth_state != "active":
-        raise HTTPException(403, "请先登录有效的 Nekowork 账号")
+        raise HTTPException(403, "Sign in with a valid Nekowork account first.")
     return user
 
 
@@ -220,7 +220,7 @@ async def target_catalog(session, client, agent_id=""):
     personal_clients = set((await session.scalars(select(Client.id).where(
         Client.user_ref == client.user_ref, Client.auth_state == "active"))).all())
     if agent_id and agent_id not in AGENTS:
-        raise HTTPException(422, "当前服务尚未配置此 Agent 的云端执行支持")
+        raise HTTPException(422, "This service does not yet have cloud execution support for this agent.")
     result = await _targets(client, clients, orgs, allowed, personal_clients)
     automatic = _automatic_targets(result, agent_id)
     if agent_id:
@@ -281,21 +281,21 @@ async def destination(session, client, options, source=None):
     roster = await targets(session, client)
     picked = next((x for x in roster if x["id"] == options["assigneeId"]), None)
     if not picked:
-        raise HTTPException(409, "目标必须是有权使用、支持会话交接的另一台在线执行机，请刷新列表")
+        raise HTTPException(409, "The target must be another online runner you are allowed to use that supports session handoff; refresh the list.")
     requested_runner_kind = str(options.get("targetRunnerKind") or "").strip()
     if requested_runner_kind and picked.get("runnerKind") != requested_runner_kind:
-        raise HTTPException(409, "目标执行机类型已变化，请刷新工作电脑列表后重试")
+        raise HTTPException(409, "The runner type has changed; refresh the work-computer list and try again.")
     if options.get("agentId") and picked["agentId"] != options["agentId"]:
-        raise HTTPException(409, "目标执行机的 Agent 与当前会话不匹配")
+        raise HTTPException(409, "The target runner's agent does not match the current session.")
     fallback = handoff_agent_policy.validate(source, options, picked["agentId"])
     if fallback and not options.get("targetSnapshot") and _automatic_targets(
             roster, source["adapterId"], source, options.get("requiredSkills", [])):
-        raise HTTPException(409, "已有与当前会话相同 Agent 的可用云端环境，请刷新后继续")
+        raise HTTPException(409, "A cloud environment with the same agent as this session is already available; refresh and continue.")
     if source and source.get("goal") and AGENTS[picked["agentId"]]["goalMode"] != "native":
-        raise HTTPException(409, "所选底座不支持此会话的目标模式")
+        raise HTTPException(409, "The selected agent base does not support this session's target mode.")
     runner = runner_hub.get(picked["runnerId"])
     if not runner or not cloud_runner_allowed(runner.id, runner.client_id):
-        raise HTTPException(409, "目标执行机未获准承载云端会话，请刷新列表")
+        raise HTTPException(409, "The target runner is not approved to host cloud sessions; refresh the list.")
     # Re-check durable ownership at the final dispatch boundary.  This closes
     # the race where a node is deleted/reassigned after target discovery.
     user = await owner(session, client)
@@ -306,11 +306,11 @@ async def destination(session, client, options, source=None):
         or_(RunnerNode.owner_user_id == user.id,
             RunnerNode.client_id.in_(own_clients))))
     if owned is None:
-        raise HTTPException(409, "目标执行机不再属于当前账号，请刷新列表")
+        raise HTTPException(409, "The target runner no longer belongs to the current account; refresh the list.")
     needed = options.get("requiredSkills", [])
     available = set(getattr(runner, "skills", []) or [])
     if needed and (not getattr(runner, "skills_known", False) or not set(needed).issubset(available)):
-        raise HTTPException(409, "目标执行机缺少会话使用的技能，不能省略这些技能后继续")
+        raise HTTPException(409, "The target runner lacks the session's skills; they cannot be omitted to continue.")
     from . import task_execution_model
     ctx = await ai_exec.load(session, force=True)
     try:
@@ -320,7 +320,7 @@ async def destination(session, client, options, source=None):
     if picked["modelMode"] == "managed":
         llm = (ctx.get("localCfg") or ctx.get("cfg") or {}).get("llm") or {}
         if not all(llm.get(key) for key in ("base", "key", "model")):
-            raise HTTPException(409, "请先为所选底座配置可用模型")
+            raise HTTPException(409, "Configure available models for the selected agent base first.")
     return picked
 
 
@@ -338,12 +338,12 @@ async def committed_destination(session, client, options, source=None):
     parts = assignee_id.split(":", 2)
     runner_id = str(snapshot.get("runnerId") or (parts[1] if len(parts) == 3 else "")).strip()
     if not runner_id or agent_id not in AGENTS:
-        raise HTTPException(409, "云端会话的原执行目标不完整，请重新选择执行机")
+        raise HTTPException(409, "The cloud session's original execution target is incomplete; select the runner again.")
     runner = runner_hub.get(runner_id)
     if (not runner or not cloud_runner_allowed(runner.id, runner.client_id)
             or not runner.ready or getattr(runner, "dispatch_mode", "") != "accepting"
             or not runner.work_root or not runner_hub.supports_capabilities(runner, ["files", "terminal"])):
-        raise HTTPException(409, "原云端执行机当前不可用，请稍后重试或重新选择执行机")
+        raise HTTPException(409, "The original cloud runner is currently unavailable; try again later or select another runner.")
     user = await owner(session, client)
     own_clients = select(Client.id).where(
         Client.user_ref == user.id, Client.auth_state == "active")
@@ -352,14 +352,14 @@ async def committed_destination(session, client, options, source=None):
         or_(RunnerNode.owner_user_id == user.id,
             RunnerNode.client_id.in_(own_clients))))
     if owned is None:
-        raise HTTPException(409, "原云端执行机不再属于当前账号")
+        raise HTTPException(409, "The original cloud runner no longer belongs to the current account.")
     installed = next((item for item in runner.agents
                       if isinstance(item, dict) and item.get("key") == agent_id), None)
     if not installed or str(installed.get("auth") or "").strip().lower() == "unauthed":
-        raise HTTPException(409, "原执行机上的 Agent 尚未登录，请先完成登录")
+        raise HTTPException(409, "The agent on the original runner is not signed in yet; complete sign-in first.")
     required = options.get("requiredSkills", [])
     if required and (not runner.skills_known or not set(required).issubset(set(runner.skills or []))):
-        raise HTTPException(409, "原执行机缺少会话所需技能")
+        raise HTTPException(409, "The original runner lacks the skills this session needs.")
     spec = AGENTS[agent_id]
     return {
         "id": "runner:" + runner.id + ":" + agent_id,
@@ -377,47 +377,47 @@ def clean_options(raw):
     if not isinstance(raw, dict) or set(raw) - {
         "sha256", "assigneeId", "agentId", "model", "instruction", "requiredSkills", "personalPlugins", "agentFallback", "targetRunnerId", "targetRunnerKind"
     }:
-        raise HTTPException(400, "交接选项不正确；不能指定执行机上的目录或额外执行配置")
+        raise HTTPException(400, "Invalid handoff options; folders or extra execution settings on the runner cannot be specified.")
     out = {}
     for key, limit in (("sha256", 64), ("assigneeId", 180), ("model", 200), ("instruction", 200000)):
         value = raw.get(key, "")
         if not isinstance(value, str) or len(value) > limit or "\0" in value:
-            raise HTTPException(400, "交接字段不正确：" + key)
+            raise HTTPException(400, "Invalid handoff fields: " + key)
         out[key] = value.strip()
     if not re.fullmatch(r"[0-9a-f]{64}", out["sha256"]) or (out["assigneeId"] and not out["assigneeId"].startswith("runner:")):
-        raise HTTPException(400, "请提供完整文件摘要和有效的执行机标识")
+        raise HTTPException(400, "Provide a complete file digest and a valid runner ID.")
     if is_local_model_reference(out["model"]):
-        raise HTTPException(409, "本地模型不能转交到其他执行机")
+        raise HTTPException(409, "Local models cannot be handed off to another runner.")
     # Keep old explicit requests byte-for-byte compatible for durable retry hashes.
     if "agentId" in raw:
         if not isinstance(raw["agentId"], str) or raw["agentId"] not in AGENTS:
-            raise HTTPException(422, "当前服务尚未配置此 Agent 的云端执行支持")
+            raise HTTPException(422, "This service does not yet have cloud execution support for this agent.")
         out["agentId"] = raw["agentId"]
     if "targetRunnerId" in raw:
         if not isinstance(raw["targetRunnerId"], str) or not re.fullmatch(r"[A-Za-z0-9._:-]{1,80}", raw["targetRunnerId"]):
-            raise HTTPException(400, "目标执行机标识不正确")
+            raise HTTPException(400, "Invalid runner ID.")
         out["targetRunnerId"] = raw["targetRunnerId"]
     if "targetRunnerKind" in raw:
         runner_kind = raw["targetRunnerKind"]
         if not isinstance(runner_kind, str) or runner_kind not in RUNNER_KINDS:
-            raise HTTPException(400, "目标执行机类型不正确")
+            raise HTTPException(400, "Invalid runner type.")
         out["targetRunnerKind"] = runner_kind
     if "agentFallback" in raw:
         out["agentFallback"] = handoff_agent_policy.clean_fallback(raw["agentFallback"])
     if not out["instruction"]:
-        raise HTTPException(400, "请说明转到云端后继续做什么")
+        raise HTTPException(400, "Describe what to continue with after moving to the cloud.")
     for key in ("requiredSkills", "personalPlugins"):
         value = raw.get(key, [])
         if not isinstance(value, list) or len(value) > 100 or any(
             not isinstance(x, str) or not x or len(x) > 160 for x in value
         ):
-            raise HTTPException(400, "交接能力列表不正确")
+            raise HTTPException(400, "Invalid handoff capability list.")
         out[key] = sorted(set(value))
     if out["personalPlugins"]:
-        raise HTTPException(409, "本机个人插件尚不能迁移，请在当前电脑完成，或改用云端已配置的能力")
+        raise HTTPException(409, "Personal local plugins cannot migrate yet; finish on this computer or use capabilities already configured in the cloud.")
     if any(x.lower() in {"computer-use", "computer_use", "desktop", "local-desktop"}
            for x in out["requiredSkills"]):
-        raise HTTPException(409, "正在使用本机电脑操作能力的会话不能转到云端")
+        raise HTTPException(409, "Sessions using this machine's computer-use capability cannot move to the cloud.")
     return out
 
 
@@ -425,9 +425,9 @@ async def get(session, client, transfer_id):
     await owner(session, client)
     row = await session.get(Handoff, identity(client.id, transfer_id), populate_existing=True)
     if not row:
-        raise HTTPException(404, "尚未准备此交接")
+        raise HTTPException(404, "This handoff has not been prepared.")
     if row.owner_user_id != client.user_ref:
-        raise HTTPException(403, "设备归属已变更，不能访问原账号的交接")
+        raise HTTPException(403, "Device ownership has changed; the original account's handoff is no longer accessible.")
     return row
 
 
@@ -525,13 +525,13 @@ async def prepare(session, client, transfer_id, data, raw_options):
     old = await session.get(Handoff, row_id)
     if old:
         if old.owner_user_id != user.id:
-            raise HTTPException(403, "设备归属已变更")
+            raise HTTPException(403, "Device ownership has changed.")
         if old.phase == "aborted":
             return public(old)
         if old.request_hash != digest:
-            raise HTTPException(409, "此交接编号已绑定另一份文件或目标，请使用原请求重试")
+            raise HTTPException(409, "This handoff ID is already bound to another file or target; retry with the original request.")
         if hashlib.sha256(data).hexdigest() != old.sha256:
-            raise HTTPException(409, "重试上传的工作包与原文件不一致")
+            raise HTTPException(409, "The retried upload package does not match the original file.")
         return public(await refresh(session, old))
     try:
         manifest = await asyncio.to_thread(portable_workspace.validate, data, options["sha256"])
@@ -542,7 +542,7 @@ async def prepare(session, client, transfer_id, data, raw_options):
     if not options["assigneeId"]:
         available = _automatic_targets(await targets(session, client), agent_id, source, options["requiredSkills"])
         if not available:
-            raise HTTPException(409, "暂时没有匹配当前 Agent 且可接单的云端环境，请在「我的 → 云端环境」检查连接、底座和负载")
+            raise HTTPException(409, "No cloud environment currently matches this agent and can take tasks; check connection, agent base, and load under My → Cloud environments.")
         # The request hash above describes the caller's intent. Persist the chosen
         # destination separately in options so every retry/commit uses one host.
         options["assigneeId"] = available[0]["id"]
@@ -590,7 +590,7 @@ async def prepare(session, client, transfer_id, data, raw_options):
         # Concurrent abort/prepare wins permanently; never overwrite its fence.
         old = await get(session, client, transfer_id)
         if old.phase != "aborted" and old.request_hash != digest:
-            raise HTTPException(409, "交接编号已绑定另一份请求")
+            raise HTTPException(409, "The handoff ID is already bound to another request.")
         return public(old)
     return public(row)
 
@@ -620,7 +620,7 @@ async def abort(session, client, transfer_id):
         mark(session, row.task_id, owner=row.owner_user_id)
     await session.commit()
     if not changed.rowcount:
-        raise HTTPException(409, "云端已开始接管或尚在核对回执，不能恢复本地执行")
+        raise HTTPException(409, "The cloud has taken over or is still verifying the receipt; local execution cannot be resumed.")
     return public(await get(session, client, transfer_id))
 
 
@@ -634,10 +634,10 @@ async def dispatch_body(session, client, task, body):
         # A copied marker cannot authorize any remote paths or snapshot bytes.
         if ((task.work_routing or {}).get("conversationHandoff")
                 or (task.work_routing or {}).get("cloudConversation")):
-            raise HTTPException(409, "交接记录无效")
+            raise HTTPException(409, "Invalid handoff record.")
         return None, body
     if row.owner_client_id != client.id or row.owner_user_id != client.user_ref or row.phase != "committing":
-        raise HTTPException(409, "请通过会话交接确认开始，不能从任务页重新派发此会话")
+        raise HTTPException(409, "Start via session handoff confirmation; this session cannot be re-dispatched from the task page.")
     from . import conversation_content
     options = await conversation_content.load_options(row.owner_user_id, "handoff:" + row.id, row.options, session=session)
     return row, {"assigneeId": options["assigneeId"], "assigneeType": "agent",
@@ -695,7 +695,7 @@ async def dispatch_inputs(session, row, extra):
 async def commit(session, client, transfer_id, sha256):
     row = await get(session, client, transfer_id)
     if row.sha256 != sha256:
-        raise HTTPException(409, "交接文件摘要不一致")
+        raise HTTPException(409, "Handoff file digest mismatch.")
     row = await refresh(session, row)
     if row.phase in {"committed", "aborted"}:
         return public(row)

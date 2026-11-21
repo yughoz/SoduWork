@@ -33,28 +33,28 @@ def clean_options(raw, has_files=False):
     if not isinstance(raw, dict) or set(raw) - {
         "sessionId", "agentId", "model", "title", "text", "userText", "inputPreparation", "requiredSkills", "targetRunnerId", "targetRunnerKind", "acceptance", "plugins"
     }:
-        raise HTTPException(400, "云端会话选项不正确；不能指定本地目录、执行机或额外执行配置")
+        raise HTTPException(400, "Invalid cloud session options; local folders, runner, or extra execution settings cannot be specified.")
     out = {}
     for key, limit in (("sessionId", 160), ("agentId", 80), ("model", 200),
                        ("title", 200), ("text", 200000), ("userText", 200000)):
         value = raw.get(key, "")
         if not isinstance(value, str) or len(value) > limit or "\0" in value:
-            raise HTTPException(400, "云端会话字段不正确：" + key)
+            raise HTTPException(400, "Invalid cloud session fields: " + key)
         out[key] = value.strip()
     if not re.fullmatch(r"[A-Za-z0-9._:-]{1,160}", out["sessionId"]):
-        raise HTTPException(400, "云端会话编号格式不正确")
+        raise HTTPException(400, "Invalid cloud session ID format.")
     if out["agentId"] not in AGENTS:
-        raise HTTPException(422, "当前服务尚未配置此 Agent 的云端执行支持")
+        raise HTTPException(422, "This service does not yet have cloud execution support for this agent.")
     if is_local_model_reference(out["model"]):
-        raise HTTPException(409, "本地模型只能在本机使用，不能用于云端会话")
+        raise HTTPException(409, "Local models can only be used on this machine and are unavailable in cloud sessions.")
     input_preparation = raw.get("inputPreparation")
     if input_preparation is not None:
         if (not isinstance(input_preparation, dict)
                 or set(input_preparation) - {"schemaVersion", "userText", "fallback"}):
-            raise HTTPException(400, "云端输入理解选项不正确")
+            raise HTTPException(400, "Invalid cloud understanding options.")
         user_text = input_preparation.get("userText", raw.get("userText", ""))
         if not isinstance(user_text, str) or len(user_text) > 50000 or "\0" in user_text:
-            raise HTTPException(400, "云端输入理解的原始文字不正确")
+            raise HTTPException(400, "Invalid source text for cloud understanding.")
         out["userText"] = user_text
         out["inputPreparation"] = {"schemaVersion": 1, "userText": user_text,
                                     "fallback": input_preparation.get("fallback") is True}
@@ -62,27 +62,27 @@ def clean_options(raw, has_files=False):
         out["userText"] = str(raw.get("userText", out["text"]))[:200000]
         out["inputPreparation"] = None
     if not out["text"] and not has_files:
-        raise HTTPException(400, "请输入云端会话的第一条消息")
+        raise HTTPException(400, "Enter the first message of the cloud session.")
     required = raw.get("requiredSkills", [])
     if not isinstance(required, list) or len(required) > 100 or any(
             not isinstance(item, str) or not item or len(item) > 160 for item in required):
-        raise HTTPException(400, "云端会话技能列表不正确")
+        raise HTTPException(400, "Invalid cloud session skill list.")
     if any(item.lower() in {"computer-use", "computer_use", "desktop", "local-desktop"} for item in required):
-        raise HTTPException(409, "本机电脑操作技能不能用于云端会话")
+        raise HTTPException(409, "This machine's computer-use skill cannot be used in cloud sessions.")
     out["requiredSkills"] = sorted(set(required))
     target_runner_id = raw.get("targetRunnerId", "")
     if not isinstance(target_runner_id, str) or len(target_runner_id) > 80 or (target_runner_id and not re.fullmatch(r"[A-Za-z0-9._:-]{1,80}", target_runner_id)):
-        raise HTTPException(400, "移动端目标执行机标识不正确")
+        raise HTTPException(400, "Invalid mobile runner ID.")
     out["targetRunnerId"] = target_runner_id.strip()
     target_runner_kind = raw.get("targetRunnerKind", "")
     if not isinstance(target_runner_kind, str) or target_runner_kind not in handoffs.RUNNER_KINDS | {""}:
-        raise HTTPException(400, "目标执行机类型不正确")
+        raise HTTPException(400, "Invalid runner type.")
     out["targetRunnerKind"] = target_runner_kind.strip()
     from . import conversation_turn_plugins
     plugins = conversation_turn_plugins.normalize(raw.get("plugins"))
     if plugins:
         if not out["targetRunnerId"] or out["targetRunnerKind"] != "work-computer" or raw.get("acceptance"):
-            raise HTTPException(422, "本机插件需要明确选择本人电脑，不能用于验收会话")
+            raise HTTPException(422, "Local plugins require explicitly selecting your own computer and cannot be used in acceptance sessions.")
         out["plugins"] = plugins
     if raw.get("acceptance") is not None:
         from . import cloud_acceptance
@@ -92,7 +92,7 @@ def clean_options(raw, has_files=False):
 
 async def read_files(files):
     if len(files) > MAX_FILES:
-        raise HTTPException(413, "云端会话最多可附加 20 个文件")
+        raise HTTPException(413, "Cloud sessions accept up to 20 attached files.")
     result, names, total = [], set(), 0
     limit = min(MAX_TOTAL_BYTES, get_settings().attach_max_mb * 1024 * 1024)
     for upload in files:
@@ -100,19 +100,19 @@ async def read_files(files):
         if (not name or len(name) > 200 or name != name.strip() or name.endswith(".")
                 or name in {".", ".."} or re.search(r'[\\/:*?"<>|\x00-\x1f\x7f]', name)
                 or re.fullmatch(r"(?i)(?:CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\..*)?", name)):
-            raise HTTPException(400, "附件名称不正确，请只上传文件而不是目录路径")
+            raise HTTPException(400, "Invalid attachment name; upload files only, not folder paths.")
         if name.casefold() in names:
-            raise HTTPException(400, "附件包含重名文件，请重命名后再发送")
+            raise HTTPException(400, "Attachments contain duplicate names; rename them and send again.")
         names.add(name.casefold())
         content_type = str(upload.content_type or "application/octet-stream")
         if len(content_type) > 200 or re.search(r"[\x00-\x1f\x7f]", content_type):
-            raise HTTPException(400, "附件类型不正确")
+            raise HTTPException(400, "Invalid attachment type.")
         data = await upload.read(min(limit, MAX_TOTAL_BYTES - total) + 1)
         total += len(data)
         if len(data) > limit or total > MAX_TOTAL_BYTES:
-            raise HTTPException(413, "附件超过单文件或总大小上限")
+            raise HTTPException(413, "Attachments exceed the per-file or total size limit.")
         if not data:
-            raise HTTPException(400, "不能上传空文件")
+            raise HTTPException(400, "Empty files cannot be uploaded.")
         result.append({"name": name, "contentType": content_type, "data": data,
                        "size": len(data), "sha256": hashlib.sha256(data).hexdigest()})
     return result
@@ -125,11 +125,11 @@ async def _cleanup(objects):
 
 async def _resume(session, client, row, digest):
     if row.owner_user_id != client.user_ref:
-        raise HTTPException(403, "设备归属已变更，不能访问原账号的云端会话")
+        raise HTTPException(403, "Device ownership has changed; cloud sessions of the original account are no longer accessible.")
     if row.phase == "aborted":
         return handoffs.public(row)
     if (row.source or {}).get("entryKind") != "cloud" or row.request_hash != digest:
-        raise HTTPException(409, "此云端会话请求编号已用于另一条消息或附件，请使用原请求重试")
+        raise HTTPException(409, "This cloud session request ID was already used by another message or attachment; retry with the original request.")
     return await handoffs.commit(session, client, row.transfer_id, row.sha256)
 
 
@@ -149,7 +149,7 @@ async def create(session, client, request_id, raw, uploads):
         from . import cloud_acceptance
         await cloud_acceptance.validate(session, client, requested["acceptance"])
         if uploads:
-            raise HTTPException(400, "自动验收只读取固定交付材料，请在验收前补充所需证据")
+            raise HTTPException(400, "Automatic acceptance reads only fixed deliverables; add the required evidence before acceptance.")
     source = {"entryKind": "cloud", "sessionId": requested["sessionId"],
               "adapterId": requested["agentId"], "modelName": requested["model"],
               "title": requested["title"] or requested["text"][:80], "goal": ""}
@@ -170,7 +170,7 @@ async def create(session, client, request_id, raw, uploads):
             available = [item for item in available
                          if item.get("runnerKind") == requested["targetRunnerKind"]]
     if not available:
-        raise HTTPException(409, "暂时没有匹配 Agent、技能且可接单的云端环境，请在「我的 → 云端环境」检查连接、底座和负载")
+        raise HTTPException(409, "No cloud environment currently matches this agent and skills and can take tasks; check connection, agent base, and load under My → Cloud environments.")
     instruction = requested["text"] or "请根据本轮附件和用户说明理解任务后再处理。"
     options = {"assigneeId": available[0]["id"], "agentId": requested["agentId"],
                "model": requested["model"], "instruction": instruction,

@@ -703,7 +703,7 @@ async def run_one(session: AsyncSession, s, who: str = "Nekowork（定时）",
                 result = await cloud_conversations.create(session, client, request_id, request, [])
             except HTTPException as exc:
                 if exc.status_code != 409 or exc.detail != (
-                        '此云端会话请求编号已用于另一条消息或附件，请使用原请求重试'):
+                        "This cloud session request ID was already used by another message or attachment; retry with the original request."):
                     raise
                 # A pre-upgrade handoff may have committed before its run receipt.
                 # Resume only if the original ISO text still matches its digest.

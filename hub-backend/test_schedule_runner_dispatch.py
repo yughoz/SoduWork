@@ -258,7 +258,7 @@ class ScheduleRunnerDispatchTests(unittest.IsolatedAsyncioTestCase):
                 await schedules.run_one(self.session, self.schedule, schedule_run_id=run.id)
             self.assertEqual(changed.exception.status_code, 409)
             self.assertEqual(changed.exception.detail,
-                             "此云端会话请求编号已用于另一条消息或附件，请使用原请求重试")
+                             "This cloud session request ID was already used by another message or attachment; retry with the original request.")
         self.assertTrue(recovered["ok"], recovered)
         self.assertEqual(recovered["taskId"], original["taskId"])
         self.assertEqual(run.receipt["conversationId"], request_id)

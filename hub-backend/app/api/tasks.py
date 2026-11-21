@@ -567,7 +567,7 @@ async def conversation_task_turn(
         Task.id == tid, _task_access.owner_clause(client)
     ).with_for_update())).scalar_one_or_none()
     if task is None:
-        raise HTTPException(404, "需求不存在或不属于当前设备")
+        raise HTTPException(404, "The request does not exist or belongs to another device.")
     if str(body.get("action") or "prepare") not in {"complete", "fail", "wait", "cancel"}:
         if conversation_turns.receipt_model_source(task, body) == "device":
             # This endpoint records an authenticated native queue receipt. It
@@ -613,14 +613,14 @@ async def conversation_task_delivery(
         Task.id == tid, _task_access.owner_clause(client)
     ).with_for_update())).scalar_one_or_none()
     if task is None:
-        raise HTTPException(404, "需求不存在或不属于当前设备")
+        raise HTTPException(404, "The request does not exist or belongs to another device.")
     if len(paths) != len(files):
-        raise HTTPException(422, "产出文件名与文件数量不一致")
+        raise HTTPException(422, "Output file names do not match the file count.")
     if not isinstance(categories, list):
         categories = []
     if categories and (len(categories) != len(files) or
                        any(value not in {"primary", "supporting", "evidence", "internal"} for value in categories)):
-        raise HTTPException(422, "产出分类与文件数量不一致")
+        raise HTTPException(422, "Output categories do not match the file count.")
     prepared = []
     prepared_categories = {}
     from ..services import delivery_manifest
@@ -1337,20 +1337,20 @@ async def ai_status_task(
     ev_row = await ai_exec.last_dispatch_event(session, tid)   # Recognize historical multica.* events.
     if ev_row is None:
         if ref:
-            raise HTTPException(409, "原执行会话已变化，请刷新需求后重试")
+            raise HTTPException(409, "The original execution session has changed; refresh the request and try again.")
         return {"done": False, "dispatched": False}
     ctx = await ai_exec.load(session)
     runner = {}
     d = ev_row.detail or {}
     if ref and ref != str(d.get("ref") or d.get("issueId") or ""):
-        raise HTTPException(409, "原执行会话已变化，请刷新需求后重试")
+        raise HTTPException(409, "The original execution session has changed; refresh the request and try again.")
     require_snapshot = bool(ref)
     ref = d.get("ref") or d.get("issueId", "")
     s = await _aio.to_thread(ai_exec.status_sync, ctx, ref)
     if require_snapshot and not s.get("ok"):
         # A continuation must not acknowledge delivery using stale task files
         # when its authoritative Runner snapshot could not be read.
-        raise HTTPException(502, "交付结果暂未同步，请恢复本轮重试")
+        raise HTTPException(502, "Deliverables are not synced yet; resume this round and retry.")
     if s.get("ok") and (s.get("attachments") or s.get("artifactUrl")):
         await ai_exec.pull_artifacts(session, tid, ctx, s, ref)   # Reuse the administrative path's idempotent artifact import.
         await session.refresh(t)
@@ -1508,7 +1508,7 @@ async def ai_say_task(
     from ..services import ai_exec
     text = str(body.get("text") or "").strip()
     if len(text) > 200000:
-        raise HTTPException(413, "消息超过 200000 字符，请拆分后发送")
+        raise HTTPException(413, "Message exceeds 200000 characters; split it and send again.")
     if not text:
         raise HTTPException(status_code=400, detail="说点什么再发")
     from ..services.cloud_execution_sync import require_account_cloud_task
@@ -1516,7 +1516,7 @@ async def ai_say_task(
     if t is None:
         t = await _view_task(session, client, tid)
     if not _task_access.can_continue_execution(t, client):
-        raise HTTPException(403, "当前账号只能查看此执行会话")
+        raise HTTPException(403, "The current account can only view this execution session.")
     ev_row = await ai_exec.last_dispatch_event(session, tid)
     if ev_row is None:
         raise HTTPException(status_code=400, detail="这条需求还没交给 AI")
@@ -1530,14 +1530,14 @@ async def ai_say_task(
     expected_ref = body.get("expectedRef")
     controlled_turn = body.get("conversationTurn")
     if expected_ref is not None and expected_ref != ref:
-        raise HTTPException(409, "原执行会话已变化，请刷新需求后重试")
+        raise HTTPException(409, "The original execution session has changed; refresh the request and try again.")
     if controlled_turn is not None:
         current = dict((t.work_routing or {}).get("conversationTurn") or {})
         if (not isinstance(controlled_turn, dict) or current.get("state") != "running"
                 or current.get("executor") != "dispatch" or current.get("continuationRef") != ref
                 or current.get("conversationId") != controlled_turn.get("conversationId")
                 or current.get("turnId") != controlled_turn.get("turnId")):
-            raise HTTPException(409, "需求执行状态已变化，请从需求入口继续修正")
+            raise HTTPException(409, "The request's execution state has changed; continue fixing it from the request entry.")
     if not handoff:
         from ..services import task_continuation
         try:
@@ -1551,22 +1551,22 @@ async def ai_say_task(
     turn_skills = conversation_turn_skills.normalize(body.get("skills"))
     if turn_skills:
         if body.get("messageId") is None:
-            raise HTTPException(422, "技能续聊需要消息回执编号")
+            raise HTTPException(422, "Skill follow-ups require a message receipt ID.")
         await conversation_turn_skills.validate(session, client, handoff, ref, turn_skills)
         ctx = {**ctx, "_turnSkills": turn_skills}
     turn_plugins = conversation_turn_plugins.normalize(body.get("plugins"))
     if turn_plugins:
         if body.get("messageId") is None:
-            raise HTTPException(422, "插件续聊需要消息回执编号")
+            raise HTTPException(422, "Plugin follow-ups require a message receipt ID.")
         await conversation_turn_plugins.validate(session, client, handoff, ref, turn_plugins)
         ctx = {**ctx, "_turnPlugins": turn_plugins}
     if turn_files:
         if (not handoff and not controlled_turn) or body.get("messageId") is None:
-            raise HTTPException(409, "追加文件需要支持回执的远程会话；需求材料请从需求入口提交")
+            raise HTTPException(409, "Appending files requires a remote session that supports receipts; submit request materials from the request entry.")
         from ..services import ai_remote
         runner = ai_remote._runner_of_ref(ref)
         if not runner or "turnFiles1" not in getattr(runner, "caps", []):
-            raise HTTPException(409, "原执行机离线或尚未支持追加文件，请更新并连接执行机后重试")
+            raise HTTPException(409, "The original runner is offline or does not support appending files yet; update and connect the runner and try again.")
         ctx = {**ctx, "_turnFiles": turn_files}
     if body.get("messageId") is not None:
         from ..services import conversation_message_receipts
