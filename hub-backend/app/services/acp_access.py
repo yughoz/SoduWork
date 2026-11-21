@@ -421,6 +421,9 @@ class BridgeAccess:
                                   "full": ("agent-full-access",)},
                 "codex": {"standard": ("workspace-write", "agent"), "readonly": ("read-only",),
                           "full": ("agent-full-access",)},
+                # Hermes advertises default/accept_edits/dont_ask (acp_adapter/modes.py);
+                # it has no read-only native mode, so 'readonly' stays unsupported.
+                "hermes": {"standard": ("accept_edits", "default"), "full": ("dont_ask",)},
                 "qwen": {"standard": ("default",), "readonly": ("plan",), "full": ("yolo",)},
                 "kimi": {"standard": ("default",), "readonly": ("plan",), "full": ("yolo",)},
                 "dsh": {"standard": ("workspace-write",), "readonly": ("read-only",),
