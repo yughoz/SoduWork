@@ -61,8 +61,8 @@ Yang **belum ada**: browser UI untuk chat/workbench + auth browser sebagai accou
 - Stream ke browser: WebSocket `/api/v1/web/ws` (cookie auth), fan-out dari event task yang sama.
 
 ### M4 — Approval di web
-- Permission mode dibatasi v1: **standard saja** (file write di workspace + tanya untuk sensitif). Mode `full` dari web = ditolak dengan pesan jelas; `readonly` menyusul.
-- Approval prompt (edit file di luar workspace, command berisiko) muncul inline di chat browser → jawaban diteruskan ke runner via pipeline approval yang sama.
+- Permission mode v1 (keputusan user 2026-11-21): **standard + full** dibolehkan dari web; `full` = native yolo/full-access harness, tampil warning sekali per session. `readonly` menyusul belakangan.
+- Approval prompt (edit di luar workspace, command berisiko pada mode standard) muncul inline di chat browser → jawaban diteruskan ke runner via pipeline approval yang sama.
 - Audit: tiap aksi web tercatat `web.*` di audit log hub.
 
 ### M5 — Keamanan
