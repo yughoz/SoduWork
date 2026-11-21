@@ -73,3 +73,15 @@ class UserIntegration(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (UniqueConstraint("user_id", "provider", name="uq_nw_user_integration"),)
+
+
+class McpToken(Base):
+    """Bearer token for external MCP clients (Hermes, Maus, Cursor). SHA-256 only."""
+    __tablename__ = "nekowork_mcp_token"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(64), unique=True)   # agent name for audit
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

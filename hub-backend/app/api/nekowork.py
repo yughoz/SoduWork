@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..db import get_session
 from ..deps import current_user
 from ..models import User
-from ..services import nekowork_asana, nekowork_newapi, nekowork_usage
+from ..services import nekowork_asana, nekowork_mcp, nekowork_newapi, nekowork_usage
 from ..services.nekowork_newapi import NewApiError
 
 log = logging.getLogger(__name__)
@@ -228,3 +228,42 @@ async def asana_delete_identity(identity_id: int,
     removed = await nekowork_asana.delete_identity(session, user, identity_id)
     await session.commit()
     return {"removed": removed}
+
+
+class McpTokenBody(StrictBody):
+    name: str
+
+
+@router.post("/mcp-tokens")
+async def mcp_create_token(body: McpTokenBody,
+                           user: User = Depends(current_user),
+                           session: AsyncSession = Depends(get_session)) -> dict:
+    """Admin: mint a bearer token for an external MCP client (show-once)."""
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    try:
+        result = await nekowork_mcp.create_token(session, name=body.name)
+        await session.commit()
+    except NewApiError as exc:
+        await session.rollback()
+        raise _http_error(exc) from exc
+    return result
+
+
+@router.get("/mcp-tokens")
+async def mcp_list_tokens(user: User = Depends(current_user),
+                          session: AsyncSession = Depends(get_session)) -> dict:
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    return {"items": await nekowork_mcp.list_tokens(session)}
+
+
+@router.delete("/mcp-tokens/{token_id}")
+async def mcp_disable_token(token_id: int,
+                            user: User = Depends(current_user),
+                            session: AsyncSession = Depends(get_session)) -> dict:
+    if not user.is_super:
+        raise HTTPException(status_code=403, detail="Hanya super admin")
+    disabled = await nekowork_mcp.disable_token(session, token_id)
+    await session.commit()
+    return {"disabled": disabled}
