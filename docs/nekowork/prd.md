@@ -15,6 +15,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
 3. **MCP Nekowork** — port Super MCP Nekorp (`/api/mcp`) jadi MCP endpoint di Hub, konsumen lama (Hermes, Maus, Cursor) tetap jalan.
 4. **Dashboard sisa token** — user lihat saldo/usage token; tampil di admin console dan di desktop client (sebagai app).
 5. **Titen memory embedded** — server Titen milik Nekowork di dalam Hub (bukan instance eksternal), key per-user dikelola admin, client auto-setup pas login.
+6. **Web client** — kerja dari browser mana pun; eksekusi tetap di PC user via desktop client sebagai Runner. Lihat `modul_web_client.md` (draft, menunggu konfirmasi).
 
 ## 2. Keputusan terkunci (2026-11-20)
 
