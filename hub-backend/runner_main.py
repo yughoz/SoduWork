@@ -819,6 +819,12 @@ class Runner:
                 continue
             await _drop_input_transfer(transfer)
 
+    @staticmethod
+    def _log_rpc_exception(done) -> None:
+        exc = done.exception()
+        if exc is not None:
+            log.error("RPC handler crashed: %s: %s", type(exc).__name__, exc)
+
     def _reap_admission(self) -> None:
         """Fold real Agent terminal states back into the admission ledger."""
         from app.services import ai_local
@@ -1515,6 +1521,7 @@ class Runner:
         workers = self._network_rpc_workers()
         request = workers.accept(lane, key, op)
         task = asyncio.create_task(self._handle_message(message, connection, request))
+        task.add_done_callback(self._log_rpc_exception)
         task.add_done_callback(lambda done: workers.finish(request))
         self._rpc_tasks.add(task)
         self._rpc_lanes[task] = lane

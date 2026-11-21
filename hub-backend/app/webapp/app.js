@@ -268,10 +268,10 @@ $("#dlg-form").addEventListener("submit", async (ev) => {
     dlg.close();
     $("#input").value = "";
     await loadChats();
-    const newId = r && (r.handoffId || r.id || r.conversationId);
-    if (newId) await openChat(newId);
+    const match = chats.find((c) => ((c.item.execution || {}).taskId) === r.taskId);
+    if (match) await openChat(match.id);
     else if (chats.length) await openChat(chats[0].id);
-    toast("Chat dibuat. PC lokal akan mulai mengeksekusi.");
+    toast("Chat dibuat. PC lokal mulai mengeksekusi.");
   } catch (e) {
     $("#dlg-err").textContent = e.message;
     $("#dlg-err").classList.remove("hidden");
