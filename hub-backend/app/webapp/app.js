@@ -274,7 +274,9 @@ $("#dlg-form").addEventListener("submit", async (ev) => {
       title: text.slice(0, 60),
       text,
       targetRunnerId: runnerId,
-      targetRunnerKind: "work-computer",
+      /* runnerKind omitted: standalone (cloud) vs desktop (work-computer) is
+         decided hub-side; env list does not expose it. ponytail: surface the
+         kind in /cloud-environments if kind-specific filtering is ever needed. */
       requiredSkills: [],
     };
     const fd = new FormData();
