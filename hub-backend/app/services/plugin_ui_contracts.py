@@ -81,7 +81,7 @@ def _builtin(value: dict) -> dict:
     if action_id == "work.task.create":
         action_id = "work.requirement.create"
     if action_id not in BUILTIN_ACTIONS:
-        raise ValueError("插件引用了未开放的 SoduWork 内置界面")
+        raise ValueError("插件引用了未开放的 Nekowork 内置界面")
     return {"type": "builtin", "actionId": action_id}
 
 

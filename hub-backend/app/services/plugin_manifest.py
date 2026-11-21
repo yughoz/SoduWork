@@ -449,7 +449,7 @@ def normalize(manifest: dict, workflow: dict | None = None) -> tuple[dict, dict,
         raise ValueError("plugin distribution must be standalone when provided")
     schema = int(raw.get("schemaVersion") or 0)
     if schema != 1:
-        raise ValueError("只支持 schemaVersion=1 的 SoduWork 插件")
+        raise ValueError("只支持 schemaVersion=1 的 Nekowork 插件")
     key, version = _text(raw.get("key"), 64).lower(), _text(raw.get("version"), 40)
     if not _KEY.fullmatch(key):
         raise ValueError("插件 key 只允许小写字母、数字和短横线")

@@ -162,7 +162,7 @@ async def _recover_code_candidate(session: AsyncSession, run: am.WorkflowRun,
             errors.append("已完成的 AI 会话没有返回代码分支")
             continue
         found = await code_delivery.check(
-            session, task, who="SoduWork", force=True,
+            session, task, who="Nekowork", force=True,
             branch_hint=branch, head_hint=head,
             scm_hint={"provider": str(executor.get("provider") or ""),
                       "runnerId": str(executor.get("runnerId") or ""),
@@ -719,7 +719,7 @@ async def _start_unlocked(session: AsyncSession, task: models.Task, binding: am.
         "entrypoint": entrypoint}, actor=actor_id or "system")
     task_events.record(session, task.id, "plugin.started",
                        {"runId": run.id, "pluginId": plugin.id,
-                        "versionId": version.id, "plugin": plugin.name}, actor="SoduWork")
+                        "versionId": version.id, "plugin": plugin.name}, actor="Nekowork")
     await session.commit()
     if notify and task.owner_client_id:
         from ..realtime import hub
@@ -990,7 +990,7 @@ async def _start_from_evidence_unlocked(
         "versionId": version.id, "startAtNode": target_key,
         "artifactVersionId": manifest["artifactVersionId"],
         "commit": manifest["commit"], "adoptedNodes": len(adopted),
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     await session.commit()
     if task.owner_client_id:
         from ..realtime import hub

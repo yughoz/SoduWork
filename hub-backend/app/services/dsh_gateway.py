@@ -39,7 +39,7 @@ def _request_budgets(context_limit: int, requested_output: int) -> tuple[int, di
 def bundle_args() -> list[str]:
     bundle = Path(__file__).with_name("dsh_gateway_bundle")
     if not (bundle / "cordis.patch.yml").is_file() or not (bundle / "package.json").is_file():
-        raise RuntimeError("DeepSeek Harness managed gateway adapter is missing; update SoduWork")
+        raise RuntimeError("DeepSeek Harness managed gateway adapter is missing; update Nekowork")
     return ["--bundle", str(bundle)]
 
 
@@ -53,7 +53,7 @@ def inject_env(env: dict, llm: dict) -> None:
     output_limit, compaction = _request_budgets(
         context_limit, runtime_images.model_fields(llm).get("maxOutputTokens", DEFAULT_OUTPUT))
     profile = {
-        "displayName": "SoduWork",
+        "displayName": "Nekowork",
         "baseURL": base.rstrip("/"),
         "api": protocol,
         "models": [{"id": model, "name": model,

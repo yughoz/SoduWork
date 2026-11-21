@@ -45,7 +45,7 @@ def stale_message(host: str, current: str, target: str, healed: bool) -> str:
     where = ("执行机 %s" % host) if host else "这台机器的执行机"
     head = "⚠ 刚才那条任务的派活回执没送到，靠会话实况才接回来——" if healed else ""
     return (head + "%s 版本 %s 低于服务端配套 %s。执行机随客户端一起升级，"
-            "请尽快完成客户端更新（更新提示被推迟过的话，重启 SoduWork 会再次提示）。"
+            "请尽快完成客户端更新（更新提示被推迟过的话，重启 Nekowork 会再次提示）。"
             % (where, current or "未知", target))
 
 
@@ -82,7 +82,7 @@ async def nudge_stale_client(client_id: str, current: str, latest: str,
         return False
     if not _due(cid, now, store=_client_last_sent, interval=_CLIENT_INTERVAL_SECONDS):
         return False
-    text = ("当前 SoduWork %s 需要手动升级，请前往下载页安装 %s。"
+    text = ("当前 Nekowork %s 需要手动升级，请前往下载页安装 %s。"
             % (current, latest))
     try:
         from ..realtime import hub

@@ -127,4 +127,4 @@ async def _close_batch_members(session: AsyncSession, batch: models.Task, *,
         if await mark(session, t, "done", engine=engine, why="批次办结回流",
                       allow_incomplete=True):
             task_events.record(session, sid, "ai.batch_done",
-                               {"batchId": batch.id, "via": "batch_close"}, actor="SoduWork")
+                               {"batchId": batch.id, "via": "batch_close"}, actor="Nekowork")

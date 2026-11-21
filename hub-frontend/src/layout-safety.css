@@ -1,5 +1,5 @@
 /*
- * Shared layout safety contract for the SoduWork admin shell.
+ * Shared layout safety contract for the Nekowork admin shell.
  * Keep overflow local and scrollable; never hide the whole page overflow.
  */
 .app,

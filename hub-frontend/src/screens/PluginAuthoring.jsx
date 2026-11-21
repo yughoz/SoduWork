@@ -68,7 +68,7 @@ export function PluginAuthorGuide({ onClose, adminOnly = false }) {
       </article>
     </section>
     <div className="author-steps">{STEPS.map(([id, title, text]) => <article key={id}><i>{id}</i><b>{title}</b><p>{text}</p></article>)}</div>
-    <p className="author-flow-note">{tx("本机试用验证个人对话中的效果；企业工作流的多节点执行、环境发布和人工验收，需要在授权的测试环境验证。SoduWork 平台级插件仍执行发布评测，不与企业内上传共用轻审核规则。")}</p>
+    <p className="author-flow-note">{tx("本机试用验证个人对话中的效果；企业工作流的多节点执行、环境发布和人工验收，需要在授权的测试环境验证。Nekowork 平台级插件仍执行发布评测，不与企业内上传共用轻审核规则。")}</p>
     <details className="author-advanced">
       <summary>{tx("查看包协议、节点交接与安全边界")}</summary>
       <section className="author-contract">

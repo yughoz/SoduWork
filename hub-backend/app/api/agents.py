@@ -219,7 +219,7 @@ async def post_agent_install(
     if action not in ("install", "update", "uninstall", "check", "login", "login-isolated", "login-cancel") or (action.startswith("login") and key != "codex"):
         raise HTTPException(status_code=400, detail="不认识的操作")
     if action == "uninstall" and key == "pi":
-        raise HTTPException(status_code=409, detail="Pi 是 SoduWork 必需组件，不能单独卸载。")
+        raise HTTPException(status_code=409, detail="Pi 是 Nekowork 必需组件，不能单独卸载。")
     runner = _pick_runner(client, body.get("runnerId"))
     if action == "login-cancel":
         jid = str(body.get("jobId") or "").strip()

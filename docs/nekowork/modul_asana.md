@@ -80,7 +80,7 @@ Unique: (`user_id`, `provider`). Ini tabel yang ikut dimigrasi dari Nekorp (open
 ## 6. Business Rules
 
 1. **Assignee resolver:** input `assignee_user` (user Hub) → lookup `user_integrations` provider `asana` → gid. Kalau belum ada mapping: auto-match email lowercase ke `asana_users_cache`; kalau match tunggal → pakai + catat `status=auto`; kalau ambigu/gak ada → gagal dengan daftar kandidat, gak asal pilih.
-2. AI (agent SoduWork) cuma boleh pilih project `archived=false AND ai_enabled=true`, dibantu `name + keywords + ai_notes`. Manusia bebas pilih semua project.
+2. AI (agent Nekowork) cuma boleh pilih project `archived=false AND ai_enabled=true`, dibantu `name + keywords + ai_notes`. Manusia bebas pilih semua project.
 3. Cache bukan source of truth keberadaan task — kegagalan upstream = error jelas, bukan hasil kosong palsu.
 4. Sync cache idempotent (upsert by gid).
 

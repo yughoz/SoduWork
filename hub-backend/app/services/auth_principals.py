@@ -66,7 +66,7 @@ async def active_user(session, client):
     value = await user_snapshot(session, str(client.user_ref or ""))
     if (not value or not value["is_active"] or value["account_deleted_at"] or
             client.auth_state != "active"):
-        raise HTTPException(403, "请先登录有效的 SoduWork 账号")
+        raise HTTPException(403, "请先登录有效的 Nekowork 账号")
     return SimpleNamespace(**value)
 
 

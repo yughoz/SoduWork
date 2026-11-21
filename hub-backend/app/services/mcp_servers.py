@@ -327,7 +327,7 @@ def protect_builtin(previous: list[dict], following: list[dict]) -> None:
             continue
         new = by_id.get(old["id"])
         if new is None or any(new.get(key) != value for key, value in old.items() if key != "enabled"):
-            raise ValueError("SoduWork 内置 MCP 只能启用或停用，不能删除或修改")
+            raise ValueError("Nekowork 内置 MCP 只能启用或停用，不能删除或修改")
 
 
 async def personal_save(session, client, rows: list[dict]) -> list[dict]:
@@ -599,7 +599,7 @@ async def readiness(session, names: list[str] | None = None, *, client=None) -> 
     rows = await _dispatch_rows(session, client)
     enabled = {str(item.get("name") or "") for item in rows
                if item.get("enabled") and _usable(item)}
-    # SoduWork-owned capabilities are available through the signed plugin gateway
+    # Nekowork-owned capabilities are available through the signed plugin gateway
     # and intentionally do not appear in the administrator connector registry.
     virtual = {name for name in wanted if is_virtual_mcp(name)}
     missing = sorted(wanted - enabled - virtual)

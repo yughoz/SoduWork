@@ -95,14 +95,14 @@ async def attach_shot(session: AsyncSession, task, png: bytes, *, url: str,
     """Store the screenshot as a verification attachment and return its ID."""
     meta = {
         "kind": "deploy_screenshot", "url": url[:400], "label": label[:120],
-        "verification": {"state": "passed", "by": "SoduWork",
+        "verification": {"state": "passed", "by": "Nekowork",
                          "at": int(time.time() * 1000)},
         **dict(evidence_meta or {}),
     }
     row = models.Attachment(
         id=str(uuid.uuid4()), task_id=task.id,
         filename=("上线回执-%s.png" % (label or "截图"))[:250],
-        content_type="image/png", size=len(png), uploaded_by="agent:SoduWork",
+        content_type="image/png", size=len(png), uploaded_by="agent:Nekowork",
         role="verification", source_ref=source_ref,
         workflow_run_id=run_id, node_run_id=node_run_id,
         evidence_meta=meta)

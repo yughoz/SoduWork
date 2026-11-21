@@ -214,7 +214,7 @@ async def _heal_lost_dispatch(session: AsyncSession, task: models.Task,
         "healedFrom": healed_from,
         "summary": summary,
         "runnerVersion": str(identity.get("runnerVersion") or ""),
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     if task.status == "todo":
         await task_status.mark(session, task, "doing", why="执行会话实况接回")
     # Send throttled upgrade guidance when an outdated Runner may have lost its receipt.
@@ -592,7 +592,7 @@ async def reconcile_runner_restart(session: AsyncSession, runner) -> list[dict]:
         row.metadata_ = meta
         stale.append(row)
         session.add(models.TaskEvent(
-            task_id=row.task_id, kind="ai.session_reconciled", actor="SoduWork",
+            task_id=row.task_id, kind="ai.session_reconciled", actor="Nekowork",
             detail={"ref": row.ref, "from": "queued", "to": "interrupted",
                     "reason": meta["error"], "runnerId": runner_id}))
     if not stale:
@@ -657,7 +657,7 @@ async def reconcile_local_sessions(session: AsyncSession) -> int:
         if row.state != old:
             changed += 1
             session.add(models.TaskEvent(
-                task_id=row.task_id, kind="ai.session_reconciled", actor="SoduWork",
+                task_id=row.task_id, kind="ai.session_reconciled", actor="Nekowork",
                 detail={"ref": row.ref, "from": old, "to": row.state,
                         "reason": error[:300]}))
     return changed

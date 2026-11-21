@@ -31,14 +31,14 @@ export default function RepoMap() {
   return (
     <>
       <div className="toolbar integration-toolbar">
-        <span className="hintline">{tx("外部平台推 bug 时带的「工程」在这儿对到 SoduWork 的工程。")}<b>{tx("对不上的 bug 不会瞎猜归属")}</b>{tx("—— 它们留在未分配池，并出现在下面「等着配映射」里。")}</span>
+        <span className="hintline">{tx("外部平台推 bug 时带的「工程」在这儿对到 Nekowork 的工程。")}<b>{tx("对不上的 bug 不会瞎猜归属")}</b>{tx("—— 它们留在未分配池，并出现在下面「等着配映射」里。")}</span>
         <div className="integration-toolbar-actions">
           <LiveDot />
           <button className="btn btn-ghost" onClick={reload}><Icon name="refresh" />{tx("刷新")}</button>
         </div>
       </div>
 
-      <div className="admin-filterbar"><FilterInput value={query} onChange={(e) => setQuery(e.target.value)} placeholder={tx("搜索外部工程或 SoduWork 工程")} aria-label={tx("搜索外部工程或 SoduWork 工程")} /></div>
+      <div className="admin-filterbar"><FilterInput value={query} onChange={(e) => setQuery(e.target.value)} placeholder={tx("搜索外部工程或 Nekowork 工程")} aria-label={tx("搜索外部工程或 Nekowork 工程")} /></div>
 
       <div ref={groupsRef} className="rm-map-groups">
         <div className="card rm-map-list">
@@ -85,7 +85,7 @@ function PendingRow({ g, repos, intName, onSaved }) {
   const [rid, setRid] = useState('')
   const [busy, setBusy] = useState(false)
   async function save() {
-    if (!rid) { toast(tx("先选一个 SoduWork 工程")); return }
+    if (!rid) { toast(tx("先选一个 Nekowork 工程")); return }
     setBusy(true)
     try {
       const r = await api.saveRepoBinding({ integrationId: g.integrationId, externalRepo: g.externalRepo, repoId: rid })
@@ -110,8 +110,8 @@ function PendingRow({ g, repos, intName, onSaved }) {
         {g.count > (g.samples || []).length && <span className="muted">{tx("…等 ")}{g.count}{tx(" 条")}</span>}
       </div>
       <div className="rm-map-controls admin-card-actions">
-        <SelectMenu className="f-in rm-map-select" aria-label={tx("选择映射的 SoduWork 工程")} value={rid} onChange={(e) => setRid(e.target.value)}>
-          <option value="">{tx("对到 SoduWork 的哪个工程…")}</option>
+        <SelectMenu className="f-in rm-map-select" aria-label={tx("选择映射的 Nekowork 工程")} value={rid} onChange={(e) => setRid(e.target.value)}>
+          <option value="">{tx("对到 Nekowork 的哪个工程…")}</option>
           {repos.map((r) => <option key={r.id} value={r.id}>{r.name}{r.ready ? tx("（已配自动合并）") : ''}</option>)}
         </SelectMenu>
         <button className="admin-card-action is-primary" disabled={busy} onClick={save}>{busy ? tx("保存中…") : tx("配上")}</button>

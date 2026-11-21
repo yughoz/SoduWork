@@ -111,7 +111,7 @@ def check(cfg: dict) -> str:
     tpl = str(c.get("branch") or "").strip()
     if tpl:
         if "{task}" not in tpl:
-            return "分支模板里必须有 {task}（SoduWork 任务号）——自动合并就是靠名字里的任务号认分支的，少了它这条提交永远合不进去。"
+            return "分支模板里必须有 {task}（Nekowork 任务号）——自动合并就是靠名字里的任务号认分支的，少了它这条提交永远合不进去。"
         if _safe_branch_tpl(tpl) != tpl:
             return "分支模板里有 git 不允许的字符（空格 ~ ^ : ? * [ \\ .. 或首尾的 /）。"
     if c.get("mrTarget") and not _safe_branch_name(c["mrTarget"]):
@@ -189,19 +189,19 @@ HEAD = "\n【按研发流程走（重要）】\n"
 REDLINES = """
 ⚠️ **你的活到"把自己的改动推上去{mr_tail}"就结束了**。以下三件**一件都不许做**（真机上出过事：
 它自己合了 main、还 SFTP 传到生产机 `systemctl restart` 把服务重启了——备份和健康检查它都做了，
-可整件事在 SoduWork 的视野之外，没人授权、没有留痕、出事没法对账）：
-- ✗ **自己合进基线分支**（`git merge` 到 main/develop/master 并推上去）——合并是 SoduWork（或评审人）做的；
+可整件事在 Nekowork 的视野之外，没人授权、没有留痕、出事没法对账）：
+- ✗ **自己合进基线分支**（`git merge` 到 main/develop/master 并推上去）——合并是 Nekowork（或评审人）做的；
 - ✗ **发布上线**：不许连生产/测试服务器（ssh/scp/sftp/rsync）、不许改服务器上的文件、
   不许 `systemctl` / 重启任何服务、不许动数据库；
 - ✗ force push、改已推历史。
-需要上线就在回复里说明"这条改动可以发布了"，由 SoduWork 按管理员配好的发布目标触发。
+需要上线就在回复里说明"这条改动可以发布了"，由 Nekowork 按管理员配好的发布目标触发。
 """
 
 BROWSER_RULE = """
 ⚠️ **要用浏览器截图验证时，端口和用户目录都必须是你自己的**：
 拉浏览器一律用**随机高位端口**（别用 9222/9229 这些默认口）+ 独立的 `--user-data-dir`；
 连上 CDP 后**先核对 target 的 URL 是不是你自己要开的那个页面**，不是就断开重来。
-原因：开发机上常有别的应用（比如 SoduWork 桌宠自己）正占着 9222，你的浏览器绑不上这个端口时，
+原因：开发机上常有别的应用（比如 Nekowork 桌宠自己）正占着 9222，你的浏览器绑不上这个端口时，
 脚本会**连到那个应用上**，然后一个 `Page.navigate` 把人家的窗口开到你的页面去——真出过这事。
 """
 
@@ -248,7 +248,7 @@ VERIFY_NEVER = ("**不要启动 GUI 浏览器截图**（chrome/edge/puppeteer/pl
 # Provider-specific screenshot and evidence delivery instructions.
 ARTIFACT_HOSTED = "把改动后的界面截图存到工程目录下，作为**评论附件**交回。"
 ARTIFACT_LOCAL = (
-    "把改动后的界面截图存到工程目录下，SoduWork 会自己从这个目录把新文件收走。\n"
+    "把改动后的界面截图存到工程目录下，Nekowork 会自己从这个目录把新文件收走。\n"
     "★截图/日志这类是**产出物、不是代码**：`git add` 的时候**只加你真正改的源码**，"
     "别把它们（和工作区里本来就有的其它未跟踪文件）一起提交进去。"
 )
@@ -272,7 +272,7 @@ UNATTENDED = """
 
 
 def work_branch(task_id: str, cfg: dict | None = None) -> str:
-    """Build the task branch name from the configured template. Always include the SoduWork task ID
+    """Build the task branch name from the configured template. Always include the Nekowork task ID
     so git_ops can identify its branch without guessing.
     """
     tid = "".join(c for c in str(task_id or "") if c.isalnum() or c in "-_") or "task"

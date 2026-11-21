@@ -1,7 +1,7 @@
 """Safe, content-addressed Agent Skill creation and import.
 
 Imported packages stay outside the repository and are immutable. A small
-atomic index decides which version is active for a company or one SoduWork device;
+atomic index decides which version is active for a company or one Nekowork device;
 the immutable payload can then be transferred to any remote Runner.
 """
 from __future__ import annotations
@@ -249,12 +249,12 @@ def install(parsed: dict, scope: str, owner_client_id: str = "") -> dict:
     scope = "personal" if scope == "personal" else "company"
     owner = str(owner_client_id or "")[:64] if scope == "personal" else ""
     if scope == "personal" and not owner:
-        raise ValueError("个人 Skill 必须绑定一台 SoduWork")
+        raise ValueError("个人 Skill 必须绑定一台 Nekowork")
     checksum, name = str(parsed["checksum"]), str(parsed["name"])
     from . import skills as skill_service
     if any(item.get("name") == name for item in skill_service.scan_root(
             skill_service.bundled_root())):
-        raise ValueError("不能用导入包覆盖 SoduWork 内置 Skill「%s」，请换一个名称" % name)
+        raise ValueError("不能用导入包覆盖 Nekowork 内置 Skill「%s」，请换一个名称" % name)
     target = os.path.join(root(), "packages", checksum, name)
     ready = os.path.join(target, ".ready")
     if not os.path.isfile(ready):
@@ -313,7 +313,7 @@ def remove_personal(name: str, owner: str, checksum: str) -> dict:
     if not owner or not _NAME.fullmatch(name):
         raise FileNotFoundError("个人 Skill 不存在")
     if any(row["name"] == name for row in skills.scan_root(skills.bundled_root())):
-        raise PermissionError("SoduWork 内置技能只能启用或停用，不能删除")
+        raise PermissionError("Nekowork 内置技能只能启用或停用，不能删除")
     with write_index_lock():
         index = _load_index()
         row = next((item for item in index["items"] if item.get("name") == name

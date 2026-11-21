@@ -34,13 +34,13 @@ def agents(client, runner, choices):
 async def validate_start(session, client, task, runner, options):
     from . import managed_work_route
     if managed_work_route.is_managed(task):
-        raise HTTPException(409, "工程任务请先在 SoduWork 按审批流程启动")
+        raise HTTPException(409, "工程任务请先在 Nekowork 按审批流程启动")
     if runner.client_id != client.id or runner_hub.CLIENT_TAG not in (runner.tags or []):
         raise HTTPException(409, "首次远程启动仅支持当前账号设备内置的桌面执行机")
     available = agents(client, runner, await models(session, client))
     selected = next((item for item in available if item["id"] == options.get("agentId")), None)
     if not selected:
-        raise HTTPException(409, "所选执行底座尚未就绪，请先在 SoduWork 检查安装与模型配置")
+        raise HTTPException(409, "所选执行底座尚未就绪，请先在 Nekowork 检查安装与模型配置")
     model = options.get("model", "")
     if selected["modelPick"] and not any(item["name"] == model for item in selected["models"]):
         raise HTTPException(409, "请明确选择当前可用的执行模型")

@@ -122,7 +122,7 @@ def prompt(value) -> str:
         "[SODUWORK READ-ONLY PREFLIGHT EVIDENCE POLICY]\n"
         "This node runs in a clean, read-only clone. Prefer an existing failing test or "
         "a live API reproduction. Missing installed project dependencies or downstream "
-        "credentials alone is not a blocker when SoduWork managed delivery preflight is READY. "
+        "credentials alone is not a blocker when Nekowork managed delivery preflight is READY. "
         "You may conclude that a defect is reproducible without executing the application only "
         "when all of these facts are present: (1) an exact externally observable contract, "
         "(2) the exact source file and code path that violates it, and (3) deterministic language "

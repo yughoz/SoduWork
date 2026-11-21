@@ -71,7 +71,7 @@ def _provenance(parsed: dict, user, channel: str, source_name: str,
     out = provenance_api({
         "publisherId": proof.get("publisherId") if verified else uid,
         "publisherName": (
-            "SoduWork 平台" if system else proof.get("publisherName") if verified else name),
+            "Nekowork 平台" if system else proof.get("publisherName") if verified else name),
         "publisherType": (
             "platform" if system else proof.get("publisherType") if verified else "member"),
         "channel": channel,

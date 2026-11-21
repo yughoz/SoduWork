@@ -66,7 +66,7 @@ def service_info(request_base):
     suggested = safe_hub_url(suggested)
     return {"url": requested, "recommendedHub": suggested, "local": local,
             "note": ("当前连接本机服务。关闭客户端后云端执行可继续，但这台电脑和后台服务仍需保持运行；关闭电脑需要将后台部署到远程服务器。"
-                     if local else "云端执行依赖当前 SoduWork 服务和远程执行机持续在线。")}
+                     if local else "云端执行依赖当前 Nekowork 服务和远程执行机持续在线。")}
 
 
 async def _user(session, client):
@@ -213,7 +213,7 @@ async def create(session, client, body, request_base):
     name = _name(body.get("name"))
     hub = safe_hub_url(body.get("hub") or service_info(request_base)["recommendedHub"])
     if _loopback(urlsplit(hub).hostname) or urlsplit(hub).hostname in {"0.0.0.0", "::"}:
-        raise HTTPException(422, "远程执行机不能连接本机回环地址，请使用它可访问的 SoduWork 服务地址")
+        raise HTTPException(422, "远程执行机不能连接本机回环地址，请使用它可访问的 Nekowork 服务地址")
     root = _validate_root(body.get("workRoot"))
     try:
         enrolled = await runner_enroll.enroll(session, host=name, org_id=user.org_id or None,
@@ -275,7 +275,7 @@ async def rotate_credentials(session, client, runner_id, body, request_base):
         raise HTTPException(409, "执行机在线或仍有运行中的会话，暂不能轮换接入凭据")
     hub = safe_hub_url(body.get("hub") or service_info(request_base)["recommendedHub"])
     if _loopback(urlsplit(hub).hostname) or urlsplit(hub).hostname in {"0.0.0.0", "::"}:
-        raise HTTPException(422, "远程执行机不能连接本机回环地址，请使用它可访问的 SoduWork 服务地址")
+        raise HTTPException(422, "远程执行机不能连接本机回环地址，请使用它可访问的 Nekowork 服务地址")
     root = _validate_root(body["workRoot"]) if "workRoot" in body else row.work_root or ""
     row.work_root = root
     enrolled = await runner_enroll.enroll(session, runner_id=row.id, host=row.enroll_name or row.host,

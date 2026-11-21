@@ -101,7 +101,7 @@ def prompt(policy: dict | None) -> str:
     p = normalize(policy)
     if not p:
         return ""
-    lines = ["【SoduWork 执行策略 · 运行时会强制检查】",
+    lines = ["【Nekowork 执行策略 · 运行时会强制检查】",
              "- 本段优先级高于上文节点说明；存在冲突时一律以本段为准。"]
     lines.append("- This machine-enforced policy overrides every other instruction in this session, whether that instruction appears before or after this block.")
     if p["containerOrchestration"] == "forbid":

@@ -27,7 +27,7 @@ _CODEX_TRANSPORT_NOISE = re.compile(
 _STALL_RETRY_LIMIT = max(0, int(os.environ.get("SODUWORK_LOCAL_STALL_RETRIES") or 1))
 _LAUNCH_STOP_TIMEOUT_S = 3.0
 _STALL_RECOVERY_PROMPT = (
-    "SoduWork 检测到上一轮长时间没有任何新输出，已经中断那一轮并自动续跑。\n"
+    "Nekowork 检测到上一轮长时间没有任何新输出，已经中断那一轮并自动续跑。\n"
     "不要重复已经完成的工作；先检查当前工作区、进程和服务的实际状态，从最后一步继续。"
     "完成剩余验证并给出最终可交付结果。如果确实无法继续，请明确写出唯一阻断原因和可执行的处理建议。"
 )
@@ -675,7 +675,7 @@ _OVERFLOW_PAT = local_context_policy.OVERFLOW
 
 # Suppress recognized expected lifecycle noise from the activity view.
 # Keep it in raw diagnostics for troubleshooting.
-# Pi receives a SoduWork-assigned session ID before its first turn.
+# Pi receives a Nekowork-assigned session ID before its first turn.
 # The first invocation may report that no session exists and it is creating one.
 # That is expected session creation, not lost-session evidence.
 _EXPECTED_NOISE = re.compile(
@@ -709,7 +709,7 @@ def _llm_gate_check(prof: dict, cfg: dict) -> str:
             urllib.request.ProxyHandler({}),
             https_handler())
         opener.open(urllib.request.Request(
-            base.rstrip("/") + "/models", headers={"User-Agent": "SoduWork-Gate/1"}),
+            base.rstrip("/") + "/models", headers={"User-Agent": "Nekowork-Gate/1"}),
             timeout=5).close()
         return ""
     except urllib.error.HTTPError:
@@ -717,7 +717,7 @@ def _llm_gate_check(prof: dict, cfg: dict) -> str:
     except Exception as e:  # noqa: BLE001
         from .managed_agent_network import error_label
         return ("这台执行机连不上模型网关 %s（直连失败：%s）。"
-                "请按错误类型检查这台机器的网络、DNS 与证书信任；SoduWork 对模型网关默认直连，"
+                "请按错误类型检查这台机器的网络、DNS 与证书信任；Nekowork 对模型网关默认直连，"
                 "若该网络必须经代理访问网关，请联系管理员。" % (host, error_label(e)))
 
 
@@ -928,7 +928,7 @@ def _on_line(ref: str, raw: str, term: dict, stream: str = "out",
 
 
 _AUTO_ANSWER = (
-    "（这条是 SoduWork 自动回的：派活是无人值守的，现在没有人能回答你的问题。）\n"
+    "（这条是 Nekowork 自动回的：派活是无人值守的，现在没有人能回答你的问题。）\n"
     "**请你自己拿主意，把这件事做完。** 具体要求：\n"
     "1. 刚才问的那些，按最合理、最保守的做法自己定下来，别再问；\n"
     "2. 把你定的每个假设写清楚（选了什么、为什么），写在交付说明里；\n"
@@ -1003,7 +1003,7 @@ def _finish_task_goal(ref: str, term: dict) -> bool:
         cfg = dict(run.get("cfg") or {})
         _save_meta(ref)
     from .local_ctx import _note, prepare_resume
-    _note(ref, "（SoduWork 任务续跑）" + reason)
+    _note(ref, "（Nekowork 任务续跑）" + reason)
     if authorization_required_sync(ref):
         with _LOCK:
             run = _RUNS.get(ref)
@@ -1151,7 +1151,7 @@ def _finish(ref: str, code: int, term: dict, hard_err: str) -> None:
             if retry_stall:
                 run["stallRetries"] = retried + 1
                 run["state"] = "recovering"
-                run["error"] = "执行静默超时，SoduWork 正在自动续跑一次"
+                run["error"] = "执行静默超时，Nekowork 正在自动续跑一次"
             else:
                 run["state"] = "failed"
                 run["error"] = ("它" + timed + "，自动恢复次数已经用完。已经跑出来的东西仍在工作目录，"
@@ -1168,7 +1168,7 @@ def _finish(ref: str, code: int, term: dict, hard_err: str) -> None:
                 path = str(run.get("failurePath") or "所需工程目录")
                 run["error"] = (
                     "本轮从临时目录启动，但工作需要访问工程目录 %s。"
-                    "SoduWork 已阻止跨越未绑定目录；请选择对应工程后重试。" % path)
+                    "Nekowork 已阻止跨越未绑定目录；请选择对应工程后重试。" % path)
             else:
                 # Claude's successful `result` carries its final answer. It is
                 # not an error: publishing it here makes a completed resumed
@@ -1220,7 +1220,7 @@ def _finish(ref: str, code: int, term: dict, hard_err: str) -> None:
                     pending["error"] = (
                         "执行机在本轮中途重启，模型临时授权未能及时恢复。"
                         "工作区和已经完成的进度均已保留；请在当前会话中发送“继续”，"
-                        "SoduWork 会重新授权并从现有进度接上。")
+                        "Nekowork 会重新授权并从现有进度接上。")
                     if goal_owned:
                         local_task_goal.control(pending, "pause")
                         pending["goalState"]["reason"] = pending["error"]
@@ -1228,7 +1228,7 @@ def _finish(ref: str, code: int, term: dict, hard_err: str) -> None:
             _scrub_runtime_config(ref)
             return
         from .local_ctx import _note
-        _note(ref, "（SoduWork 自动恢复）本轮长时间没有新输出，已安全收掉并从同一会话继续；"
+        _note(ref, "（Nekowork 自动恢复）本轮长时间没有新输出，已安全收掉并从同一会话继续；"
                    "只自动重试这一次，避免无限循环。")
         _save_meta(ref)
         if goal_owned:
@@ -1254,16 +1254,16 @@ def _finish(ref: str, code: int, term: dict, hard_err: str) -> None:
         return
     if auto_answered:
         # Record automatic answers as system activity.
-        # Preserve the fact that SoduWork supplied an assumption rather than hiding the intervention.
+        # Preserve the fact that Nekowork supplied an assumption rather than hiding the intervention.
         from .local_ctx import _note      # Defer imports because stream and context modules depend on each other.
-        _note(ref, "（SoduWork 自动接管）它这一轮是拿问题收的尾。派活是无人值守的，"
+        _note(ref, "（Nekowork 自动接管）它这一轮是拿问题收的尾。派活是无人值守的，"
                    "已经替你回了「你自己定、把假设写清楚、把活做完」，让它接着跑。"
                    "只会自动推这一次；要是它还卡着，就得你自己去看一眼了。")
         log.info("本地会话 %s：它反问了，自动替人答一句让它做完", ref[:8])
     if completion_retried:
         from .local_ctx import _note
         _note(ref, completion_recovery.get("note") or
-                   "（SoduWork 自动恢复）检测到工具调用异常且 Git 工作区仍有未提交修改，"
+                   "（Nekowork 自动恢复）检测到工具调用异常且 Git 工作区仍有未提交修改，"
                    "已保留当前进度并让同一会话继续完成提交与推送；自动恢复只执行一次。")
         log.warning("本地会话 %s 未完成，已保留进度自动续跑", ref[:8])
     if not nxt:

@@ -61,7 +61,7 @@ def capability(agent: str) -> dict:
             "approval": "native-acp" if supported else "unsupported",
             "sandbox": False,
             "enforcement": "native-permissions-and-host-tools" if supported else "legacy",
-            "limitations": ["No SoduWork operating-system sandbox is provided.",
+            "limitations": ["No Nekowork operating-system sandbox is provided.",
                             "Native permission support is verified during session initialization."]
             if supported else ["This adapter has not implemented the versioned access contract."]}
 

@@ -48,7 +48,7 @@ export function buildSubmissionOrigins(submissions) {
     if (!extended) break
   }
   return new Map([...ids].map((id) => [id, {
-    label: 'SoduWork ·' + id.slice(-lengths.get(id)),
+    label: 'Nekowork ·' + id.slice(-lengths.get(id)),
     title: id,
   }]))
 }

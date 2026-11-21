@@ -197,7 +197,7 @@ def agent_kinds() -> list[dict]:
     Resolve a type to a concrete recipient only at dispatch time.
     """
     out = [{"key": "hosted", "name": "托管智能体", "modelPick": False,
-            "note": "派给后台配好的那套托管 AI（模型在它那边按 agent 配，SoduWork 改不了）"}]
+            "note": "派给后台配好的那套托管 AI（模型在它那边按 agent 配，Nekowork 改不了）"}]
     try:
         from .local_base import _PROFILES
         for key, prof in list(_PROFILES.items()):
@@ -692,7 +692,7 @@ def fetch_attachment_for_sync(ctx: dict, ref: str, attachment_id: str) -> bytes 
 
 def runner_info_sync(ctx: dict, ref: str) -> dict:
     """Return optional execution machine and directory details. These are recovery hints; only
-    attachments or accessible URLs returned to SoduWork count as delivered outputs.
+    attachments or accessible URLs returned to Nekowork count as delivered outputs.
     """
     p = _by_ref(ref) or _p(ctx)
     if not hasattr(p, "runner_info_sync"):
@@ -891,7 +891,7 @@ def remind_sync(ctx: dict, ref: str, text: str) -> dict:
 # The task owner's explicit reminder authorizes the updated delivery instruction.
 REMIND_TEXT = (
     "【交付要求 · 以本条为准，覆盖此前关于交付方式的任何说法】\n"
-    "这活的产出还没回到 SoduWork。**在你本地工作目录里的文件不算交付**——那台机器别人拿不到。\n"
+    "这活的产出还没回到 Nekowork。**在你本地工作目录里的文件不算交付**——那台机器别人拿不到。\n"
     "请把主产出写成工作目录里的文件（如 结果.md）；"
     "如果交付物是一个可访问的网站/服务，请在回复里直接给出可访问的 URL。\n"
     "如果确实没有可交付的文件，请回一句说明为什么。"
@@ -903,7 +903,7 @@ def preview(t, ctx: dict, extra: dict | None = None) -> dict:
     return _p(ctx).preview_issue(t, ctx.get("cfg") or {}, extra)
 
 
-# Provider-independent SoduWork orchestration.
+# Provider-independent Nekowork orchestration.
 
 async def collect_task_files(session, task_id: str, limit: int = 5,
                              max_mb: int = 10) -> list[tuple[str, bytes, str]]:

@@ -48,7 +48,7 @@ def home_root() -> str:
 
 
 def bundled_root() -> str:
-    """Return version-controlled skills bundled with SoduWork. Keep user-added skills in home_root
+    """Return version-controlled skills bundled with Nekowork. Keep user-added skills in home_root
     so upgrades do not overwrite them.
     """
     # PyInstaller one-file Runners extract resources beneath sys._MEIPASS.
@@ -62,7 +62,7 @@ def bundled_root() -> str:
 
 
 def configured_roots() -> list[str]:
-    """Additional local roots supplied by the embedding SoduWork client."""
+    """Additional local roots supplied by the embedding Nekowork client."""
     raw = str(os.environ.get("SODUWORK_SKILL_ROOTS") or "")
     return [os.path.abspath(os.path.expanduser(part))
             for part in raw.split(os.pathsep) if str(part).strip()]
@@ -269,8 +269,8 @@ def source_info(item: dict) -> tuple[str, str]:
     if item.get("runtimeLocal") and explicit_key:
         labels = {
             "pi": "Pi", "codex": "Codex", "claude": "Claude Code",
-            "agents": "Agent Skills", "soduwork": "SoduWork 本机",
-            "builtin": "SoduWork 内置",
+            "agents": "Agent Skills", "soduwork": "Nekowork 本机",
+            "builtin": "Nekowork 内置",
         }
         return explicit[:40] or labels.get(explicit_key, "本机 Skill"), explicit_key[:24]
     if item.get("scope") == "personal":
@@ -281,15 +281,15 @@ def source_info(item: dict) -> tuple[str, str]:
     bundled = os.path.normcase(os.path.abspath(bundled_root())).replace("\\", "/")
     home = os.path.normcase(os.path.abspath(home_root())).replace("\\", "/")
     if root == bundled:
-        return "SoduWork 内置", "builtin"
+        return "Nekowork 内置", "builtin"
     if root == home:
-        return "SoduWork 本机", "soduwork"
+        return "Nekowork 本机", "soduwork"
     configured = {
         os.path.normcase(os.path.abspath(path)).replace("\\", "/")
         for path in configured_roots()
     }
     if root in configured:
-        return "SoduWork 本机", "soduwork"
+        return "Nekowork 本机", "soduwork"
     if "/.pi/agent/skills" in root:
         return "Pi", "pi"
     if "/.agents/skills" in root:
@@ -671,7 +671,7 @@ def prompt_block(skills: list[dict], native: bool) -> str:
         return ("\n【可用技能】已经给你装上这几项：" +
                 "、".join(s["name"] for s in valid) +
                 "。对上号了就按它说的做。\n")
-    lines = ["\n【可用技能（SoduWork 给这条活配的）】",
+    lines = ["\n【可用技能（Nekowork 给这条活配的）】",
              "下面每一项都是一个技能目录，里面的 `SKILL.md` 写了完整做法。",
              "**判断哪一项对得上这次的活，对上了就先 `read` 它的 SKILL.md 再照着做**；都对不上就正常干。"]
     for s in valid:

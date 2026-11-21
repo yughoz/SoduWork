@@ -154,8 +154,8 @@ async def execute(session: AsyncSession, task, current_plan: dict, *, actor: str
     task_events.record(session, task.id, "release.rollback_requested", {
         "customer": current_plan.get("customer"), "environment": current_plan.get("environment"),
         "from": (current_plan.get("current") or {}).get("version"),
-        "to": target.get("version"), "by": actor or "SoduWork",
-    }, actor=actor or "SoduWork")
+        "to": target.get("version"), "by": actor or "Nekowork",
+    }, actor=actor or "Nekowork")
     await session.commit()
     try:
         result = await asyncio.to_thread(_deploy, ids, str(target.get("id")),
@@ -163,13 +163,13 @@ async def execute(session: AsyncSession, task, current_plan: dict, *, actor: str
     except Exception as e:  # noqa: BLE001
         task_events.record(session, task.id, "release.rollback_failed",
                            {"to": target.get("version"), "error": str(e)[:300]},
-                           actor=actor or "SoduWork")
+                           actor=actor or "Nekowork")
         await session.commit()
         raise
     task_events.record(session, task.id, "release.rolled_back", {
         "customer": current_plan.get("customer"), "environment": current_plan.get("environment"),
         "to": target.get("version"), "result": result,
-    }, actor=actor or "SoduWork")
+    }, actor=actor or "Nekowork")
     await session.commit()
     try:
         from . import notify

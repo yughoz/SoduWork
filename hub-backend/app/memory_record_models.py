@@ -1,4 +1,4 @@
-﻿"""Versioned, bounded summaries shared by SoduWork memory surfaces.
+﻿"""Versioned, bounded summaries shared by Nekowork memory surfaces.
 
 ``MemoryRecord`` is intentionally separate from the legacy imported
 ``SessionMemory`` table. The latter stores owner-private Codex evidence;

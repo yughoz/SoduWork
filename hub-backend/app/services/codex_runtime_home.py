@@ -1,9 +1,9 @@
-"""Per-conversation Codex CLI state isolation for SoduWork Runner.
+"""Per-conversation Codex CLI state isolation for Nekowork Runner.
 
 The Codex desktop app and Codex CLI normally share ``~/.codex``. Running both
 against that directory lets system-skill installation and plugin-cache writes
 race each other. Managed Windows filesystem filters then turn some atomic
-replaces into ``os error 17``/``4395``. SoduWork gives every conversation a stable
+replaces into ``os error 17``/``4395``. Nekowork gives every conversation a stable
 private CODEX_HOME and imports only the user's login file -- never personal
 hooks, MCP configuration, caches, or session history.
 """
@@ -141,7 +141,7 @@ def _sync_auth(source_home: str, runtime_home: str) -> None:
 
     A hard link is not usable on machines where transparent encryption exposes
     the two user-profile areas as different volumes. The destination inherits
-    the same per-user AppData ACL as SoduWork's other private runtime state.
+    the same per-user AppData ACL as Nekowork's other private runtime state.
     """
     source = os.path.join(source_home, "auth.json")
     target = os.path.join(runtime_home, "auth.json")
@@ -204,7 +204,7 @@ def _sync_auth(source_home: str, runtime_home: str) -> None:
 
 
 def prepare(env: dict, data_root: str, ref: str = "") -> str:
-    """Select a stable private home for one SoduWork conversation."""
+    """Select a stable private home for one Nekowork conversation."""
     from . import codex_account_home
     source_home = str(env.get("CODEX_HOME") or "").strip() or \
         os.path.join(os.path.expanduser("~"), ".codex")

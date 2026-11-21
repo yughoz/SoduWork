@@ -130,7 +130,7 @@ function TokenReveal({ value, onClose }) {
   return (
     <Modal title={tx("保存接入令牌")} icon="key" onClose={onClose}
       foot={<><button className="btn btn-ghost" onClick={onClose}>{tx("我已保存")}</button><button className="btn btn-primary" onClick={copy}><Icon name="copy" />{tx("复制令牌")}</button></>}>
-      <div className="int-hint" style={{ marginBottom: 12 }}>{tx("这是「")}{value.name}{tx("」的接入令牌，")}<b>{tx("只展示这一次")}</b>{tx("。请现在复制到外部系统；丢失后只能安全轮换，SoduWork 不会再次回显原值。")}</div>
+      <div className="int-hint" style={{ marginBottom: 12 }}>{tx("这是「")}{value.name}{tx("」的接入令牌，")}<b>{tx("只展示这一次")}</b>{tx("。请现在复制到外部系统；丢失后只能安全轮换，Nekowork 不会再次回显原值。")}</div>
       <label className="f-lbl">X-Ingest-Token</label>
       <input className="f-in" value={value.ingestToken || ''} readOnly autoFocus
         onFocus={(e) => e.currentTarget.select()} style={{ fontFamily: 'var(--mono)' }} />
@@ -225,7 +225,7 @@ function FieldMapEditor({ value, onChange, editing, id }) {
     <div>
       <label className="f-lbl">{tx("字段对照（留空＝用内置别名，识别不到再填）")}</label>
       <div className="int-hint" style={{ marginBottom: 8 }}>{tx("平台把 bug ")}<b>POST</b>{tx(" 到 ")}<code>/api/v1/webhooks/{editing && id ? id : tx("{创建后生成的集成id}")}</code>{tx("， 请求头带 ")}<b>X-Ingest-Token</b>{tx("（创建完成时只展示一次；丢失后从卡片安全轮换）。 载荷可单条、也可 ")}<code>{'{items:[…]}'}</code>。
-        <br />{tx("★三样缺一不可：")}<b>{tx("bug 唯一标识")}</b>{tx("（否则没法幂等）· ")}<b>{tx("负责人")}</b>{tx("（决定落到谁手上）·")}<b>{tx("工程")}</b>{tx("（决定在哪个仓库改；还要在「工程映射」里把它对到 SoduWork 的工程）。")}</div>
+        <br />{tx("★三样缺一不可：")}<b>{tx("bug 唯一标识")}</b>{tx("（否则没法幂等）· ")}<b>{tx("负责人")}</b>{tx("（决定落到谁手上）·")}<b>{tx("工程")}</b>{tx("（决定在哪个仓库改；还要在「工程映射」里把它对到 Nekowork 的工程）。")}</div>
       {FM_KEYS.map(([k, label, ph]) => (
         <div key={k} className="fm-row">
           <span className="fm-k">{label}</span>

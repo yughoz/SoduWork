@@ -94,7 +94,7 @@ async def _safe_started_replay(session, row, latest, now):
         **detail, "retryable": True, "confirmedNotStarted": True,
         "summary": "原执行机确认尚未接收；将使用相同派发编号恢复",
         "healedFrom": "durable-admission-negative", "observedBootId": result["observedBootId"],
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     row.phase = "prepared"
     await session.commit()
     return True

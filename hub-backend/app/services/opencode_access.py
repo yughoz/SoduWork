@@ -35,7 +35,7 @@ export default async () => {
     for (const agent of Object.values(config.agent)) {
       if (agent && typeof agent === 'object') agent.permission = structuredClone(permission);
     }
-    config.agent[agentId] = { mode: 'primary', description: 'SoduWork session access policy',
+    config.agent[agentId] = { mode: 'primary', description: 'Nekowork session access policy',
       permission: structuredClone(permission) };
     config.agent[profile] = { ...config.agent[profile], disable: false, hidden: false,
       mode: 'primary', permission: structuredClone(permission) };
@@ -45,7 +45,7 @@ export default async () => {
   'tool.execute.before': async () => {
     if (!finalConfig || !matches(finalConfig.permission) ||
         Object.values(finalConfig.agent).some(agent => !matches(agent.permission))) {
-      throw new Error('SoduWork access policy was changed after initialization. Operation blocked.');
+      throw new Error('Nekowork access policy was changed after initialization. Operation blocked.');
     }
   },
   };

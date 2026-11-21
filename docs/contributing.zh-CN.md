@@ -1,14 +1,14 @@
-# 参与 SoduWork 开发
+# 参与 Nekowork 开发
 
 **简体中文** · [English](../CONTRIBUTING.md) · [文档导航](README.zh-CN.md)
 
-感谢你参与 SoduWork。问题反馈、文档、翻译、测试和代码都欢迎。参与本项目即表示同意遵守[行为准则](../CODE_OF_CONDUCT.md)。
+感谢你参与 Nekowork。问题反馈、文档、翻译、测试和代码都欢迎。参与本项目即表示同意遵守[行为准则](../CODE_OF_CONDUCT.md)。
 
 使用编程 Agent 的贡献者可以先阅读公开的 [AGENTS.md](../AGENTS.md)。
 
 ## 开始之前
 
-- **报告问题、提出建议**：用 [Issue 模板](https://github.com/mdiri-ai/SoduWork/issues/new/choose)提交。使用问题和想法请发到 [Discussions](https://github.com/mdiri-ai/SoduWork/discussions)。
+- **报告问题、提出建议**：用 [Issue 模板](https://github.com/mdiri-ai/Nekowork/issues/new/choose)提交。使用问题和想法请发到 [Discussions](https://github.com/mdiri-ai/Nekowork/discussions)。
 - **安全问题**：不要发公开 Issue，按 [SECURITY.md](security.zh-CN.md) 私下报告。
 - **较大的改动**（新功能、数据结构、公开协议）：先开 Issue 说明用户问题和方案，确认方向后再提交 PR。
 - **本地环境**：按[启动指南](getting-started.md)准备独立的本地实例，目录结构和各模块入口见[开发指南](development.md)。公开源码范围以 [tools/distribution/PUBLIC-SOURCE.json](../tools/distribution/PUBLIC-SOURCE.json) 和[首版范围](release-scope.md)为准。

@@ -233,7 +233,7 @@ async def _stale_runner_hint(session: AsyncSession, stage: str, message, picked)
         state = runner_release.release_state(str(getattr(row, "version", "") or ""))
         if row is not None and state["upgradeAvailable"]:
             text += ("；执行机 %s 版本 %s 低于服务端配套 %s——多半是老执行机的缺陷，"
-                     "请先升级那台机器上的 SoduWork 客户端或执行机再试" % (
+                     "请先升级那台机器上的 Nekowork 客户端或执行机再试" % (
                          str(row.host or runner_id), state["currentVersion"] or "未知",
                          state["targetVersion"]))
     except Exception:  # noqa: BLE001 - Optional guidance must not interfere with failure persistence.

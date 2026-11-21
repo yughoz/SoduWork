@@ -1,9 +1,9 @@
-"""ACP v1 subprocess bridge for SoduWork Runner.
+"""ACP v1 subprocess bridge for Nekowork Runner.
 
 The bridge is dependency-free. It translates ACP NDJSON JSON-RPC into the
-normalized event stream already consumed by SoduWork's local execution runtime.
+normalized event stream already consumed by Nekowork's local execution runtime.
 Client-side files are confined to one task workspace. Terminal access is only
-advertised when the task passed SoduWork's existing capability gate.
+advertised when the task passed Nekowork's existing capability gate.
 """
 from __future__ import annotations
 
@@ -497,7 +497,7 @@ class AcpBridge:
             return
         self.send({"jsonrpc": "2.0", "id": message["id"], "error": {
             "code": -32601,
-            "message": "Unsupported SoduWork Runner client method: " + method}})
+            "message": "Unsupported Nekowork Runner client method: " + method}})
 
     def _permission_result(self, params: dict) -> dict:
         call = params.get("toolCall") or {}
@@ -727,7 +727,7 @@ class AcpBridge:
             "protocolVersion": _PROTOCOL,
             "clientCapabilities": self._client_capabilities(),
             "clientInfo": {
-                "name": "soduwork-runner", "title": "SoduWork Runner", "version": "1"},
+                "name": "soduwork-runner", "title": "Nekowork Runner", "version": "1"},
         })
         if int(init.get("protocolVersion") or 0) != _PROTOCOL:
             raise BridgeError("ACP protocol version is incompatible")

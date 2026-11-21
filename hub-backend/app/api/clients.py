@@ -46,7 +46,7 @@ async def enroll(
         session.add(c)
     else:
         if c.auth_state == "revoked":
-            raise HTTPException(status_code=403, detail="这台 SoduWork 已被停用，请联系管理员重新登记")
+            raise HTTPException(status_code=403, detail="这台 Nekowork 已被停用，请联系管理员重新登记")
         if c.secret_hash and not device_auth.secret_matches(c, key):
             raise HTTPException(status_code=401, detail="设备密钥不正确")
         if not c.secret_hash:
@@ -122,7 +122,7 @@ async def register(
         c = Client(id=device, secret_hash=device_auth.hash_secret(issued), auth_state="pending")
         session.add(c)
     elif c.auth_state == "revoked":
-        raise HTTPException(status_code=403, detail="这台 SoduWork 已被停用")
+        raise HTTPException(status_code=403, detail="这台 Nekowork 已被停用")
     elif c.secret_hash:
         if not device_auth.secret_matches(c, x_soduwork_secret or ""):
             raise HTTPException(status_code=401, detail="设备密钥不正确")
@@ -206,7 +206,7 @@ async def create_team_task(
                "invalid_title": "title must be a string",
                "invalid_team_org_id": "teamOrgId must be a string of at most 36 characters",
                "no_assignee": "请选择指派成员", "out_of_scope": "该成员不在你的团队内",
-               "no_box": "该成员还没有绑定 SoduWork，无法派需求", "inactive": "该成员已停用，无法派需求"}.get(r.get("reason"), "派需求失败")
+               "no_box": "该成员还没有绑定 Nekowork，无法派需求", "inactive": "该成员已停用，无法派需求"}.get(r.get("reason"), "派需求失败")
         raise HTTPException(status_code=400, detail=msg)
     return r
 
@@ -307,7 +307,7 @@ async def assign_inbox_task_from_box(
         code = {"already_claimed": 409, "not_found": 404}.get(r.get("reason"), 400)
         msg = {"not_found": "需求不存在", "already_claimed": "该需求已被认领或已派走",
                "not_in_inbox": "该需求不在收件箱里", "out_of_scope": "该需求不在你的收件箱范围内",
-               "no_box": "该成员还没有绑定 SoduWork，无法分配"}.get(r.get("reason"), "分配失败")
+               "no_box": "该成员还没有绑定 Nekowork，无法分配"}.get(r.get("reason"), "分配失败")
         raise HTTPException(status_code=code, detail=msg)
     return r
 
@@ -350,10 +350,10 @@ async def message_teammate(
     """Send a short mention notification using the organization-wide colleague directory."""
     r = await team_svc.message_mate(session, client, uid, str(body.get("text") or ""), body)
     if not r.get("ok"):
-        msg = {"no_user": "本 SoduWork 还没绑定用户，请让管理员分配归属",
+        msg = {"no_user": "本 Nekowork 还没绑定用户，请让管理员分配归属",
                "empty": "消息内容不能为空",
                "target_out_of_scope": "这位同事不在当前企业的可用人员中",
-               "no_box": "这位同事还没有 SoduWork，消息送不过去"}.get(r.get("reason"), "消息没有发出去")
+               "no_box": "这位同事还没有 Nekowork，消息送不过去"}.get(r.get("reason"), "消息没有发出去")
         raise HTTPException(status_code=400, detail=msg)
     return r
 
@@ -454,9 +454,9 @@ async def handoff_my_task(
                                        str(body.get("note") or "")[:2000])
     if not r.get("ok"):
         msg = {"not_found": "这不是你持有的需求", "already_done": "需求已完成，不用再转给别人",
-               "no_user": "本 SoduWork 还没绑定用户，请让管理员分配归属",
+               "no_user": "本 Nekowork 还没绑定用户，请让管理员分配归属",
                "target_out_of_scope": "这位同事不在当前企业的可用人员中",
-               "no_box": "这位同事还没有 SoduWork，转不过去"}.get(r.get("reason"), "转发失败")
+               "no_box": "这位同事还没有 Nekowork，转不过去"}.get(r.get("reason"), "转发失败")
         raise HTTPException(status_code=400, detail=msg)
     return r
 
@@ -471,10 +471,10 @@ async def create_assigned_task(
     r = await team_svc.create_assigned_task(session, client, body)
     if not r.get("ok"):
         msg = {
-            "no_user": "这台 SoduWork 尚未绑定有效用户，请联系管理员",
+            "no_user": "这台 Nekowork 尚未绑定有效用户，请联系管理员",
             "no_title": "需求标题不能为空",
             "target_out_of_scope": "接收人不在当前企业或已停用",
-            "no_box": "接收人暂时没有可接收需求的 SoduWork",
+            "no_box": "接收人暂时没有可接收需求的 Nekowork",
             "bad_task_id": "需求编号格式不正确",
             "id_conflict": "需求编号已被其他需求占用，请重试",
         }.get(r.get("reason"), "创建交办需求失败")
@@ -497,6 +497,6 @@ async def reassign_team_task(
     if not r.get("ok"):
         msg = {"forbidden": "无团队管理权限", "not_found": "需求不存在", "out_of_scope": "该需求不在你的团队内",
                "already_done": "需求已完成，无需转派",
-               "target_out_of_scope": "目标成员不在你的团队内", "no_box": "该成员还没有 SoduWork"}.get(r.get("reason"), "改派失败")
+               "target_out_of_scope": "目标成员不在你的团队内", "no_box": "该成员还没有 Nekowork"}.get(r.get("reason"), "改派失败")
         raise HTTPException(status_code=400, detail=msg)
     return r

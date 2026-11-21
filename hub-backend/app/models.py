@@ -337,7 +337,7 @@ class RepoBinding(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
     integration_id: Mapped[str] = mapped_column(String(36), index=True)
     external_repo: Mapped[str] = mapped_column(String(200), index=True)
-    repo_id: Mapped[str] = mapped_column(String(36))          # SoduWork Repo.id
+    repo_id: Mapped[str] = mapped_column(String(36))          # Nekowork Repo.id
     note: Mapped[str] = mapped_column(String(200), default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
@@ -469,7 +469,7 @@ class ClientUpdateAttempt(Base):
 
 
 class IntegrationBinding(Base):
-    """Mapping from an external assignee to a SoduWork client."""
+    """Mapping from an external assignee to a Nekowork client."""
     __tablename__ = "integration_binding"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)

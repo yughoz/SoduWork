@@ -23,7 +23,7 @@ async def check(current: str = "", channel: str = "stable", session: AsyncSessio
     # is permanently retired. Old clients receive a safe no-op until they are
     # manually installed once with the full-package updater.
     return {"hasUpdate": False, "retired": True,
-            "message": "请安装新版 SoduWork 以启用完整客户端在线升级"}
+            "message": "请安装新版 Nekowork 以启用完整客户端在线升级"}
 
     res = await session.execute(
         select(Release).where(Release.channel == channel).order_by(Release.created_at.desc())
@@ -69,7 +69,7 @@ def _newer(latest: str, current: str) -> bool:
 
 @router.get("/manifest/{version}")
 async def manifest(version: str, session: AsyncSession = Depends(get_session)):
-    raise HTTPException(status_code=410, detail="渲染层热更新已停用，请安装新版 SoduWork")
+    raise HTTPException(status_code=410, detail="渲染层热更新已停用，请安装新版 Nekowork")
 
     r = await session.get(Release, version)
     if r is None:
@@ -79,7 +79,7 @@ async def manifest(version: str, session: AsyncSession = Depends(get_session)):
 
 @router.get("/files/{version}/{filepath:path}")
 async def get_file(version: str, filepath: str, session: AsyncSession = Depends(get_session)):
-    raise HTTPException(status_code=410, detail="渲染层热更新已停用，请安装新版 SoduWork")
+    raise HTTPException(status_code=410, detail="渲染层热更新已停用，请安装新版 Nekowork")
 
     r = await session.get(Release, version)
     if r is None:

@@ -179,7 +179,7 @@ async def materialize_my_skills(
     if not portable:
         return Response(status_code=204, headers={
             "Cache-Control": "private, no-store",
-            "X-SoduWork-Skill-Schema": "1",
+            "X-Nekowork-Skill-Schema": "1",
         })
     try:
         payload = await asyncio.to_thread(runner_skills.build, portable)
@@ -192,8 +192,8 @@ async def materialize_my_skills(
         headers={
             "Cache-Control": "private, no-store",
             "X-Content-Type-Options": "nosniff",
-            "X-SoduWork-Skill-Schema": "1",
-            "X-SoduWork-Skill-Sha256": digest,
+            "X-Nekowork-Skill-Schema": "1",
+            "X-Nekowork-Skill-Sha256": digest,
         },
     )
 
@@ -264,7 +264,7 @@ async def delete_my_mcp_server(server_id: str, client: Client = Depends(current_
     if item is None:
         raise HTTPException(404, "个人 MCP 不存在或无权删除")
     if mcp_servers.is_builtin(item):
-        raise HTTPException(403, "SoduWork 内置 MCP 只能启用或停用，不能删除")
+        raise HTTPException(403, "Nekowork 内置 MCP 只能启用或停用，不能删除")
     client.mcp_servers = [row for row in rows if row is not item]
     from ..services import connector_oauth as oauth
     await oauth.release_removed(session, rows, client.mcp_servers)

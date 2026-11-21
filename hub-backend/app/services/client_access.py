@@ -1,7 +1,7 @@
 """Employee client sign-in policy and monthly AI token quota.
 
 The device key proves possession of one installation. A password proves the
-human identity. Keeping these concerns separate lets SoduWork remember a trusted
+human identity. Keeping these concerns separate lets Nekowork remember a trusted
 device without persisting a password or a long-lived user bearer token.
 """
 from __future__ import annotations

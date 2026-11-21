@@ -85,8 +85,8 @@ def _capability_remediation(runner, verdict) -> tuple[str, str]:
            for key in missing):
         return "grant", execution_capabilities.error_message(verdict, host)
     if not int(report.get("reportedAt") or 0):
-        return "upgrade", ("这台 SoduWork 的 Runner 版本过旧，没有上报本机能力，"
-                           "请升级 SoduWork 客户端后重试")
+        return "upgrade", ("这台 Nekowork 的 Runner 版本过旧，没有上报本机能力，"
+                           "请升级 Nekowork 客户端后重试")
     return "install", execution_capabilities.error_message(verdict, host)
 
 
@@ -120,7 +120,7 @@ async def validate_direct_execution(session: AsyncSession, s):
     client_id = str(getattr(s, "owner_client_id", "") or "")
     client = await session.get(models.Client, client_id) if client_id else None
     if client is None:
-        raise ValueError("请先选择任务归属的 SoduWork")
+        raise ValueError("请先选择任务归属的 Nekowork")
     from . import skills
     return await skills.resolve_named(
         session, required_skill_names(capabilities), client)
@@ -174,7 +174,7 @@ async def validate_selected_model(session: AsyncSession, s, *, allow_missing_mod
     client_id = str(getattr(s, "owner_client_id", "") or "").strip()
     client = await session.get(models.Client, client_id) if client_id else None
     if client is None:
-        raise ValueError("指定模型前请先选择任务归属的 SoduWork")
+        raise ValueError("指定模型前请先选择任务归属的 Nekowork")
     from . import ai_exec
     ctx = await ai_exec.load(session, force=True)
     model_kind = aid if aid.startswith("local:") else (
@@ -291,7 +291,7 @@ async def _preflight_execution(session: AsyncSession, s,
     aid = str(getattr(s, "assignee_id", "") or "")
     if client is None:
         return {"state": "blocked", "mode": mode,
-                "message": "请先选择任务归属的 SoduWork",
+                "message": "请先选择任务归属的 Nekowork",
                 "checks": [{"key": "runner", "state": "blocked",
                             "label": "尚未选择执行设备"}]}
     if getattr(s, "owner_user_id", None) and s.owner_user_id != client.user_ref:
@@ -433,7 +433,7 @@ async def validate_execution(session: AsyncSession, s,
     client_id = str(getattr(s, "owner_client_id", "") or "")
     client = await session.get(models.Client, client_id) if client_id else None
     if client is None:
-        raise ValueError("请先选择任务归属的 SoduWork")
+        raise ValueError("请先选择任务归属的 Nekowork")
     task = SimpleNamespace(
         owner_client_id=client.id,
         project_id=(repo.project_id if repo else None),

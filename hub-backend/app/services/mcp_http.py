@@ -313,7 +313,7 @@ class HttpSession:
             try:
                 result = self._post("initialize", {
                     "protocolVersion": _PROTOCOL_VERSION, "capabilities": {},
-                    "clientInfo": {"name": "soduwork-hub", "title": "SoduWork Hub", "version": "1.12"},
+                    "clientInfo": {"name": "soduwork-hub", "title": "Nekowork Hub", "version": "1.12"},
                 })
                 negotiated = result.get("protocolVersion")
                 if not isinstance(negotiated, str) or negotiated not in _SUPPORTED_VERSIONS:

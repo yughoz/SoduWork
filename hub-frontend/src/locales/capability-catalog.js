@@ -23,14 +23,14 @@ export default {
   "保存开放策略": "Save access policy",
   "公司开放策略已保存，员工下一次执行生效": "Access policy saved. It applies to the next execution.",
   "已发现的 Skill": "Discovered Skills",
-  "自动扫描 SoduWork 内置、公司导入与标准技能目录": "Scans built-in Skills, company imports and standard skill directories",
+  "自动扫描 Nekowork 内置、公司导入与标准技能目录": "Scans built-in Skills, company imports and standard skill directories",
   "项": "items",
   "没有匹配的 Skill": "No matching Skills",
   "导入标准技能包，或调整搜索条件。": "Import a standard skill package or adjust your search.",
   "能力列表，可滚动": "Capability list, scrollable",
   "暂无用途说明": "No description yet",
   "未开放": "Disabled",
-  "台 SoduWork 在用": "SoduWork devices using this",
+  "台 Nekowork 在用": "Nekowork devices using this",
   "目标 Runner 也必须安装同名 Skill；建议导入公司能力库固化版本": "The target Runner must have the same Skill installed. Import it into the company catalog to pin its version.",
   "需执行机同名能力": "Matching Skill required on Runner",
   "有环境要求": "Environment requirements",
@@ -41,7 +41,7 @@ export default {
   "公司能力库": "Company catalog",
   "本机技能库": "Local skill library",
   "通用目录": "Standard directory",
-  "SoduWork 内置": "Built into SoduWork"
+  "Nekowork 内置": "Built into Nekowork"
 }
 
 export const ja = {
@@ -68,14 +68,14 @@ export const ja = {
   "保存开放策略": "公開ポリシーを保存",
   "公司开放策略已保存，员工下一次执行生效": "公開ポリシーを保存しました。従業員の次回実行から適用されます。",
   "已发现的 Skill": "検出された Skill",
-  "自动扫描 SoduWork 内置、公司导入与标准技能目录": "SoduWork 内蔵、組織のインポート、標準 Skill ディレクトリを自動検出",
+  "自动扫描 Nekowork 内置、公司导入与标准技能目录": "Nekowork 内蔵、組織のインポート、標準 Skill ディレクトリを自動検出",
   "项": "件",
   "没有匹配的 Skill": "一致する Skill がありません",
   "导入标准技能包，或调整搜索条件。": "標準 Skill パッケージをインポートするか、検索条件を変更してください。",
   "能力列表，可滚动": "能力一覧、スクロール可能",
   "暂无用途说明": "用途の説明はありません",
   "未开放": "未公開",
-  "台 SoduWork 在用": "台の SoduWork で使用中",
+  "台 Nekowork 在用": "台の Nekowork で使用中",
   "目标 Runner 也必须安装同名 Skill；建议导入公司能力库固化版本": "対象 Runner にも同名の Skill が必要です。組織の能力ライブラリへのインポートでバージョンを固定できます。",
   "需执行机同名能力": "実行端末に同名 Skill が必要",
   "有环境要求": "環境要件あり",
@@ -86,7 +86,7 @@ export const ja = {
   "公司能力库": "組織の能力ライブラリ",
   "本机技能库": "ローカル Skill ライブラリ",
   "通用目录": "共通ディレクトリ",
-  "SoduWork 内置": "SoduWork 内蔵"
+  "Nekowork 内置": "Nekowork 内蔵"
 };
 
 export const ko = {
@@ -113,14 +113,14 @@ export const ko = {
   "保存开放策略": "공개 정책 저장",
   "公司开放策略已保存，员工下一次执行生效": "공개 정책이 저장되었습니다. 직원의 다음 실행부터 적용됩니다.",
   "已发现的 Skill": "발견된 Skill",
-  "自动扫描 SoduWork 内置、公司导入与标准技能目录": "SoduWork 기본 제공 Skill, 조직에서 가져온 Skill 및 표준 Skill 디렉터리 자동 검색",
+  "自动扫描 Nekowork 内置、公司导入与标准技能目录": "Nekowork 기본 제공 Skill, 조직에서 가져온 Skill 및 표준 Skill 디렉터리 자동 검색",
   "项": "건",
   "没有匹配的 Skill": "일치하는 Skill 없음",
   "导入标准技能包，或调整搜索条件。": "표준 Skill 패키지를 가져오거나 검색 조건을 변경하세요.",
   "能力列表，可滚动": "기능 목록, 스크롤 가능",
   "暂无用途说明": "용도 설명 없음",
   "未开放": "비공개",
-  "台 SoduWork 在用": "대의 SoduWork에서 사용 중",
+  "台 Nekowork 在用": "대의 Nekowork에서 사용 중",
   "目标 Runner 也必须安装同名 Skill；建议导入公司能力库固化版本": "대상 Runner에도 같은 이름의 Skill이 설치되어 있어야 합니다. 조직 기능 라이브러리로 가져와 버전을 고정하는 것이 좋습니다.",
   "需执行机同名能力": "실행 기기에 같은 이름의 Skill 필요",
   "有环境要求": "환경 요구 사항 있음",
@@ -131,5 +131,5 @@ export const ko = {
   "公司能力库": "조직 기능 라이브러리",
   "本机技能库": "로컬 Skill 라이브러리",
   "通用目录": "공통 디렉터리",
-  "SoduWork 内置": "SoduWork 기본 제공"
+  "Nekowork 内置": "Nekowork 기본 제공"
 };

@@ -94,11 +94,11 @@ function AddTaskModal({ pid, tasks, clients, onClose, onDone }) {
   const toggle = (id) => setDeps((x) => x.includes(id) ? x.filter((v) => v !== id) : [...x, id])
   async function add() {
     if (!title.trim()) return toast(tx("请填写需求标题"))
-    if (!target) return toast(tx("请选择接收需求的 SoduWork"))
+    if (!target) return toast(tx("请选择接收需求的 Nekowork"))
     setBusy(true); try { await api.addProjectTask(pid, { title: title.trim(), target, deps, triageStage: 'intake' }); onDone() } catch (e) { toast(tx("需求没有创建：") + e.message) } finally { setBusy(false) }
   }
   return <Modal scope="project-governance" title={tx("添加项目需求")} icon="ticket" wide onClose={onClose} foot={<><button className="btn btn-ghost" onClick={onClose}>{tx("取消")}</button><button className="btn btn-primary" disabled={busy} onClick={add}>{tx("创建需求")}</button></>}>
-    <div className="pg-form-grid"><Field label={tx("需求标题")} wide><input autoFocus className="f-in" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={tx("例如：完成前端交互开发与自测")} /></Field><Field label={tx("接收终端")} wide><SelectMenu className="f-in" value={target} onChange={(e) => setTarget(e.target.value)}><option value="">{tx("选择 SoduWork…")}</option>{clients.map((c) => <option key={c.id} value={c.id}>{c.name || c.id}{c.online ? '' : tx(" · 离线")}</option>)}</SelectMenu></Field></div>
+    <div className="pg-form-grid"><Field label={tx("需求标题")} wide><input autoFocus className="f-in" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={tx("例如：完成前端交互开发与自测")} /></Field><Field label={tx("接收终端")} wide><SelectMenu className="f-in" value={target} onChange={(e) => setTarget(e.target.value)}><option value="">{tx("选择 Nekowork…")}</option>{clients.map((c) => <option key={c.id} value={c.id}>{c.name || c.id}{c.online ? '' : tx(" · 离线")}</option>)}</SelectMenu></Field></div>
     {tasks.length > 0 && <section className="pg-dependencies"><b>{tx("前置需求")}</b><p>{tx("新需求进入需求池待整理；澄清后设为待交付。选定的前置需求交付后，才能安排执行。")}</p><div>{tasks.map((t) => <button type="button" key={t.id} className={deps.includes(t.id) ? 'on' : ''} onClick={() => toggle(t.id)}><i />{t.title}</button>)}</div></section>}
   </Modal>
 }
@@ -127,7 +127,7 @@ function RepoEditor({ repo, isNew, dfDefault, dfSteps, onCancel, onSave }) {
         <Field label={tx("Git 仓库地址")} wide><input className="f-in" value={form.gitUrl || ''} onChange={set('gitUrl')} placeholder="https://gitlab.example.com/team/repo.git" /></Field><Field label={tx("基线分支")}><input className="f-in" value={form.branch || ''} onChange={set('branch')} placeholder="main" /></Field><Field label={tx("工作目录内的相对子目录")}><input className="f-in" value={form.localDir || ''} onChange={set('localDir')} placeholder={tx("例如：apps/web")} /></Field>
         <Field label={tx("运行与验证说明")} wide><textarea className="f-in" rows="4" value={form.note || ''} onChange={set('note')} placeholder={tx("告诉 AI 如何启动、测试和验收这个模块，例如：npm run dev；npm test")} /></Field>
       </div></>}
-      {tab === 'delivery' && <><div className="pg-section-title"><b>{tx("AI 完成后的交付动作")}</b><span>{tx("工作副本与合并副本必须隔离，避免未提交改动污染交付。")}</span></div><div className="pg-delivery-status"><StatusChip ok={form.serverDir && form.mergeBranch} label={form.serverDir && form.mergeBranch ? tx("自动合并至 {0}", [form.mergeBranch]) : tx("尚未启用自动合并")} /><StatusChip ok={form.aiWorkDir} label={form.aiWorkDir ? tx("支持服务端自动执行") : tx("仅支持在线终端执行")} /></div><div className="pg-form-grid"><Field label={tx("服务端干净仓库路径")} wide><input className="f-in" value={form.serverDir || ''} onChange={set('serverDir')} placeholder={tx("用于合并的干净仓库副本路径")} /></Field><Field label={tx("目标分支")}><input className="f-in" value={form.mergeBranch || ''} onChange={set('mergeBranch')} placeholder="develop / main" /></Field><Field label={tx("AI 自动执行工作目录")}><input className="f-in" value={form.aiWorkDir || ''} onChange={set('aiWorkDir')} placeholder={tx("必须与上面的合并仓库分开")} /></Field></div><div className="pg-callout"><Icon name="shield" /><div><b>{tx("交付判定")}</b><span>{tx("配置前两项后，AI push 成功不等于交付；SoduWork 会在合并成功后才关闭本阶段，冲突则转为可处理异常。")}</span></div></div></>}
+      {tab === 'delivery' && <><div className="pg-section-title"><b>{tx("AI 完成后的交付动作")}</b><span>{tx("工作副本与合并副本必须隔离，避免未提交改动污染交付。")}</span></div><div className="pg-delivery-status"><StatusChip ok={form.serverDir && form.mergeBranch} label={form.serverDir && form.mergeBranch ? tx("自动合并至 {0}", [form.mergeBranch]) : tx("尚未启用自动合并")} /><StatusChip ok={form.aiWorkDir} label={form.aiWorkDir ? tx("支持服务端自动执行") : tx("仅支持在线终端执行")} /></div><div className="pg-form-grid"><Field label={tx("服务端干净仓库路径")} wide><input className="f-in" value={form.serverDir || ''} onChange={set('serverDir')} placeholder={tx("用于合并的干净仓库副本路径")} /></Field><Field label={tx("目标分支")}><input className="f-in" value={form.mergeBranch || ''} onChange={set('mergeBranch')} placeholder="develop / main" /></Field><Field label={tx("AI 自动执行工作目录")}><input className="f-in" value={form.aiWorkDir || ''} onChange={set('aiWorkDir')} placeholder={tx("必须与上面的合并仓库分开")} /></Field></div><div className="pg-callout"><Icon name="shield" /><div><b>{tx("交付判定")}</b><span>{tx("配置前两项后，AI push 成功不等于交付；Nekowork 会在合并成功后才关闭本阶段，冲突则转为可处理异常。")}</span></div></div></>}
       {tab === 'flow' && <><div className="pg-section-title"><b>{tx("该仓库的研发规则")}</b><span>{tx("只配置例外项，其余继承企业默认流程。")}</span></div><div className="pg-flow-panel"><div><small>{tx("当前生效策略")}</small><DevFlowSummary cfg={form.devFlow} inherit={dfDefault} steps={dfSteps} /></div><div><button className="btn btn-ghost" onClick={() => setFlowOpen(true)}><Icon name="pencil" />{tx("编辑覆盖项")}</button>{!isNew && <DevFlowPreview cfg={form.devFlow} repoId={repo.id} />}</div></div>{flowOpen && <DevFlowModal value={form.devFlow || {}} inherit={dfDefault} defaultSteps={dfSteps} repoId={repo.id} title={tx("研发规则 · ") + (form.name || tx("新仓库"))} onClose={() => setFlowOpen(false)} onSave={(v) => { setForm({ ...form, devFlow: v }); setFlowOpen(false); toast(tx("规则已更新，保存仓库后生效")) }} />}</>}
       {tab === 'skills' && <>{isNew ? <EmptyPanel icon="plug" title={tx("保存仓库后配置能力")} text={tx("企业 Skill 会默认继承；仓库创建后可在这里增加或取消专属能力。")} /> : <RepoSkills repoId={repo.id} repoName={form.name} />}</>}
     </div>
@@ -195,7 +195,7 @@ function CatalogRepoModal({ pid, clients, onClose, onDone }) {
 
   async function sync() {
     if (!sourceId) return toast(tx("请先接入 GitLab 代码源"))
-    if (!clientId) return toast(tx("请选择保存了代码账号的 SoduWork"))
+    if (!clientId) return toast(tx("请选择保存了代码账号的 Nekowork"))
     setSyncing(true)
     try {
       const result = await api.syncRepositoryCatalog(sourceId, clientId)
@@ -224,7 +224,7 @@ function CatalogRepoModal({ pid, clients, onClose, onDone }) {
     <div className="pg-catalog-lead"><div><b>{tx("选择真实代码资产，再指定这个项目使用的分支")}</b><span>{tx("同一个远程仓库可以服务多个项目；每个项目独立保存工作分支、合并目标与研发规则。")}</span></div>{canSync && <button className="btn btn-ghost btn-sm" disabled={syncing || !sourceId} onClick={sync}><Icon name="refresh" />{syncing ? tx("同步中…") : tx("同步目录")}</button>}</div>
     <div className="pg-catalog-source">
       <Field label={tx("代码源")}><SelectMenu className="f-in" value={sourceId} onChange={(e) => setSourceId(e.target.value)}><option value="">{tx("选择 GitLab…")}</option>{sources.map((item) => <option key={item.id} value={item.id}>{item.name} · {String(item.type).toUpperCase()}</option>)}</SelectMenu></Field>
-      <Field label={tx("用于读取的代码账号")}><SelectMenu className="f-in" value={clientId} onChange={(e) => setClientId(e.target.value)}><option value="">{tx("选择 SoduWork…")}</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name || client.id}{client.online ? tx(" · 在线") : tx(" · 离线")}</option>)}</SelectMenu></Field>
+      <Field label={tx("用于读取的代码账号")}><SelectMenu className="f-in" value={clientId} onChange={(e) => setClientId(e.target.value)}><option value="">{tx("选择 Nekowork…")}</option>{clients.map((client) => <option key={client.id} value={client.id}>{client.name || client.id}{client.online ? tx(" · 在线") : tx(" · 离线")}</option>)}</SelectMenu></Field>
     </div>
     {!sources.length ? <EmptyPanel icon="plug" title={tx("还没有可用代码源")} text={tx("请先在「系统集成」接入 GitLab，然后回到这里同步仓库目录。")} /> : <div className="pg-catalog-layout">
       <section className="pg-catalog-browser">
@@ -293,7 +293,7 @@ function RepoSection({ pid, repos, loading, reload, clients, projects }) {
     })}</div>}
     {catalogOpen && <CatalogRepoModal pid={pid} clients={clients || []} onClose={() => setCatalogOpen(false)} onDone={async () => { setCatalogOpen(false); await reload() }} />}
     {copying && <CopyRepoModal repo={copying} pid={pid} projects={projects || []} onClose={() => setCopying(null)} onDone={async () => { setCopying(null); await reload() }} />}
-    {del && <Confirm title={tx("删除代码仓库")} text={tx("确定从项目中移除「") + del.name + tx("」？只删除 SoduWork 中的登记信息，不会修改远程代码。")} danger confirmText={tx("删除登记")} onConfirm={async () => { await api.deleteRepo(del.id); setDel(null); reload() }} onClose={() => setDel(null)} />}
+    {del && <Confirm title={tx("删除代码仓库")} text={tx("确定从项目中移除「") + del.name + tx("」？只删除 Nekowork 中的登记信息，不会修改远程代码。")} danger confirmText={tx("删除登记")} onConfirm={async () => { await api.deleteRepo(del.id); setDel(null); reload() }} onClose={() => setDel(null)} />}
   </section>
 }
 

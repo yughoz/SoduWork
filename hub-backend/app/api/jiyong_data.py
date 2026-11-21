@@ -18,7 +18,7 @@ router = APIRouter(prefix='/api/v1/jiyong', tags=['jiyong-data'])
 async def owner(session, client):
     user = await session.get(User, str(client.user_ref or ''))
     if not user or not user.is_active or user.account_deleted_at:
-        raise HTTPException(403, '请先登录有效的 SoduWork 账号')
+        raise HTTPException(403, '请先登录有效的 Nekowork 账号')
     # Departments are mutable. Bind to the company root so an internal transfer
     # does not strand the same user's data; moving company is a new boundary.
     current, seen = str(user.org_id or ''), set()

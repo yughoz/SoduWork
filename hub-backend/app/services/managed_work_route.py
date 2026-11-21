@@ -200,7 +200,7 @@ async def start(session: AsyncSession, task, *, binding_id: str = "",
         task_events.record(session, task.id, "plugin.route_blocked", {
             "bindingId": str(plan["binding"].id), "error": str(exc)[:500],
             "summary": "工程需求工作流没有启动，已阻止退回普通 AI 直派",
-        }, actor=actor_name or "SoduWork")
+        }, actor=actor_name or "Nekowork")
         await session.commit()
         raise ManagedWorkflowError(str(exc)) from exc
 
@@ -208,8 +208,8 @@ async def start(session: AsyncSession, task, *, binding_id: str = "",
         "pluginKey": str(plan["plugin"].key or ""), "runId": run.id,
         "bindingId": str(plan["binding"].id), "repoId": plan["repoId"],
         "summary": "需求已进入项目工作流，后续按门禁、合并、发布与验收推进",
-        "by": actor_name or "SoduWork",
-    }, actor=actor_name or "SoduWork")
+        "by": actor_name or "Nekowork",
+    }, actor=actor_name or "Nekowork")
     await session.commit()
     return {
         "ok": True, "identifier": run.id, "runId": run.id,

@@ -14,7 +14,7 @@ export function captureOutcome(capture) {
   const state = { reason: undefined };
   const methods = ['beginResponse', 'restartAttempt', 'observeFinishReason'];
   if (methods.some(method => typeof capture?.[method] !== 'function')) {
-    throw new Error('Qwen Code native outcome interface is unavailable; update SoduWork.');
+    throw new Error('Qwen Code native outcome interface is unavailable; update Nekowork.');
   }
   for (const method of methods) {
     const original = capture?.[method];
@@ -31,7 +31,7 @@ export function captureOutcome(capture) {
 
 export function promptOutcome(result, capture, signal) {
   const state = outcomes.get(capture);
-  if (!state) throw new Error('Qwen Code native outcome capture is unavailable; update SoduWork.');
+  if (!state) throw new Error('Qwen Code native outcome capture is unavailable; update Nekowork.');
   // Cancellation, native session budgets, and genuine errors keep their own
   // meanings. Only an actual final model MAX_TOKENS replaces claimed success.
   if (signal?.aborted || result?.stopReason !== 'end_turn' || state.reason !== 'MAX_TOKENS') return result;
@@ -60,7 +60,7 @@ const PROMPT = 'const result=await this.#executePrompt(params,pendingSend,respon
 const RECOVERY = 'rollbackRecoveryAttempt();debugLogger26.warn(`Recovery attempt ${recoveryCount} failed: ${recoveryError}`);yield{type:"chunk",value:{candidates:[{content:{role:"model",parts:[]},finishReason:FinishReason.STOP}]}};break';
 
 function unsupported() {
-  return new Error('Qwen Code ACP outcome interface is unsupported; update SoduWork before running this runtime.');
+  return new Error('Qwen Code ACP outcome interface is unsupported; update Nekowork before running this runtime.');
 }
 
 function replaceOnce(source, before, after) {

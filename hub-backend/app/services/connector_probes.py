@@ -86,7 +86,7 @@ async def probe_managed(spec: dict, timeout: int = 25,
         one["startupTimeoutSeconds"])
     if one.get("type") == "http" and not run_on_runner:
         result = await asyncio.to_thread(mcp.probe_sync, one, timeout)
-        return {**connector_health.metadata(result), **result, "runOn": "hub", "target": "SoduWork Hub"}
+        return {**connector_health.metadata(result), **result, "runOn": "hub", "target": "Nekowork Hub"}
 
     from . import runner_hub
     runner = preferred_runner or runner_hub.pick_for("")

@@ -7,7 +7,7 @@ The service keeps three boundaries explicit:
 3. an accepted proposal cannot silently rewrite a live workflow.  It becomes ``applied`` only
    after an independently imported and approved immutable plugin version is linked to it.
 
-That separation lets SoduWork learn from every kind of work without turning one person's feedback
+That separation lets Nekowork learn from every kind of work without turning one person's feedback
 into uncontrolled enterprise-wide behaviour.
 """
 from __future__ import annotations

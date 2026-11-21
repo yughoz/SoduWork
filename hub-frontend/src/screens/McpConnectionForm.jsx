@@ -44,7 +44,7 @@ function AutoGrowTextarea({ value, onChange, minRows = 2, maxRows = 15, classNam
 
 export function McpForm({ initial, template, onClose, onSave, busy, publishLabel, extraAction }) {
   useLocale()
-  template = window.SoduWorkConnectorConfig.apiTemplate(initial) || template
+  template = window.NekoworkConnectorConfig.apiTemplate(initial) || template
   const [v, setV] = useState(() => ({ ...blank(), ...initial }))
   const [argsText, setArgsText] = useState(() => formatArguments(initial?.args))
   const [envText, setEnvText] = useState(toPairs(initial?.env))
@@ -110,7 +110,7 @@ export function McpForm({ initial, template, onClose, onSave, busy, publishLabel
         onChange={e => setEnv(f.key, String(e.target.checked))} /><span>{f.label}{f.key === 'ALLOW_WRITES' && <small>{tx('仅在需要创建、修改或发送内容时开启')}</small>}</span></label>
     : <label key={f.key} className="df-field"><span className="f-lbl">{f.label}{!f.required && <em>{tx('选填')}</em>}</span>
         <input className="f-in" type={f.secret ? 'password' : 'text'} autoComplete="off" value={env[f.key] || ''}
-          onPaste={e => { const value = window.SoduWorkConnectorConfig.credentialPaste(f.key, e.clipboardData.getData('text/plain'));
+          onPaste={e => { const value = window.NekoworkConnectorConfig.credentialPaste(f.key, e.clipboardData.getData('text/plain'));
             if (value !== null) { e.preventDefault(); setEnv(f.key, value) } }}
           onChange={e => setEnv(f.key, e.target.value)} placeholder={f.example || ''} /></label>
   return (

@@ -179,7 +179,7 @@ function EnrollPanel({ organizations, runner, onDone, onClose }) {
           <small>{editing ? tx("更新服务范围并生成一把新钥匙") : tx("登记服务范围后生成装机命令")}</small></div>
         <button className="btn btn-ghost xs" onClick={onClose}>{tx("取消")}</button>
       </div>
-      <p className="rb-hint">{tx("给构建机、服务器、没装 SoduWork 客户端的电脑用。独立执行机必须归属一个组织， 只接受该组织及下属部门的需求，不会成为全公司的公共资源。")}</p>
+      <p className="rb-hint">{tx("给构建机、服务器、没装 Nekowork 客户端的电脑用。独立执行机必须归属一个组织， 只接受该组织及下属部门的需求，不会成为全公司的公共资源。")}</p>
       {editing && <div className="rb-warn"><Icon name="alert" />{tx("提交后旧钥匙立即作废， 需要在目标机器上使用新命令重新安装。")}</div>}
       <div className="rb-form">
         <div className="rb-wide">
@@ -475,7 +475,7 @@ export default function RunnerBoard() {
                     <td><RunnerCapabilities report={r.capabilities} row={r}
                       job={componentJobs[r.runnerId + '::office']} onInstall={(row, key) => setConfirm({
                         title: tx("安装办公组件"),
-                        text: tx("在「") + (row.label || row.runnerId) + tx("」上安装并测通办公文档组件？组件使用 SoduWork 审核的固定版本，失败不会替换当前版本。"),
+                        text: tx("在「") + (row.label || row.runnerId) + tx("」上安装并测通办公文档组件？组件使用 Nekowork 审核的固定版本，失败不会替换当前版本。"),
                         run: () => { void installComponent(row, key) },
                       })} /></td>
                     <td className="rb-action-cell"><div className="rb-acts admin-row-actions">

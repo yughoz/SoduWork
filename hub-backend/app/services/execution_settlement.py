@@ -160,7 +160,7 @@ async def _settle_terminal(session: AsyncSession, task_id: str, ref: str,
                 "assigneeName": str(route.get("assigneeName") or "")[:120],
             }
             task_events.record(
-                session, task.id, ai_exec.EV_DISPATCH_FAILED, failure, actor="SoduWork")
+                session, task.id, ai_exec.EV_DISPATCH_FAILED, failure, actor="Nekowork")
             await task_status.mark(session, task, "todo", why="AI 执行失败")
         await project_context.record_completion(
             session, task, row, {"done": False, "error": error}, {})
@@ -235,7 +235,7 @@ async def _settle_terminal(session: AsyncSession, task_id: str, ref: str,
             receipt["code"] = await code_delivery.check(
                 session,
                 task,
-                who="SoduWork",
+                who="Nekowork",
                 force=True,
                 branch_hint=str(status.get("gitRemoteBranch") or status.get("gitBranch") or ""),
                 head_hint=str(status.get("gitHead") or ""),

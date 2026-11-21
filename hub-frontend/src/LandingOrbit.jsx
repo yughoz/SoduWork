@@ -29,7 +29,7 @@ export default function LandingOrbit() {
         <circle className="orbit-traveler traveler-pink" cx="34" cy="250" r="4" />
       </g>
     </svg>
-    <div className="public-brand-core"><img src="/soduwork.png" alt="" /><b>SoduWork</b></div>
+    <div className="public-brand-core"><img src="/soduwork.png" alt="" /><b>Nekowork</b></div>
     <span className="public-orbit-topic topic-chat"><Glyph name="chat" size={20} />{tx('对话与成果')}</span>
     <span className="public-orbit-topic topic-team"><Glyph name="team" size={20} />{tx('需求协作')}</span>
     <span className="public-orbit-topic topic-auto"><Glyph name="sparkle" size={20} />{tx('自动化')}</span>

@@ -1,5 +1,5 @@
 """Task CRUD, batch updates, completed-task cleanup and handoffs. Writes publish WebSocket events
-to affected SoduWork clients."""
+to affected Nekowork clients."""
 import logging
 from datetime import datetime, timezone
 from types import SimpleNamespace
@@ -396,7 +396,7 @@ async def parse_task_text(session: AsyncSession, text: str, client=None, model: 
             "    · %s ＝ %s（%s）" % (
                 row["key"], row["name"], row["desc"])
             for row in flows[:20])
-        or "    （这台 SoduWork 上没有可用的流程，flow 一律填空字符串）",
+        or "    （这台 Nekowork 上没有可用的流程，flow 一律填空字符串）",
         repos=_NL.join("    · %s" % row for row in repos)
         or "    （没有登记工程，repo 一律省略）",
     )

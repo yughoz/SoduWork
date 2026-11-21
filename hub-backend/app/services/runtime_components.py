@@ -39,7 +39,7 @@ CATALOG: dict[str, dict] = {
     },
     "browser": {
         "key": "browser", "label": "浏览与检索", "kind": "prerequisite",
-        "summary": "使用 SoduWork 内置浏览器桥接；需要 Node 22+ 与 Chrome/Edge。",
+        "summary": "使用 Nekowork 内置浏览器桥接；需要 Node 22+ 与 Chrome/Edge。",
         "installable": False,
     },
     "computer": {
@@ -418,7 +418,7 @@ def _install(jid: str, key: str) -> None:
     checks = {"version": version, "dist.integrity": spec["integrity"],
               "repository.url": spec["repository"], "license": spec["license"]}
     if code != 0 or any(str(meta.get(k) or "") != str(v) for k, v in checks.items()):
-        _done(jid, False, "组件来源或完整性指纹与 SoduWork 发布清单不一致，已拒绝安装")
+        _done(jid, False, "组件来源或完整性指纹与 Nekowork 发布清单不一致，已拒绝安装")
         return
 
     root = _root()

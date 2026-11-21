@@ -35,7 +35,7 @@ async def enqueue_reply(session, inbox, kind, text):
     # Keep platform limits and delivery order stable across retries and worker restarts.
     text = str(text)
     if len(text) > 14000:
-        text = text[:13920] + "\n\n内容较长，完整结果请在 SoduWork 原会话查看。"
+        text = text[:13920] + "\n\n内容较长，完整结果请在 Nekowork 原会话查看。"
     connection = await session.get(im.IMConnection, inbox.connection_id)
     compact = connection and connection.provider == "wecom"
     limit = 2000 if compact else (1900 if connection and connection.provider == "discord" else 3500)
@@ -120,7 +120,7 @@ async def accept(session, connection, event):
     elif connection.provider in {"slack", "teams", "feishu", "dingtalk"}:
         continuation = "继续在此会话或已配对话题内发送文字；群聊请提及机器人"
     await enqueue_reply(session, inbox, "paired" if paired else "received",
-        "已绑定你的 SoduWork 会话。" + continuation + "；执行机离线时消息会等待上线。" if paired else
+        "已绑定你的 Nekowork 会话。" + continuation + "；执行机离线时消息会等待上线。" if paired else
         "已收到，等待执行。执行机离线或原会话忙碌时会排队，结果将在这里回复。")
     try:
         await session.commit()

@@ -60,7 +60,7 @@ async def my_skills(client: Client = Depends(current_client),
                or s.get("scope") == "local"}
     mine = skill_preferences.selected_names(client, [s for s in found if s["name"] in visible])
     # Never leak Hub-local paths to a client. Availability on the Hub is not
-    # the same thing as installation on this SoduWork/Runner; the client combines
+    # the same thing as installation on this Nekowork/Runner; the client combines
     # this portable contract with its verified local cache.
     out = [sk.public_view(s, enabled=s["name"] in mine)
            for s in found if s["name"] in visible]
@@ -308,7 +308,7 @@ async def get_daily_report(
     from ..services import daily_report as dr
     u = await _actor_user(session, client)
     if u is None:
-        raise HTTPException(status_code=400, detail="本 SoduWork 未绑定用户，请让管理员分配归属")
+        raise HTTPException(status_code=400, detail="本 Nekowork 未绑定用户，请让管理员分配归属")
     day = (date or "").strip() or dr.today_str()
     from sqlalchemy import select as _sel
     from ..models import DailyReport
@@ -331,7 +331,7 @@ async def gen_daily_report(
     from ..services import daily_report as dr
     u = await _actor_user(session, client)
     if u is None:
-        raise HTTPException(status_code=400, detail="本 SoduWork 未绑定用户，请让管理员分配归属")
+        raise HTTPException(status_code=400, detail="本 Nekowork 未绑定用户，请让管理员分配归属")
     day = (body.get("date") or "").strip() or dr.today_str()
     rep = await dr.generate_for(session, u, day, notify=False)
     if rep is None:
@@ -1274,7 +1274,7 @@ async def milestone_verdict(
               {"id": m.id, "title": m.title, "pass": ok, "note": note, "auto": auto}, actor=actor)
     # After accepting a batch milestone, propagate completion to its linked source task.
     # Keep source tasks from remaining indefinitely active after their batch milestone completes.
-    # Update only SoduWork state; externally imported tasks remain read-only in their source systems.
+    # Update only Nekowork state; externally imported tasks remain read-only in their source systems.
     src = (getattr(m, "src_task_id", "") or "").strip()
     if src and ok:
         st = await session.get(Task, src)
@@ -1380,7 +1380,7 @@ async def ai_status_task(
             scm_hint = ({"provider": "runner", "runnerId": str(d.get("runnerId") or ""),
                          "ref": ref} if d.get("runnerId") else {})
             code = await cd.check(
-                session, t, who="SoduWork",
+                session, t, who="Nekowork",
                 branch_hint=str(s.get("gitRemoteBranch") or s.get("gitBranch") or ""),
                 head_hint=str(s.get("gitHead") or ""),
                 scm_hint=scm_hint)
@@ -1613,7 +1613,7 @@ async def ai_remind_task(
     client: Client = Depends(current_ai_client),
     session: AsyncSession = Depends(get_session),
 ):
-    """Remind the existing execution to return outputs as SoduWork attachments or accessible URLs;
+    """Remind the existing execution to return outputs as Nekowork attachments or accessible URLs;
     files left only in its workspace are not delivered.
     """
     import asyncio as _aio
@@ -1656,7 +1656,7 @@ async def reject_task_artifact(
         raise HTTPException(status_code=404, detail="需求不存在")
     me = await _actor_user(session, client)
     if me is None:
-        raise HTTPException(status_code=403, detail="本 SoduWork 未绑定用户，无法审核")
+        raise HTTPException(status_code=403, detail="本 Nekowork 未绑定用户，无法审核")
     creator = getattr(t, "created_by", None)
     if not creator:
         raise HTTPException(status_code=400, detail="这条需求没有记录创建人，无法判定审核权")
@@ -1804,7 +1804,7 @@ async def review_task_artifact(
         raise HTTPException(status_code=404, detail="需求不存在")
     me = await _actor_user(session, client)
     if me is None:
-        raise HTTPException(status_code=403, detail="本 SoduWork 未绑定用户，无法审核")
+        raise HTTPException(status_code=403, detail="本 Nekowork 未绑定用户，无法审核")
     creator = getattr(t, "created_by", None)
     if not creator:
         raise HTTPException(status_code=400, detail="这条需求没有记录创建人，无法判定审核权")

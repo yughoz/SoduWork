@@ -172,7 +172,7 @@ async def _record_pending(
             "exhausted": card.get("state") == "failed"}
 
 
-async def acknowledge_continuation(session, task_id, ref, submitted_at, *, actor="SoduWork",
+async def acknowledge_continuation(session, task_id, ref, submitted_at, *, actor="Nekowork",
                                   conversation_id="", turn_id="", message_id=""):
     """Consume feedback only for an accepted executor message submitted after rejection.
 
@@ -238,7 +238,7 @@ async def resume_after_rejection(
     *,
     artifact_version_id: str = "",
     request_id: str = "",
-    actor: str = "SoduWork",
+    actor: str = "Nekowork",
     fallback_on_missing_ref: bool = False,
     wait_for_executor: bool = False,
 ) -> dict:
@@ -376,7 +376,7 @@ async def return_to_backlog(
     feedback: str,
     *,
     request_id: str = "",
-    actor: str = "SoduWork",
+    actor: str = "Nekowork",
 ) -> dict:
     """Return a rejected requirement to unstarted status for manual scheduling without resuming the
     original AI. Workflow-owned tasks retain graph rollback semantics; preserve feedback rather
@@ -433,7 +433,7 @@ async def _finalize_pending(
         "requestId": str(card.get("requestId") or ""),
         "ref": str(card.get("ref") or ""),
         "attempts": card["attempts"], "reason": reason, "error": str(error)[:300],
-    }, actor=str(card.get("actor") or "SoduWork"))
+    }, actor=str(card.get("actor") or "Nekowork"))
     await session.commit()
     try:
         from . import task_access
@@ -474,7 +474,7 @@ async def _retry_one(session: AsyncSession, event_row: models.TaskEvent, *,
         session, task, str(pending.get("feedback") or ""),
         artifact_version_id=str(pending.get("versionId") or ""),
         request_id=str(pending.get("requestId") or ""),
-        actor=str(pending.get("actor") or "SoduWork"))
+        actor=str(pending.get("actor") or "Nekowork"))
     if result.get("started"):
         return "sent"
     if result.get("fallback") == "rework_pending":
@@ -488,7 +488,7 @@ async def _retry_one(session: AsyncSession, event_row: models.TaskEvent, *,
             from . import task_events
             task_events.record(session, task.id, "ai.rework_taken", {
                 "requestId": str(pending.get("requestId") or ""), "by": "workflow_owns",
-            }, actor=str(pending.get("actor") or "SoduWork"))
+            }, actor=str(pending.get("actor") or "Nekowork"))
             await session.commit()
         return "sent"
     # Permanent human-mode failures terminate without consuming additional retries.

@@ -138,7 +138,7 @@ async def _assert_client_in_scope(session: AsyncSession, user: User, client: Cli
         return
     vis = await _visible_client_ids(session, user)
     if vis is not None and client.id not in vis:
-        raise HTTPException(status_code=403, detail="无权管理该 SoduWork")
+        raise HTTPException(status_code=403, detail="无权管理该 Nekowork")
 
 
 def _org_mutation_error(exc: rbac.OrgMutationError) -> HTTPException:
@@ -466,7 +466,7 @@ async def delete_domain(
     return r
 
 
-# Scoped device fleet and SoduWork ownership.
+# Scoped device fleet and Nekowork ownership.
 
 @router.get("/clients")
 async def list_clients(
@@ -563,7 +563,7 @@ async def assign_client(
     """Assign a client to Client.user_ref; an empty userId returns it to the unassigned pool."""
     c = await session.get(Client, cid)
     if c is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, c)
     connection_changed = False
     replaced_desktops = []
@@ -579,7 +579,7 @@ async def assign_client(
         if not target.is_active or target.account_deleted_at:
             raise HTTPException(status_code=400, detail="目标用户不存在")
         if not c.secret_hash:
-            raise HTTPException(status_code=409, detail="这台 SoduWork 还没有提交设备密钥")
+            raise HTTPException(status_code=409, detail="这台 Nekowork 还没有提交设备密钥")
         if c.user_ref != target.id or c.auth_state != "active":
             connection_changed = True
             device_auth.activate(c, target)
@@ -608,10 +608,10 @@ async def activate_client(
 ):
     c = await session.get(Client, cid)
     if c is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, c)
     if not c.secret_hash:
-        raise HTTPException(status_code=409, detail="这台 SoduWork 还没有提交设备密钥，请先让客户端连接一次")
+        raise HTTPException(status_code=409, detail="这台 Nekowork 还没有提交设备密钥，请先让客户端连接一次")
     target = await session.get(User, body.userId) if body.userId else None
     if target is None or not target.is_active:
         raise HTTPException(status_code=400, detail="请选择一个可用的归属用户")
@@ -641,7 +641,7 @@ async def revoke_client(
 ):
     c = await session.get(Client, cid)
     if c is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, c)
     device_auth.revoke(c)
     await session.commit()
@@ -658,7 +658,7 @@ async def reset_client_enrollment(
 ):
     c = await session.get(Client, cid)
     if c is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, c)
     device_auth.reset_enrollment(c)
     await session.commit()
@@ -676,7 +676,7 @@ async def reset_client_secret(
     """Compatibility alias for the secure enrollment reset operation."""
     c = await session.get(Client, cid)
     if c is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, c)
     device_auth.reset_enrollment(c)
     await session.commit()
@@ -890,7 +890,7 @@ async def nudge_task(
     """Notify the current task holder with a desktop reminder without changing task state."""
     t = await _assert_task_in_scope(session, user, tid)
     if not t.owner_client_id:
-        raise HTTPException(status_code=400, detail="需求没有归属 SoduWork，没法催")
+        raise HTTPException(status_code=400, detail="需求没有归属 Nekowork，没法催")
     if t.status == "done":
         raise HTTPException(status_code=400, detail="需求已完成，不用催了")
     who = user.display_name or user.username
@@ -907,7 +907,7 @@ async def agent_run_task(
     user: User = Depends(require_perm("task.dispatch")),
     session: AsyncSession = Depends(get_session),
 ):
-    """Start a background SoduWork execution, attach outputs, and record timeline events. Reject
+    """Start a background Nekowork execution, attach outputs, and record timeline events. Reject
     duplicate starts while execution is active.
     """
     from ..services import agent_runner
@@ -975,7 +975,7 @@ async def get_dev_flow(user: User = Depends(require_perm("task.dispatch")),
             # Report the execution environment detected on the Runner; it is not an administrator setting.
             "env": ai_prompts.detect_env(),
             # Expose fixed constraints so administrators can distinguish them from configurable options.
-            "locked": ["不许合并到基线分支（合并由 SoduWork 做）",
+            "locked": ["不许合并到基线分支（合并由 Nekowork 做）",
                        "不许发布上线 / 连生产机 / 重启服务 / 动数据库",
                        "不许 force push、不许改已推历史",
                        "浏览器必须用随机高位端口 + 独立 user-data-dir",
@@ -1484,7 +1484,7 @@ async def create_subordinate_task(
         raise HTTPException(status_code=400, detail="请填需求标题")
     boxes = await _user_box_ids(session, uid)
     if not boxes:
-        raise HTTPException(status_code=400, detail="该下属还没有绑定 SoduWork，无法派需求")
+        raise HTTPException(status_code=400, detail="该下属还没有绑定 Nekowork，无法派需求")
     # Legacy assignment/acceptance templates are retired. Direct assignments use ordinary tasks.
     # The creator becomes the requester through create_task.default_requester and receives completion receipts.
     # Inbox rejection requests rework; mandatory acceptance gates require a plugin workflow.
@@ -1566,7 +1566,7 @@ async def assign_inbox_task(
         code = {"already_claimed": 409, "not_found": 404}.get(r.get("reason"), 400)
         msg = {"not_found": "需求不存在", "already_claimed": "该需求已被认领或已派走",
                "not_in_inbox": "该需求不在收件箱里", "out_of_scope": "该需求不在你的收件箱范围内",
-               "no_box": "该员工还没有绑定 SoduWork，无法分配"}.get(r.get("reason"), "分配失败")
+               "no_box": "该员工还没有绑定 Nekowork，无法分配"}.get(r.get("reason"), "分配失败")
         raise HTTPException(status_code=code, detail=msg)
     await audit.log(session, user, "task.assign", "task", tid, (r.get("task") or {}).get("title", ""),
                     {"toUserId": target.id, "toUser": target.display_name or target.username})
@@ -1606,7 +1606,7 @@ async def claim_my_inbox_task(
         code = {"already_claimed": 409, "not_found": 404}.get(r.get("reason"), 400)
         msg = {"unassigned": "你还未归属组织，无团队收件箱", "not_found": "需求不存在",
                "already_claimed": "该需求已被别人认领", "out_of_scope": "该需求不在你的团队收件箱内",
-               "no_box": "你还没有绑定 SoduWork，请让管理员把 SoduWork 分配给你"}.get(r.get("reason"), "认领失败")
+               "no_box": "你还没有绑定 Nekowork，请让管理员把 Nekowork 分配给你"}.get(r.get("reason"), "认领失败")
         raise HTTPException(status_code=code, detail=msg)
     return r
 
@@ -1621,7 +1621,7 @@ async def dispatch(
     clients immediately.
     """
     if not body.targets:
-        raise HTTPException(status_code=400, detail="请至少选择一个目标 SoduWork")
+        raise HTTPException(status_code=400, detail="请至少选择一个目标 Nekowork")
     vis = await _visible_client_ids(session, user)
     data = body.model_dump(exclude={"targets"})
     data["source"] = "平台下发"
@@ -1782,7 +1782,7 @@ async def list_ai_assignees(
     session: AsyncSession = Depends(get_session),
 ):
     """List dispatchable agents and squads with CLI types. Squad leaders select internal assignees;
-    SoduWork does not duplicate that routing.
+    Nekowork does not duplicate that routing.
     """
     import asyncio as _aio
 
@@ -2013,7 +2013,7 @@ async def create_binding(body: BindingCreate,
                          session: AsyncSession = Depends(get_session)):
     client = await session.get(Client, body.client_id)
     if client is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, client)
     result = await agg.create_binding(
         session, body.integration_id, body.external_actor, body.client_id)
@@ -2059,7 +2059,7 @@ async def assign_unassigned(task_id: str, body: AssignBody,
                             session: AsyncSession = Depends(get_session)):
     client = await session.get(Client, body.client_id)
     if client is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_in_scope(session, user, client)
     task = await session.get(Task, task_id)
     if task is not None and task.pool_org_id:

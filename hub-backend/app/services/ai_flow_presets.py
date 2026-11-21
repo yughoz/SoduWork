@@ -38,15 +38,15 @@ DEFAULT_STEPS: list[dict] = [
 # Insert the merge-request step after commit and push only when mr is enabled.
 # Do not include an empty merge-request step for workflows that do not use one.
 MR_STEP = {"key": "mr", "title": "提交合并请求（MR/PR）", "detail":
-           "把 `{work}` 向 `{target}` 提一个合并请求，标题写清做了什么、正文带上 SoduWork 任务号 {task}。\n"
-           "★**只提请求、不要自己合**——合进目标分支是 SoduWork（或评审人）的事。\n"
+           "把 `{work}` 向 `{target}` 提一个合并请求，标题写清做了什么、正文带上 Nekowork 任务号 {task}。\n"
+           "★**只提请求、不要自己合**——合进目标分支是 Nekowork（或评审人）的事。\n"
            "把 MR 链接写进回复。"}
 
 PRESETS: list[dict] = [
     {
         "id": "soduwork",
-        "name": "SoduWork 默认",
-        "desc": "分支 → 改 → 自测 → 自证 → 提交 push；合并交给 SoduWork。适合内网 GitLab、以 SoduWork 判交付。",
+        "name": "Nekowork 默认",
+        "desc": "分支 → 改 → 自测 → 自证 → 提交 push；合并交给 Nekowork。适合内网 GitLab、以 Nekowork 判交付。",
         "cfg": {"branch": "fix/{task}", "mr": "none", "commit": "", "steps": []},
     },
     {

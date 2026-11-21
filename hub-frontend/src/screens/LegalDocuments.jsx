@@ -27,7 +27,7 @@ function Preview({ draft, locale }) {
   const format = content.format || draft.format
   return <article className="legal-preview" translate="no" lang={locale}>
     {format !== 'html' && <h2>{content.title}</h2>}{draft.version && <small>{draft.version}</small>}
-    {format === 'html' ? <div className="sw-legal-html" dangerouslySetInnerHTML={{ __html: globalThis.SoduWorkLegalHtml.sanitize(DOMPurify, content.content) }} /> : format === 'markdown' ? <div dangerouslySetInnerHTML={{ __html: safeMarkup(content.content) }} /> : <div className="legal-plain">{content.content}</div>}
+    {format === 'html' ? <div className="sw-legal-html" dangerouslySetInnerHTML={{ __html: globalThis.NekoworkLegalHtml.sanitize(DOMPurify, content.content) }} /> : format === 'markdown' ? <div dangerouslySetInnerHTML={{ __html: safeMarkup(content.content) }} /> : <div className="legal-plain">{content.content}</div>}
   </article>
 }
 
@@ -92,16 +92,16 @@ function LegalEditor({ uiLocale }) {
     const apply = () => {
       let content = row.content
       if (previous === 'html') {
-        const html = globalThis.SoduWorkLegalHtml.sanitize(DOMPurify, content)
+        const html = globalThis.NekoworkLegalHtml.sanitize(DOMPurify, content)
         const converter = new TurndownService({ headingStyle: 'atx' }); converter.use(tables)
         if (next === 'markdown') content = converter.turndown(html)
         else {
-          const body = globalThis.SoduWorkLegalHtml.fragment(DOMPurify, html)
+          const body = globalThis.NekoworkLegalHtml.fragment(DOMPurify, html)
           body.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,tr,br').forEach(node => node.append('\n'))
           content = body.textContent
         }
       } else if (next === 'html') {
-        if (previous === 'markdown') content = globalThis.SoduWorkLegalHtml.sanitize(DOMPurify, marked.parse(content))
+        if (previous === 'markdown') content = globalThis.NekoworkLegalHtml.sanitize(DOMPurify, marked.parse(content))
         else { const node = document.createElement('p'); node.textContent = content; content = node.outerHTML }
       }
       change({ ...draft, translations: { ...draft.translations, [sourceLocale]: { ...row, format: next, content } } })
@@ -175,7 +175,7 @@ function LegalEditor({ uiLocale }) {
   }
   const locales = Object.keys(draft.translations)
   const filled = (row, key) => key === 'content' && (row.format || draft.format) === 'html'
-    ? !!globalThis.SoduWorkLegalHtml.fragment(DOMPurify, row.content).textContent.trim() : !!row[key]?.trim()
+    ? !!globalThis.NekoworkLegalHtml.fragment(DOMPurify, row.content).textContent.trim() : !!row[key]?.trim()
   const complete = !!draft.defaultLocale && locales.length > 0 && locales.every(key =>
     ['title', 'content', 'summary'].every(field => filled(draft.translations[key], field)))
   const ready = complete && !dirty && state?.revision > 0 && locales.every(key => reviewed.includes(key))

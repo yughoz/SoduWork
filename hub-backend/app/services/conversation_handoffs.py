@@ -46,7 +46,7 @@ def dispatch_id(row):
 async def owner(session, client):
     user = await session.get(User, client.user_ref or "")
     if not user or not user.is_active or client.auth_state != "active":
-        raise HTTPException(403, "请先登录有效的 SoduWork 账号")
+        raise HTTPException(403, "请先登录有效的 Nekowork 账号")
     return user
 
 
@@ -157,7 +157,7 @@ async def _targets(client, clients, orgs, allowed_runners=None, personal_clients
 
 _TARGET_REASONS = {
     "current_device": ("这是当前电脑，不能作为本次交接的云端执行机", "open_setup"),
-    "offline": ("执行机未连接；请检查它到当前 SoduWork 服务的网络和连接地址", "check_connection"),
+    "offline": ("执行机未连接；请检查它到当前 Nekowork 服务的网络和连接地址", "check_connection"),
     "update_required": ("执行机版本尚不支持会话交接，请更新 Runner", "update_runner"),
     "starting": ("执行机正在建立连接或探测可用 Agent，请稍后刷新", "wait"),
     "paused": ("执行机已暂停接单，请管理员恢复接单", "resume_dispatch"),
@@ -500,7 +500,7 @@ async def refresh(session, row):
                         "provider": "runner", "assigneeId": row.options["assigneeId"],
                         "assigneeCli": row.options["assigneeId"].rsplit(":", 1)[-1],
                         "model": row.options["model"], "healedFrom": "handoff-existence-probe"}
-                    task_events.record(session, task.id, ai_exec.EV_DISPATCHED, repaired, actor="SoduWork")
+                    task_events.record(session, task.id, ai_exec.EV_DISPATCHED, repaired, actor="Nekowork")
                     await execution_sessions.record_dispatch(session, task, repaired)
                     await session.commit()
                 # A negative STARTED probe is not safe to abort: an original

@@ -1,4 +1,4 @@
-"""Capabilities implemented by SoduWork itself.
+"""Capabilities implemented by Nekowork itself.
 
 These names deliberately live outside the administrator-managed MCP registry.
 They are still exposed through the same signed, per-turn plugin ticket and the
@@ -17,14 +17,14 @@ def is_virtual_mcp(name: str) -> bool:
 def virtual_spec(name: str) -> dict:
     key = str(name or "").strip()
     if key not in VIRTUAL_MCP_SERVERS:
-        raise ValueError("未知的 SoduWork 内置能力")
+        raise ValueError("未知的 Nekowork 内置能力")
     return {
         "type": "virtual",
         "builtin": True,
         "allowedTools": ["generate_video", "generate_image"],
         "toolTimeoutSeconds": 300,
         "startupTimeoutSeconds": 10,
-        "description": "SoduWork 内置媒体生成能力",
+        "description": "Nekowork 内置媒体生成能力",
     }
 
 
@@ -56,7 +56,7 @@ def virtual_tools(name: str) -> list[dict]:
         "name": "generate_video",
         "title": "生成可发布视频",
         "description": (
-            "根据脚本、分镜和平台要求生成视频文件，返回可在 SoduWork 中预览、下载和发布的 MP4/WEBM 成果。"
+            "根据脚本、分镜和平台要求生成视频文件，返回可在 Nekowork 中预览、下载和发布的 MP4/WEBM 成果。"
         ),
         "inputSchema": {
             "type": "object",

@@ -159,7 +159,7 @@ def _opencode_bin() -> str | None:
     cands = [os.path.join(root, "opencode-ai", *r.split("/")) for r in rels] if root else []
     # Keep an already-installed PATH binary usable as a compatibility path.
     # The managed binary remains preferred, while discovery still works for
-    # machines that installed OpenCode before SoduWork took over lifecycle setup.
+    # machines that installed OpenCode before Nekowork took over lifecycle setup.
     return _real_bin(cands, [exe, "opencode"])
 
 
@@ -175,7 +175,7 @@ def _bundled_pi_cli_js() -> str | None:
 
 
 def _bundled_pi_node() -> str | None:
-    """The packaged SoduWork executable can act as Node via ELECTRON_RUN_AS_NODE."""
+    """The packaged Nekowork executable can act as Node via ELECTRON_RUN_AS_NODE."""
     p = str(os.environ.get("SODUWORK_BUNDLED_NODE") or "").strip()
     return os.path.abspath(p) if p and os.path.isfile(p) else None
 
@@ -291,7 +291,7 @@ def _codex_args(sid: str, mode: str, ws: str | None, cfg: dict | None = None,
         for name, spec in servers.items():
             if not isinstance(spec, dict) or not spec.get("command"):
                 continue
-            # SoduWork's MCP bridge enforces plugin tool allowlists.
+            # Nekowork's MCP bridge enforces plugin tool allowlists.
             # Directly configuring raw servers would bypass allowedTools, so controlled calls use the shared bridge.
             if ("allowedTools" in spec or spec.get("enabledTools")
                     or spec.get("disabledTools")):
@@ -1079,7 +1079,7 @@ def _env_for(prof: dict, cfg: dict, runtime_ref: str = "", *, require_model: boo
     env["OPENCODE_CONFIG_CONTENT"] = json.dumps({
         "$schema": "https://opencode.ai/config.json",
         "provider": {"company": {
-            "npm": provider_pkg, "name": "SoduWork 模型服务",
+            "npm": provider_pkg, "name": "Nekowork 模型服务",
             "options": {"baseURL": base, **({"apiKey": "{env:SODUWORK_LLM_KEY}"} if key else {})},
             "models": {model: {"name": "公司 coding 模型",
                 "limit": {"context": context_limit, "output": min(output_limit, context_limit)},
@@ -1141,7 +1141,7 @@ def _friendly(msg: str) -> str:
     if "Not logged in" in m or "authentication_failed" in m or "/login" in m:
         return ("当前执行底座没有可用凭据（CLI 报 Not logged in）。"
                 "要么在这台机器上先把 CLI 登录好，要么给它配 API Key / 共享模型服务——"
-                "这一步得由人来定，SoduWork 不替你存密钥。")
+                "这一步得由人来定，Nekowork 不替你存密钥。")
     if "Incorrect API key" in m or "invalid_api_key" in m:
         return ("模型服务的密钥不对（网关退回 401）。去管理端「集成源 → 模型服务」核一下 Key。"
                 "原话：" + m[:200])

@@ -8,7 +8,7 @@ from . import access_policy
 from .local_base import _LOCK, _RUNS, _save_meta
 
 CONTINUATION = (
-    "[SoduWork internal permission transition] Continue the current task from the "
+    "[Nekowork internal permission transition] Continue the current task from the "
     "saved session and completed tool results. The user changed access permissions. "
     "Do not restart the original request or repeat completed operations. "
     "If an operation was interrupted or its result is uncertain, inspect its state "

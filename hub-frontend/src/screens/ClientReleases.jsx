@@ -403,7 +403,7 @@ function UploadModal({ onClose, onDone }) {
           <span className="cr-file-chip btn btn-ghost xs" aria-hidden="true">{tx("选择文件")}</span>
           <span className="cr-file-name">{installerName || tx("未选择任何文件")}</span>
         </span>
-        <small>{tx("SoduWork-x.y.z-Setup.exe / .dmg / .deb / .rpm / .tar.gz / .AppImage")} / SoduWork-Mobile-x.y.z.apk</small>
+        <small>{tx("Nekowork-x.y.z-Setup.exe / .dmg / .deb / .rpm / .tar.gz / .AppImage")} / Nekowork-Mobile-x.y.z.apk</small>
       </label>
       {error && <div className="cr-upload-error">{error}</div>}
     </div>

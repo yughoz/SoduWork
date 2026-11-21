@@ -251,7 +251,7 @@ async def upload_deployment_client_release(
             "runId": run.id, "targetId": run.target_id,
             "releaseId": release.id, "version": release.version,
             "created": created,
-        }, actor="SoduWork")
+        }, actor="Nekowork")
         await session.commit()
         return {"ok": True, "created": created, "release": result["clientRelease"]}
     finally:
@@ -368,7 +368,7 @@ async def check_update(
         await update_safety.release(session, attempt)
         attempt.state = "failed"
         attempt.progress = 0
-        attempt.error = f"Superseded by SoduWork {latest.version}"
+        attempt.error = f"Superseded by Nekowork {latest.version}"
         attempt.completed_at = datetime.now(timezone.utc)
         attempt = release = None
 
@@ -543,7 +543,7 @@ async def _assert_client_scope(session: AsyncSession, user: User, client: Client
         return
     users = await rbac.scoped_user_ids(session, scope) or set()
     if client.user_ref is not None and client.user_ref not in users:
-        raise HTTPException(status_code=403, detail="无权管理该 SoduWork")
+        raise HTTPException(status_code=403, detail="无权管理该 Nekowork")
 
 
 @admin_router.get("/client-releases")
@@ -704,7 +704,7 @@ async def list_client_attempts(
 ):
     client = await session.get(Client, client_id)
     if client is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_scope(session, user, client)
     rows = (await session.execute(
         select(ClientUpdateAttempt).where(ClientUpdateAttempt.client_id == client_id)
@@ -722,7 +722,7 @@ async def request_client_update(
 ):
     client = await session.get(Client, client_id)
     if client is None:
-        raise HTTPException(status_code=404, detail="SoduWork 不存在")
+        raise HTTPException(status_code=404, detail="Nekowork 不存在")
     await _assert_client_scope(session, user, client)
     current = str(client.app_version or "")
     if contract.parse_version(current) is None:

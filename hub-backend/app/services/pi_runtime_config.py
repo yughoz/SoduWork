@@ -114,7 +114,7 @@ def prepare(env: dict, data_root: str, llm: dict, context_window: int, runtime_r
         raise RuntimeError("当前模型已确认不支持工具调用，无法执行所选工具能力，请选择兼容模型")
     kind = llm.get("kind") or "openai-compat"
     provider = {
-        "name": "SoduWork 模型服务",
+        "name": "Nekowork 模型服务",
         "baseUrl": llm["base"],
         "api": "anthropic-messages" if kind == "anthropic" else "openai-completions",
         # Native Pi requires a configured key even for unauthenticated local endpoints.

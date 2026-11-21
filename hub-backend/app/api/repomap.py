@@ -58,12 +58,12 @@ async def upsert_binding(
     ext = str(body.get("externalRepo") or "").strip()
     rid = str(body.get("repoId") or "").strip()
     if not (iid and ext and rid):
-        raise HTTPException(status_code=400, detail="集成、平台工程标识、SoduWork 工程三样都要给")
+        raise HTTPException(status_code=400, detail="集成、平台工程标识、Nekowork 工程三样都要给")
     if await session.get(Integration, iid) is None:
         raise HTTPException(status_code=404, detail="集成不存在")
     repo = await session.get(Repo, rid)
     if repo is None:
-        raise HTTPException(status_code=404, detail="SoduWork 这边没有这个工程")
+        raise HTTPException(status_code=404, detail="Nekowork 这边没有这个工程")
     await _assert_repo_scope(session, user, repo)
     rows = (await session.execute(
         select(RepoBinding).where(RepoBinding.integration_id == iid))).scalars().all()
@@ -143,7 +143,7 @@ async def pending(
         g["count"] += 1
         if len(g["samples"]) < 3:
             g["samples"].append({"id": t.id, "title": t.title})
-    # Include available SoduWork repositories so the mapping form needs no additional request.
+    # Include available Nekowork repositories so the mapping form needs no additional request.
     repos = (await session.execute(select(Repo))).scalars().all()
     visible_repos = [repo for repo in repos
                      if await _repo_in_scope(session, user, repo)]

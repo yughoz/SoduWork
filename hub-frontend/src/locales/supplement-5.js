@@ -8,7 +8,7 @@ export default {
   "从列表删除「": "Remove “",
   "」，历史执行记录会保留。": "” from the list. Historical execution records are retained.",
   "，开放后员工可用": "; employees can use it once opened",
-  "台 SoduWork 在用": "SoduWork devices using it",
+  "台 Nekowork 在用": "Nekowork devices using it",
   "目标 Runner 也必须安装同名 Skill；建议导入公司能力库固化版本": "The target Runner must also have a Skill with this name. Import it into the company library to pin a version.",
   "需执行机同名能力": "Matching Runner capability required",
   "有环境要求": "Environment requirements apply",

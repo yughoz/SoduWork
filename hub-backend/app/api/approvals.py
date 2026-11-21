@@ -22,10 +22,10 @@ router = APIRouter(prefix="/api/v1/approvals", tags=["approvals"])
 
 async def _actor(session: AsyncSession, client: Client) -> User:
     if not client.user_ref:
-        raise HTTPException(status_code=403, detail="这台 SoduWork 还没有绑定用户，不能处理审批")
+        raise HTTPException(status_code=403, detail="这台 Nekowork 还没有绑定用户，不能处理审批")
     user = await session.get(User, client.user_ref)
     if user is None or not user.is_active:
-        raise HTTPException(status_code=403, detail="SoduWork 绑定的用户不存在或已停用")
+        raise HTTPException(status_code=403, detail="Nekowork 绑定的用户不存在或已停用")
     if user.is_super:
         user._perms = set(ALL_KEYS)
     elif user.role_id:

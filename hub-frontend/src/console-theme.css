@@ -1,4 +1,4 @@
-/* SoduWork admin palette — see docs/design/admin-ui-color-standard.md.
+/* Nekowork admin palette — see docs/design/admin-ui-color-standard.md.
    Shared tokens cover lazy-loaded screens; scoped primitives preserve their layouts. */
 :root, :root[data-theme="light"] {
   color-scheme: light;

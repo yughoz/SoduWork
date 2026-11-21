@@ -89,7 +89,7 @@ async def try_route(session: AsyncSession, task, *, aid: str = "", atype: str = 
     except Exception as exc:  # noqa: BLE001 - Routing failure must not block direct dispatch.
         task_events.record(session, task.id, "plugin.route_fallback", {
             "pluginKey": key, "error": str(exc)[:300],
-            "summary": "零活默认流程没起来，已退回直派"}, actor="SoduWork")
+            "summary": "零活默认流程没起来，已退回直派"}, actor="Nekowork")
         await session.commit()
         log.info("零活路由退回直派 task=%s key=%s: %s", task.id, key, type(exc).__name__)
         return None
@@ -97,7 +97,7 @@ async def try_route(session: AsyncSession, task, *, aid: str = "", atype: str = 
     task_events.record(session, task.id, "plugin.auto_routed", {
         "pluginKey": key, "runId": run.id, "requestedId": str(aid or "")[:180],
         "summary": "零活按默认流程执行（带验收关与交付证据）",
-        "by": actor_name or "SoduWork"}, actor=actor_name or "SoduWork")
+        "by": actor_name or "Nekowork"}, actor=actor_name or "Nekowork")
     await session.commit()
     return {"ok": True, "identifier": run.id, "runId": run.id,
             "provider": "plugin", "routedPlugin": key,

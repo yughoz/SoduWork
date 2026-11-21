@@ -35,7 +35,7 @@ export function settleTurnOutcome(driver, event, isAuthError, RequestError, mapS
 function replaceOnce(source, old, replacement) {
   const start = source.indexOf(old);
   if (start < 0 || source.indexOf(old, start + old.length) !== -1) {
-    throw new Error('Kimi ACP outcome interface is unsupported; update SoduWork before running this adapter.');
+    throw new Error('Kimi ACP outcome interface is unsupported; update Nekowork before running this adapter.');
   }
   return source.slice(0, start) + replacement + source.slice(start + old.length);
 }
@@ -44,7 +44,7 @@ export function transformSource(source, version) {
   const expected = SOURCE_HASHES.get(version);
   if (!expected || createHash('sha256').update(source).digest('hex') !== expected) {
     throw new Error('Kimi ACP outcome interface is unsupported (' + version
-      + '); update SoduWork before running this adapter.');
+      + '); update Nekowork before running this adapter.');
   }
   // The observable native event is on the existing stream, but this SDK's
   // typed registration table omits it. Add only its validated projection.
@@ -95,7 +95,7 @@ if (process.env.SODUWORK_KIMI_ACP_OUTCOME === '1') {
       }
       const loaded = nextLoad(url, context);
       if (loaded.format !== 'module' || loaded.source == null) {
-        throw new Error('Kimi ACP module format is unsupported; update SoduWork.');
+        throw new Error('Kimi ACP module format is unsupported; update Nekowork.');
       }
       const source = typeof loaded.source === 'string' ? loaded.source : Buffer.from(loaded.source).toString('utf8');
       return { ...loaded, source: transformSource(source, manifest.version) };

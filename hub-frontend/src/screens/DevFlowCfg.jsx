@@ -21,7 +21,7 @@ export const SHOT = localeMap(() => ([
   ['never', '不许拉浏览器截图', '改用「构建 + 在产物里核对 + curl 探活」自证。★Windows 上"起预览再拉 Chrome"常静默挂死，前端工程建议选它。'],
 ]))
 export const MR = localeMap(() => ([
-  ['none', '不建，SoduWork 直接合', 'AI 推完分支就收工，合并由 SoduWork 做。'],
+  ['none', '不建，Nekowork 直接合', 'AI 推完分支就收工，合并由 Nekowork 做。'],
   ['create', '建一个合并请求', 'AI 提 MR/PR 但不自己合，留给评审人。'],
   ['required', '必须建（没 MR 不算交完）', '强制走评审流程的公司选这个。'],
 ]))

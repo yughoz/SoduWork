@@ -6,7 +6,7 @@ def for_run(instruction: str) -> str:
     # details intact while making the dispatch intent explicit on both paths.
     return (
         "【执行已有自动化的本轮工作】\n"
-        "这条自动化已由 SoduWork 保存，现在是一次实际运行。"
+        "这条自动化已由 Nekowork 保存，现在是一次实际运行。"
         "请直接完成说明中的每次执行内容，并返回本轮结果。\n"
         "说明中如果还包含创建本自动化、命名、设置触发时间、初始暂停或启用等要求，"
         "这些属于已经处理的计划配置，不是本轮工作；不要再次创建本自动化，"

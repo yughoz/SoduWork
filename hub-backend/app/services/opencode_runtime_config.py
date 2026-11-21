@@ -112,5 +112,5 @@ def config_error_message(message: str) -> str:
             "--- jsonc input ---"))
             or re.search(r"\bconfig file at\b[^\r\n]*\bis not valid json(?:\(c\)|c)?(?=[:\s]|$)", text)):
         return ("OpenCode 执行组件配置无法解析，本轮尚未完成。"
-                "请检查 SoduWork 的模型配置或修复执行组件；个人 OpenCode 配置保持不变。")
+                "请检查 Nekowork 的模型配置或修复执行组件；个人 OpenCode 配置保持不变。")
     return ""

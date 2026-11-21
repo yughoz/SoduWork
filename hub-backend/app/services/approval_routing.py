@@ -330,7 +330,7 @@ async def _record_unassigned(session: AsyncSession, task: models.Task,
     task_events.record(session, task.id, "approval.unassigned", {
         "requestId": request.id, "action": request.action,
         "excluded": sorted(excluded)[:8],
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     if task.owner_client_id:
         try:
             from . import task_access
@@ -474,7 +474,7 @@ async def can_read_task_evidence(session: AsyncSession, task: models.Task,
 
 
 async def reroute_pending_for_project(session: AsyncSession, project_id: str,
-                                      actor: str = "SoduWork") -> dict:
+                                      actor: str = "Nekowork") -> dict:
     """Explicitly reissue undecided approvals after project responsibilities change. Preserve any
     countersignature snapshot with an existing decision and audit all reassignment.
     """

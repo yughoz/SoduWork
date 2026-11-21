@@ -1,4 +1,4 @@
-# 从零运行 SoduWork
+# 从零运行 Nekowork
 
 **简体中文** · [English](getting-started.en.md) · [返回 README](../README.zh-CN.md) · [开发指南](development.md)
 
@@ -9,7 +9,7 @@
 ## 装环境、解压、启动
 
 1. 安装 [Python 3.12+](https://www.python.org/downloads/) 和 [Node.js 22.19+](https://nodejs.org/)。Windows 安装 Python 时勾选 **Add Python to PATH**；Node 安装保留默认选项及 npm。安装完成后关掉旧终端。
-2. 下载源码 ZIP，选择「全部解压」。建议放到自己有写入权限的普通目录，例如 `C:/SoduWork`；不要放进系统程序目录，也不要在 ZIP 里直接运行。
+2. 下载源码 ZIP，选择「全部解压」。建议放到自己有写入权限的普通目录，例如 `C:/Nekowork`；不要放进系统程序目录，也不要在 ZIP 里直接运行。
 3. 打开包含 `README.md`、`start.py`、`client` 的目录，按系统启动：
 
    | 系统 | 默认入口 |
@@ -34,7 +34,7 @@ Windows 桌面启动还会在本实例的应用副本中准备并校验命令运
 终端会出现以下关键信息（地址以实际输出为准）：
 
 ```text
-SoduWork is ready: http://127.0.0.1:18989
+Nekowork is ready: http://127.0.0.1:18989
 Administrator: admin
 启动成功！管理页面：http://127.0.0.1:18989
 ```
@@ -288,9 +288,9 @@ Git 提示 rebase 或 merge 尚未完成时，先完成该操作，或备份后�
 
 macOS 桌面进程保留当前用户的系统主目录，以便访问默认钥匙串。应用数据和工作目录仍与已安装客户端分离，本地 Hub 仍使用隔离的主目录和数据库。
 
-源码桌面启动会准备独立缓存的 `SoduWork.app`，使用产品名称和图标。开发配置目录继续独立保存，不修改已安装客户端或下载的 Electron 应用包。这个本地开发包使用临时签名，不等同于经过正式签名和公证的发布安装包。
+源码桌面启动会准备独立缓存的 `Nekowork.app`，使用产品名称和图标。开发配置目录继续独立保存，不修改已安装客户端或下载的 Electron 应用包。这个本地开发包使用临时签名，不等同于经过正式签名和公证的发布安装包。
 
-默认 macOS 钥匙串缺失时，启动器会先显示恢复页面，再进入正常工作区。点击**打开钥匙串访问**，检查登录钥匙串与默认钥匙串设置，修复系统设置后退出并重新启动 SoduWork。拒绝或取消访问后，登录页会提示安全存储错误并保留已有凭据。SoduWork 不会重置钥匙串，也不会降级为明文存储。仅在 [Apple 支持](https://support.apple.com/guide/keychain-access/kyca2429/mac)指导下重置钥匙串。
+默认 macOS 钥匙串缺失时，启动器会先显示恢复页面，再进入正常工作区。点击**打开钥匙串访问**，检查登录钥匙串与默认钥匙串设置，修复系统设置后退出并重新启动 Nekowork。拒绝或取消访问后，登录页会提示安全存储错误并保留已有凭据。Nekowork 不会重置钥匙串，也不会降级为明文存储。仅在 [Apple 支持](https://support.apple.com/guide/keychain-access/kyca2429/mac)指导下重置钥匙串。
 
 ### 关闭启动窗口后页面打不开
 
@@ -307,7 +307,7 @@ macOS 桌面进程保留当前用户的系统主目录，以便访问默认钥�
 | 只检查环境 | `sh start.sh --check --desktop` |
 | 提前下载和构建，暂不启动 | `sh start.sh --prepare-only --desktop` |
 | 不自动打开浏览器 | `sh start.sh --desktop --no-browser` |
-| 指定独立的数据目录 | `sh start.sh --desktop --data-dir "D:/SoduWork-data"` |
+| 指定独立的数据目录 | `sh start.sh --desktop --data-dir "D:/Nekowork-data"` |
 
 准备和启动应使用同一个数据目录。指定 `--password-stdin` 后，启动器只在准备成功后才从标准输入读取首次密码。请勿将密码写入命令参数或脚本。Windows 在此模式下失败会直接返回错误码。其他无人值守的启动命令可设置 `SODUWORK_NO_PAUSE=1` 跳过失败后的按键等待。
 
@@ -317,8 +317,8 @@ macOS 桌面进程保留当前用户的系统主目录，以便访问默认钥�
 
 | 系统 | 默认数据目录 |
 | --- | --- |
-| Windows | `%LOCALAPPDATA%\SoduWork\source-service` |
-| macOS | `~/Library/Application Support/SoduWork/source-service` |
+| Windows | `%LOCALAPPDATA%\Nekowork\source-service` |
+| macOS | `~/Library/Application Support/Nekowork/source-service` |
 | Linux | `$XDG_DATA_HOME/soduwork/source-service`，未设置时为 `~/.local/share/soduwork/source-service` |
 
 在 Windows 上，`LOCALAPPDATA` 为空或为相对路径时按未设置处理，回退到 `%USERPROFILE%\AppData\Local`。绝对路径形式的 `LOCALAPPDATA` 保持不变。所选数据目录仍须位于源码目录之外，并且为空或已由此启动器初始化。
@@ -328,7 +328,7 @@ macOS 桌面进程保留当前用户的系统主目录，以便访问默认钥�
 也可以明确指定独立目录和端口：
 
 ```sh
-sh start.sh --data-dir "D:/SoduWork-local" --port 18990
+sh start.sh --data-dir "D:/Nekowork-local" --port 18990
 ```
 
 目录必须位于源码目录之外，并且为空，或者已由这个启动器初始化。它不会采用源码目录中的 `.env`、数据库、个人 Agent 配置和生产环境变量。
@@ -339,7 +339,7 @@ sh start.sh --data-dir "D:/SoduWork-local" --port 18990
 - `runtime/`、`home/`：此实例专用的运行目录与 Agent 配置。
 - `venv/`、`application/`：独立依赖与从当前源码同步的运行副本。不要直接编辑这里的代码，业务附件应通过产品管理。
 - `startup.log`：依赖安装、构建、迁移与服务器日志。
-- `desktop.log` 记录联动桌面客户端的日志。桌面账号和会话配置通常位于数据目录下的 `desktop-profile/`。在 macOS 上，若数据目录位于正式客户端的 `SoduWork/` 或 `soduwork/` 内，桌面配置使用 `SoduWork Development/` 下的独立目录。默认数据目录继续使用 `source-service-desktop`；自定义目录使用 `source-service-desktop-<目录标识>`，标识由完整数据路径生成。如果该目录尚不存在，会沿用通过安全检查的既有开发配置 `source-service-desktops/<目录标识>/`；两者都存在时优先标准目录。Hub 数据和账号留在原处，配置文件不会被移动或合并。启动器会在写入前拒绝指回正式客户端配置的输出链接；`--check --desktop` 只读打印所选桌面配置路径。桌面配置同样属于私密数据。
+- `desktop.log` 记录联动桌面客户端的日志。桌面账号和会话配置通常位于数据目录下的 `desktop-profile/`。在 macOS 上，若数据目录位于正式客户端的 `Nekowork/` 或 `soduwork/` 内，桌面配置使用 `Nekowork Development/` 下的独立目录。默认数据目录继续使用 `source-service-desktop`；自定义目录使用 `source-service-desktop-<目录标识>`，标识由完整数据路径生成。如果该目录尚不存在，会沿用通过安全检查的既有开发配置 `source-service-desktops/<目录标识>/`；两者都存在时优先标准目录。Hub 数据和账号留在原处，配置文件不会被移动或合并。启动器会在写入前拒绝指回正式客户端配置的输出链接；`--check --desktop` 只读打印所选桌面配置路径。桌面配置同样属于私密数据。
 
 更新源码后停止并重新运行同一条命令即可，启动器只更新自己的代码副本并保留数据。更新前应在服务停止时备份**整个数据目录**及单独存放的桌面配置目录；回退时同时恢复匹配版本的源码和数据备份，不能只降低源码版本。
 

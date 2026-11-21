@@ -1,4 +1,4 @@
-/* Public SoduWork pages: quiet paper, ink, and a teal work surface.
+/* Public Nekowork pages: quiet paper, ink, and a teal work surface.
    All selectors are scoped; hover never moves a control's hit area. */
 .public-theme {
   --p-paper:#f5f8f8; --p-surface:#fff; --p-ink:#1a3039; --p-copy:#52666e;

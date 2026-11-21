@@ -127,7 +127,7 @@ function ProviderEditor({ value, orgs, roles, onClose, onDone }) {
   return <Modal title={original ? tx("配置企业身份源") : tx("接入企业身份源")} icon="key" wide onClose={onClose}
     foot={<><button className="btn btn-ghost" onClick={onClose}>{tx("取消")}</button><button className="btn btn-primary" disabled={busy} onClick={submit}>{busy ? tx("正在保存并测试…") : tx("保存并测试")}</button></>}>
     <div className="idp-form">
-      <div className="idp-form-note"><Icon name="shield" /><p><b>{tx("这里不填写密钥明文。")}</b>{tx("机密客户端只填 Hub 上的环境变量名；SoduWork 测试时会验证变量是否存在。")}</p></div>
+      <div className="idp-form-note"><Icon name="shield" /><p><b>{tx("这里不填写密钥明文。")}</b>{tx("机密客户端只填 Hub 上的环境变量名；Nekowork 测试时会验证变量是否存在。")}</p></div>
       <div className="idp-form-grid">
         <label><span>{tx("显示名称")}</span><input className="f-in" value={form.name} onChange={(e) => set('name', e.target.value)} placeholder={tx("公司统一登录")} /></label>
         <label><span>{tx("稳定标识")}</span><input className="f-in" value={form.key} disabled={!!original} onChange={(e) => set('key', e.target.value.toLowerCase())} placeholder="company-oidc" /></label>

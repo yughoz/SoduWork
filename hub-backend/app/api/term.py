@@ -293,7 +293,7 @@ async def _serve_terminal(websocket: WebSocket, task: str, cols: int, rows: int,
                     q.get_nowait()
                 except asyncio.QueueEmpty:
                     pass
-                q.put_nowait("\r\n[SoduWork：终端输出过快，已省略部分滚动画面；需求结果不会受影响。]\r\n")
+                q.put_nowait("\r\n[Nekowork：终端输出过快，已省略部分滚动画面；需求结果不会受影响。]\r\n")
         try:
             loop.call_soon_threadsafe(enqueue)
         except Exception:  # noqa: BLE001

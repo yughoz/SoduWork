@@ -1,4 +1,4 @@
-"""Immediate teardown for every long-lived channel owned by one SoduWork device."""
+"""Immediate teardown for every long-lived channel owned by one Nekowork device."""
 from __future__ import annotations
 
 import asyncio

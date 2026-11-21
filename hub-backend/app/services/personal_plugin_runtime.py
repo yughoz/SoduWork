@@ -51,19 +51,19 @@ def load_plugin(key: str, path: str, version: str = "", checksum: str = "",
         raise ValueError("个人插件没有固定版本号，请重新选择插件后保存自动化")
     if not path:
         raise ValueError(
-            "这台执行机上没有个人插件库：个人插件自动化只能在装了 SoduWork 客户端的本人电脑上运行")
+            "这台执行机上没有个人插件库：个人插件自动化只能在装了 Nekowork 客户端的本人电脑上运行")
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
     except (OSError, ValueError) as exc:
-        raise ValueError("读不到这台 SoduWork 的个人插件库，请重启客户端后重试") from exc
+        raise ValueError("读不到这台 Nekowork 的个人插件库，请重启客户端后重试") from exc
     plugins = data.get("plugins") if isinstance(data, dict) else None
     if not isinstance(plugins, list):
         raise ValueError("个人插件库格式不对，请重启客户端后重试")
     plugin = next((p for p in plugins if isinstance(p, dict)
                    and str(p.get("key") or "") == key), None)
     if plugin is None:
-        raise ValueError("个人插件「%s」在这台 SoduWork 上不存在或已删除，请到定时任务里换一个方法" % key)
+        raise ValueError("个人插件「%s」在这台 Nekowork 上不存在或已删除，请到定时任务里换一个方法" % key)
     if plugin.get("enabled") is False:
         raise ValueError("个人插件「%s」已停用，请在插件页重新启用后再跑" % key)
     selected = _selected_version(plugin, version, policy)
@@ -152,7 +152,7 @@ def context_text(body: dict, values: list[tuple[str, object]]) -> str:
         ("任务参数：\n" + "\n".join("- %s：%s" % (label, value) for label, value in values))
         if values else "",
         ("本轮依赖 MCP：" + "、".join(mcp) +
-         "。只能通过本轮下发的 SoduWork MCP 桥（连接名 " + GRANT_SERVER +
+         "。只能通过本轮下发的 Nekowork MCP 桥（连接名 " + GRANT_SERVER +
          "）调用：每个连接只用 plugin_mcp_list 查看一次真实工具并复用返回定义，确认参数后再用 plugin_mcp_call；"
          "不可用时必须明确说明，不得假装调用成功。") if mcp else "",
         ("本轮需要的基础执行能力：" + "、".join(runtime) +
@@ -183,7 +183,7 @@ def _post(url: str, headers: dict, payload: dict, timeout: int = 15) -> dict:
             detail = ""
         raise ValueError(str(detail or ("Hub 拒绝了 MCP 授权（HTTP %s）" % exc.code))) from exc
     except (urllib.error.URLError, OSError, ValueError) as exc:
-        raise ValueError("连不上 SoduWork 后台换取 MCP 授权：" + str(exc)[:120]) from exc
+        raise ValueError("连不上 Nekowork 后台换取 MCP 授权：" + str(exc)[:120]) from exc
 
 
 def grant_mcp(names: list[str], identity: dict, ref: str = "") -> dict:

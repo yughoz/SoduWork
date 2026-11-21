@@ -111,7 +111,7 @@ def _verified_version(key: str) -> str:
 def _verified_version_issue(key: str, actual: str) -> str:
     expected = _verified_version(key)
     if expected and actual != expected:
-        return (f"需要 SoduWork 已验证版本 {expected}，实际为 {actual or '未找到有效安装记录'}。"
+        return (f"需要 Nekowork 已验证版本 {expected}，实际为 {actual or '未找到有效安装记录'}。"
                 "请点「更新」切换至已验证版本。")
     return ""
 
@@ -130,7 +130,7 @@ def _verified_cli_issue(key: str, reported: str) -> str:
                          str(reported or "").strip(), re.I)
     actual = match.group(1) if match else ""
     if actual != expected:
-        return (f"需要 SoduWork 已验证版本 {expected}，当前选中的执行程序版本为 {actual or '无法确认'}。"
+        return (f"需要 Nekowork 已验证版本 {expected}，当前选中的执行程序版本为 {actual or '无法确认'}。"
                 "请检查该底座的执行程序路径，并点「更新」切换至已验证版本。")
     return ""
 
@@ -211,7 +211,7 @@ def _bin_of(key: str) -> str:
 
 
 def is_bundled(key: str) -> bool:
-    """Whether this agent is shipped and lifecycle-managed by SoduWork."""
+    """Whether this agent is shipped and lifecycle-managed by Nekowork."""
     if key == "pi":
         return bool(_bundled_pi_cli_js() and _bundled_pi_node())
     return False
@@ -267,7 +267,7 @@ def _auth_probe(key: str) -> tuple[str, str]:
                 state, _ = _account_auth_probe(key, _bin_of(key),
                     env=codex_account_home.environment(_data_root()))
                 if state == "authed":
-                    return "authed", "SoduWork 独立 Codex 账号已登录；新对话使用此账号"
+                    return "authed", "Nekowork 独立 Codex 账号已登录；新对话使用此账号"
                 return state, "独立 Codex 账号未通过本机验证，请点击「登录 Codex」后新建对话"
         except Exception:
             return "", "Codex 独立登录设置无法读取，请检查 Runner 数据目录后重新登录"
@@ -322,20 +322,20 @@ def detect(key: str, *, has_model: bool = True, probes: dict | None = None) -> d
     # Installation alone does not imply readiness; preserve the four distinct states.
     if not installed:
         state = "missing"
-        why = ("还没装。点「装上」，SoduWork 会安装已校验的官方版本，"
+        why = ("还没装。点「装上」，Nekowork 会安装已校验的官方版本，"
                "不需要 Node/npm 或管理员权限。"
                if spec.get("installer") == "managed" else
-               "还没装。点「装上」，SoduWork 替你完成安装。")
+               "还没装。点「装上」，Nekowork 替你完成安装。")
         install_how = str(spec.get("install_how") or "")
         if install_how:
             why = install_how
         if runtime_issue:
             why = runtime_issue
     elif needs_llm and not has_model:
-        state, why = "nollm", "装好了，但 SoduWork 这边一个模型都用不了——去「我的模型」配一把 key。"
+        state, why = "nollm", "装好了，但 Nekowork 这边一个模型都用不了——去「我的模型」配一把 key。"
     elif bundled:
         name = str(prof.get("name") or key)
-        state, why = "ready", (name + " 已随 SoduWork 内置，可以直接派活。"
+        state, why = "ready", (name + " 已随 Nekowork 内置，可以直接派活。"
                                "点「测一下」确认模型连接。")
     else:
         state, why = "ready", ("装好了，可以派活。建议点一次「测一下」确认真能跑通。"
@@ -354,7 +354,7 @@ def detect(key: str, *, has_model: bool = True, probes: dict | None = None) -> d
         if auth == "authed" and state == "ready":
             why = auth_detail + "，可以直接派活。它用自己的模型，不占共享模型。"
         elif auth == "unauthed":
-            state, why = "unauthed", "装好了，但" + auth_detail +                 "。它用自己的账号和模型，SoduWork 不会给它配共享模型。"
+            state, why = "unauthed", "装好了，但" + auth_detail +                 "。它用自己的账号和模型，Nekowork 不会给它配共享模型。"
     # Keep the legacy state vocabulary for older desktop clients, which index
     # it directly. New clients use setupState without changing dispatch gates.
     setup_state = state
@@ -580,7 +580,7 @@ def start_install(key: str, action: str, *, owner_id: str = "") -> str:
         raise ValueError("Account login is supported only for Codex")
     jid = _new_job(key, action)
     if action == "uninstall" and not can_uninstall(key):
-        _done(jid, False, "该底座是 SoduWork 必需组件，不能单独卸载。")
+        _done(jid, False, "该底座是 Nekowork 必需组件，不能单独卸载。")
         return jid
     if action.startswith("login"):
         from . import codex_login_flow
@@ -597,11 +597,11 @@ def start_install(key: str, action: str, *, owner_id: str = "") -> str:
         version = _version_of(key)[0]
         name = str((_PROFILES.get(key) or {}).get("name") or key)
         if action == "uninstall":
-            _done(jid, False, name + " 是 SoduWork 内置组件，不能单独卸载。")
+            _done(jid, False, name + " 是 Nekowork 内置组件，不能单独卸载。")
         else:
             label = f"{name} {version}" if version else name
-            _done(jid, True, f"{label} 已随 SoduWork 内置；"
-                  "无需单独安装，升级 SoduWork 时会一起升级。")
+            _done(jid, True, f"{label} 已随 Nekowork 内置；"
+                  "无需单独安装，升级 Nekowork 时会一起升级。")
         return jid
     spec = _SPECS.get(key) or {}
     if spec.get("installer") == "manual":
@@ -657,7 +657,7 @@ def _run_managed(jid: str, key: str, action: str) -> None:
 @agent_npm_runtime.serial_install
 def _run_npm(jid: str, key: str, action: str) -> None:
     if action == "uninstall" and not can_uninstall(key):
-        _done(jid, False, "该底座是 SoduWork 必需组件，不能单独卸载。")
+        _done(jid, False, "该底座是 Nekowork 必需组件，不能单独卸载。")
         return
     spec = _SPECS.get(key) or {}
     pkg = spec.get("pkg") or ""
@@ -694,11 +694,11 @@ def _run_npm(jid: str, key: str, action: str) -> None:
             elif not cur:
                 _done(jid, True, f"已验证版本是 {verified}，这台设备尚未安装", code)
             elif cur != verified:
-                _done(jid, True, f"当前为 {cur}；SoduWork 已验证版本为 {verified}，请点「更新」切换。", code)
+                _done(jid, True, f"当前为 {cur}；Nekowork 已验证版本为 {verified}，请点「更新」切换。", code)
             elif issue := (_runtime_issue(key) or _verified_cli_issue(key, _selected_cli_version(key))):
                 _done(jid, False, f"已安装已验证版本 {cur}，但{issue}", 2)
             else:
-                _done(jid, True, f"已安装 SoduWork 已验证版本 {cur}", code)
+                _done(jid, True, f"已安装 Nekowork 已验证版本 {cur}", code)
             return
         if not cur:
             _done(jid, True, f"最新是 {latest}，你这台还没装", code)
@@ -720,7 +720,7 @@ def _run_npm(jid: str, key: str, action: str) -> None:
             try:
                 dsh_runtime.remove_host(_data_root())
             except Exception as exc:  # noqa: BLE001
-                _done(jid, False, "适配器已卸载，但 SoduWork 运行时清理失败：" + str(exc)[:220], 2)
+                _done(jid, False, "适配器已卸载，但 Nekowork 运行时清理失败：" + str(exc)[:220], 2)
                 return
         # Verify executable removal after uninstall; npm's exit code alone is insufficient.
         # Leftover executables may remain runnable.
@@ -906,7 +906,7 @@ def _run_probe_once(jid: str, key: str, llm: dict, *, workspace=None,
     if prof.get("needs_llm") and not (llm.get("base") and llm.get("model") and
                                        (llm.get("key") or llm.get("localOnly") is True)):
         steps.append({"name": "能干活吗", "ok": False, "detail": "还没有能用的模型"})
-        _fin(False, "它跑得起来，但 SoduWork 这边没有能用的模型——先去「我的模型」配一把 key。")
+        _fin(False, "它跑得起来，但 Nekowork 这边没有能用的模型——先去「我的模型」配一把 key。")
         return
 
     from .local_base import _env_for

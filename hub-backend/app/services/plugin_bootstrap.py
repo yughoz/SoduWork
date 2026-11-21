@@ -95,7 +95,7 @@ async def bootstrap_example(session: AsyncSession, provenance_api) -> None:
                     or proof["channel"] != "builtin"
                     or proof["signatureState"] != "platform"):
                 matched.provenance = provenance_api({
-                    "publisherId": "system", "publisherName": "SoduWork 平台",
+                    "publisherId": "system", "publisherName": "Nekowork 平台",
                     "publisherType": "platform", "channel": "builtin",
                     "sourceName": filename, "sourceKind": "builtin",
                     "checksum": checksum, "signatureState": "platform",
@@ -113,7 +113,7 @@ async def bootstrap_example(session: AsyncSession, provenance_api) -> None:
             plugin_id=plugin.id, version=manifest["version"], checksum=checksum,
             manifest=manifest, workflow=workflow, capability_report=report,
             provenance=provenance_api({
-                "publisherId": "system", "publisherName": "SoduWork 平台",
+                "publisherId": "system", "publisherName": "Nekowork 平台",
                 "publisherType": "platform", "channel": "builtin",
                 "sourceName": filename, "sourceKind": "builtin",
                 "checksum": checksum, "signatureState": "platform",
@@ -134,7 +134,7 @@ async def bootstrap_example(session: AsyncSession, provenance_api) -> None:
                     or proof["channel"] != "builtin"
                     or proof["signatureState"] != "platform"):
                 registered.provenance = provenance_api({
-                    "publisherId": "system", "publisherName": "SoduWork 平台",
+                    "publisherId": "system", "publisherName": "Nekowork 平台",
                     "publisherType": "platform", "channel": "builtin",
                     "sourceName": filename, "sourceKind": "builtin",
                     "checksum": checksum, "signatureState": "platform",

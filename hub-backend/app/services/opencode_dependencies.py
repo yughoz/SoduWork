@@ -218,7 +218,7 @@ def _bootstrap(binary, version, stage: Path, say) -> Path:
     plugin.write_text(
         "export default async () => { await import(" + json.dumps(entry.as_uri()) + ");"
         "return { config: async config => { config.agent ||= {}; config.agent["
-        + json.dumps(marker) + "] = {mode:'primary',description:'SoduWork dependency verification'};"
+        + json.dumps(marker) + "] = {mode:'primary',description:'Nekowork dependency verification'};"
         "}};};", encoding="utf-8")
     env["OPENCODE_CONFIG_CONTENT"] = json.dumps({"plugin": [plugin.as_uri()]})
     flags = ({"creationflags": getattr(subprocess, "CREATE_NO_WINDOW", 0)} if os.name == "nt"

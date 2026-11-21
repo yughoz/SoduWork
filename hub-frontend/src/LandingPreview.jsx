@@ -51,7 +51,7 @@ export default function LandingPreview() {
     event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[next].focus()
   }
   return <div className="product-stage">
-    <div className="product-stage-caption"><span><i />{tx('一个空间，衔接整段工作')}</span><span>SoduWork</span></div>
+    <div className="product-stage-caption"><span><i />{tx('一个空间，衔接整段工作')}</span><span>Nekowork</span></div>
     <div className="product-workspace">
       <div className="product-rail" aria-hidden="true"><img src="/soduwork.png" alt="" className="logo-box" /><PublicIcon name="chat" /><PublicIcon name="grid" /><PublicIcon name="clock" /><PublicIcon name="layers" /><span className="product-rail-tail">S</span></div>
       <div className="product-workspace-main">
@@ -62,7 +62,7 @@ export default function LandingPreview() {
           <span className="product-context"><PublicIcon name="file" size={15} />{tx('工作示例')}</span>
           <h2>{example.title}</h2>
           <div className="product-message">{example.prompt}<span>{tx('你')}</span></div>
-          <div className="product-answer"><span className="product-ai"><PublicIcon name="sparkle" size={18} /></span><div><b>SoduWork</b><p>{example.response}</p></div></div>
+          <div className="product-answer"><span className="product-ai"><PublicIcon name="sparkle" size={18} /></span><div><b>Nekowork</b><p>{example.response}</p></div></div>
           <div className="product-steps">{example.steps.map(step => <span key={step}><PublicIcon name="check" size={13} />{step}</span>)}</div>
           <div className="product-document"><span className="product-file-icon"><PublicIcon name="file" size={25} /></span><div><small>{example.type}</small><b>{example.file}</b><p>{tx('成果与过程，一起留在工作里')}</p></div><PublicIcon name="arrow" size={18} /></div>
           <p className="product-note">{example.note}</p>

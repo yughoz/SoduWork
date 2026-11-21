@@ -85,7 +85,7 @@ export default function ModelRuntime({ providers, models, catalogActions, catalo
     </div>
     {error && <div className="model-runtime-state" role="alert"><div><b>{data ? tx("刷新失败，以下显示上次成功读取的数据。") : tx("运行状态暂不可用")}</b><span>{error}</span></div><button className="btn btn-ghost xs" onClick={() => refreshRef.current?.()}>{tx("重试")}</button></div>}
     <div id={overviewId} className="model-runtime-overview-body" hidden={!overviewOpen}>
-    <p className="model-dimension-note">{tx("查看目录配置，以及经 SoduWork 代理的实时请求与近一小时统计。")}</p>
+    <p className="model-dimension-note">{tx("查看目录配置，以及经 Nekowork 代理的实时请求与近一小时统计。")}</p>
     <div className={'model-runtime-metrics' + (catalogSummary ? ' with-catalog' : '')}>
       {catalogSummary}
       <section className="model-runtime-live model-runtime-dimension" aria-label={tx("实时负载")}>

@@ -4,7 +4,7 @@ import { translateText as tx, localeMap, useLocale } from '../i18n.js'
 import { Icon, SelectMenu, toast } from '../ui.jsx'
 import './mail-settings.css'
 
-const EMPTY = { enabled: false, host: 'smtp.126.com', port: 465, security: 'ssl', username: '', senderAddress: '', senderName: 'SoduWork', password: '' }
+const EMPTY = { enabled: false, host: 'smtp.126.com', port: 465, security: 'ssl', username: '', senderAddress: '', senderName: 'Nekowork', password: '' }
 const STATES = localeMap(() => ({ queued: '等待发送', sending: '正在发送', retry: '等待重试', sent: 'SMTP 已接收', failed: '发送失败', expired: '已过期', unknown: '结果待确认' }))
 const ERRORS = localeMap(() => ({ SMTP_AUTH_FAILED: '授权失败，请检查客户端授权码', SMTP_TLS_FAILED: 'TLS 证书验证失败', SMTP_CONNECTION_FAILED: 'SMTP 连接失败', SMTP_REJECTED: '邮件服务器拒绝投递', SMTP_RECIPIENT_REJECTED: '收件地址被拒绝', SMTP_RESULT_UNKNOWN: '发送结果不确定，请先检查收件箱', MAIL_NOT_READY: '邮件配置不可用', MAIL_EXPIRED: '邮件已过期', MAIL_INTERNAL_ERROR: '邮件处理异常' }))
 const PRIVACY_STATES = localeMap(() => ({ queued: '等待处理', running: '处理中', processing: '处理中', completed: '已完成', ready: '已就绪', failed: '处理失败', expired: '已过期' }))

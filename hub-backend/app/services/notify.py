@@ -115,7 +115,7 @@ async def alert(session: AsyncSession, text: str, *, task=None) -> bool:
     if not url.startswith(("http://", "https://")):
         return False
     title = str(getattr(task, "title", "") or "").strip()
-    body = ("【SoduWork】%s\n%s" % (title, text)) if title else ("【SoduWork】" + text)
+    body = ("【Nekowork】%s\n%s" % (title, text)) if title else ("【Nekowork】" + text)
 
     def _post():
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))  # Connect directly to internal destinations.

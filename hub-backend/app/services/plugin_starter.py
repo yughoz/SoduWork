@@ -137,11 +137,11 @@ def build() -> bytes:
     files = {
         "plugin.json": json.dumps(manifest(), ensure_ascii=False, indent=2) + "\n",
         "README.md": (
-            "# SoduWork 企业工作流起步模板\n\n"
+            "# Nekowork 企业工作流起步模板\n\n"
             "1. 修改 key、version、name 与 prompt。\n"
             "2. 先在插件级 capabilities 声明能力，再为每个 AI 节点选择最小子集。\n"
             "3. 用 outputs + inputs 显式传递跨 Agent 上下文。\n"
-            "4. Agent、模型、Runner 标签在 SoduWork 绑定页按企业环境配置，不写死在包里。\n"
+            "4. Agent、模型、Runner 标签在 Nekowork 绑定页按企业环境配置，不写死在包里。\n"
             "5. 重新压缩为 .soduwork-plugin，先预检，再导入隔离区。\n"
         ),
     }

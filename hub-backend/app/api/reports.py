@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api/v1/reports", tags=["work-reports"])
 async def _actor(session: AsyncSession, client: Client) -> User:
     user = await session.get(User, client.user_ref) if client.user_ref else None
     if user is None or not user.is_active:
-        raise HTTPException(status_code=400, detail="本 SoduWork 尚未绑定有效员工，请让管理员分配归属")
+        raise HTTPException(status_code=400, detail="本 Nekowork 尚未绑定有效员工，请让管理员分配归属")
     return user
 
 

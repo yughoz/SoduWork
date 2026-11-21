@@ -108,7 +108,7 @@ async def _device_with_key(
             detail={
                 "code": "DEVICE_NOT_ENROLLED",
                 "message": (
-                    "\u8fd9\u53f0 SoduWork \u5c1a\u672a\u767b\u8bb0\uff0c"
+                    "\u8fd9\u53f0 Nekowork \u5c1a\u672a\u767b\u8bb0\uff0c"
                     "\u8bf7\u91cd\u8bd5"
                 ),
             },
@@ -119,7 +119,7 @@ async def _device_with_key(
             detail={
                 "code": "DEVICE_REVOKED",
                 "message": (
-                    "\u8fd9\u53f0 SoduWork \u5df2\u88ab\u505c\u7528\uff0c"
+                    "\u8fd9\u53f0 Nekowork \u5df2\u88ab\u505c\u7528\uff0c"
                     "\u8bf7\u8054\u7cfb\u7ba1\u7406\u5458"
                 ),
             },

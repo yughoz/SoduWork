@@ -19,7 +19,7 @@ _LEGAL_TEXTS = {
         "titles": {"terms": "用户协议", "privacy": "隐私政策"},
         "operator": "待管理员填写服务运营方",
         "contact": "待管理员填写隐私联系邮箱",
-        "terms": """SoduWork 用户协议
+        "terms": """Nekowork 用户协议
 版本：{version}
 服务运营方：{operator}
 联系邮箱：{contact}
@@ -28,7 +28,7 @@ _LEGAL_TEXTS = {
 你可以使用本人控制的邮箱注册。完成邮箱验证、设置密码并确认协议后，账号立即启用，加入管理员配置的默认组织和角色。组织、角色、模型额度、工程与插件权限由后台策略决定。请保管邮箱、密码和设备，不冒用他人身份。
 
 二、工作内容与执行授权
-SoduWork 提供对话、需求管理、工具及 Agent 执行能力。发送给模型或插件的内容取决于你实际选择和授权的操作。账号注册和验证码操作不调用大模型。AI 输出需要你结合实际情况核对；涉及外部系统的操作按产品内确认与组织权限执行。
+Nekowork 提供对话、需求管理、工具及 Agent 执行能力。发送给模型或插件的内容取决于你实际选择和授权的操作。账号注册和验证码操作不调用大模型。AI 输出需要你结合实际情况核对；涉及外部系统的操作按产品内确认与组织权限执行。
 
 三、组织与个人数据
 加入默认组织后，团队共享内容按现有组织权限可见。个人资料、个人资料库和账号凭据按本人权限访问；团队需求、交付和审计记录遵循组织管理规则。
@@ -39,7 +39,7 @@ SoduWork 提供对话、需求管理、工具及 Agent 执行能力。发送给�
 五、服务联系与协议更新
 遇到账号、数据或服务问题，可联系上述邮箱。协议发生实质变更时应发布新版本并告知用户；涉及需要重新取得同意的处理，应重新确认。
 """,
-        "privacy": """SoduWork 隐私政策
+        "privacy": """Nekowork 隐私政策
 版本：{version}
 个人信息处理者：{operator}
 隐私联系邮箱：{contact}
@@ -67,7 +67,7 @@ SoduWork 提供对话、需求管理、工具及 Agent 执行能力。发送给�
         "titles": {"terms": "Terms of Service", "privacy": "Privacy Policy"},
         "operator": "Service operator pending administrator setup",
         "contact": "Privacy contact email pending administrator setup",
-        "terms": """SoduWork Terms of Service
+        "terms": """Nekowork Terms of Service
 Version: {version}
 Service operator: {operator}
 Contact email: {contact}
@@ -76,7 +76,7 @@ Contact email: {contact}
 You may register with an email address you control. Once your email is verified, a password is set, and this agreement is confirmed, your account is activated immediately and joins the default organization and roles configured by the administrator. Organizations, roles, model quotas, and project and plugin permissions are governed by backend policy. Keep your email, password, and devices safe, and do not impersonate others.
 
 2. Work content and execution authorization
-SoduWork provides conversation, issue management, tool, and agent execution capabilities. What is sent to models or plugins depends on the operations you actually choose and authorize. Account registration and verification-code operations do not invoke large models. Check AI output against your actual situation; operations involving external systems follow in-product confirmation and organization permissions.
+Nekowork provides conversation, issue management, tool, and agent execution capabilities. What is sent to models or plugins depends on the operations you actually choose and authorize. Account registration and verification-code operations do not invoke large models. Check AI output against your actual situation; operations involving external systems follow in-product confirmation and organization permissions.
 
 3. Organization and personal data
 After joining the default organization, team-shared content is visible according to existing organization permissions. Personal profiles, the personal knowledge base, and account credentials are accessed according to your own permissions; team issues, deliverables, and audit records follow organization management rules.
@@ -87,7 +87,7 @@ You can change your password, replace your email, remove signed-in devices, expo
 5. Service contact and agreement updates
 For account, data, or service issues, contact the email above. Material changes to this agreement will be released as a new version with notice to users; processing that requires renewed consent will be reconfirmed.
 """,
-        "privacy": """SoduWork Privacy Policy
+        "privacy": """Nekowork Privacy Policy
 Version: {version}
 Personal information handler: {operator}
 Privacy contact email: {contact}
@@ -115,7 +115,7 @@ This policy should match the actual service. When the purposes, methods, or scop
         "titles": {"terms": "利用規約", "privacy": "プライバシーポリシー"},
         "operator": "サービス提供者は管理者による設定待ちです",
         "contact": "プライバシー連絡先メールは管理者による設定待ちです",
-        "terms": """SoduWork 利用規約
+        "terms": """Nekowork 利用規約
 バージョン：{version}
 サービス提供者：{operator}
 連絡先メール：{contact}
@@ -124,7 +124,7 @@ This policy should match the actual service. When the purposes, methods, or scop
 本人が管理するメールアドレスで登録できます。メール認証の完了、パスワードの設定、本規約への同意をもってアカウントは直ちに有効化され、管理者が設定した既定の組織とロールに参加します。組織、ロール、モデル割り当て、プロジェクトおよびプラグインの権限はバックエンドのポリシーにより決定されます。メールアドレス・パスワード・端末を適切に管理し、他人になりすまさないでください。
 
 二、作業内容と実行の許諾
-SoduWork は対話、課題管理、ツール、エージェント実行の機能を提供します。モデルやプラグインに送信される内容は、ユーザーが実際に選択し許諾した操作によって決まります。アカウント登録と認証コードの操作では大規模モデルを呼び出しません。AI の出力は実際の状況に照らしてご確認ください。外部システムに関わる操作は、製品内の確認と組織の権限に従って実行されます。
+Nekowork は対話、課題管理、ツール、エージェント実行の機能を提供します。モデルやプラグインに送信される内容は、ユーザーが実際に選択し許諾した操作によって決まります。アカウント登録と認証コードの操作では大規模モデルを呼び出しません。AI の出力は実際の状況に照らしてご確認ください。外部システムに関わる操作は、製品内の確認と組織の権限に従って実行されます。
 
 三、組織と個人データ
 既定の組織に参加すると、チームで共有するコンテンツは既存の組織権限に従って表示されます。個人プロフィール、個人ナレッジベース、アカウント資格情報は本人の権限の範囲でアクセスされ、チームの課題・成果物・監査記録は組織の管理規則に従います。
@@ -135,7 +135,7 @@ SoduWork は対話、課題管理、ツール、エージェント実行の機�
 五、サービス連絡と規約の更新
 アカウント、データ、サービスに関する問題は、上記のメールアドレスにご連絡ください。本規約に実質的な変更がある場合は新バージョンを公開してユーザーに告知します。改めて同意が必要な処理については、再度確認を行います。
 """,
-        "privacy": """SoduWork プライバシーポリシー
+        "privacy": """Nekowork プライバシーポリシー
 バージョン：{version}
 個人情報取扱者：{operator}
 プライバシー連絡先メール：{contact}
@@ -163,7 +163,7 @@ SoduWork は対話、課題管理、ツール、エージェント実行の機�
         "titles": {"terms": "이용약관", "privacy": "개인정보 처리방침"},
         "operator": "서비스 운영자는 관리자 설정 대기 중입니다",
         "contact": "개인정보 문의 이메일은 관리자 설정 대기 중입니다",
-        "terms": """SoduWork 이용약관
+        "terms": """Nekowork 이용약관
 버전: {version}
 서비스 운영자: {operator}
 문의 이메일: {contact}
@@ -172,7 +172,7 @@ SoduWork は対話、課題管理、ツール、エージェント実行の機�
 본인이 관리하는 이메일로 등록할 수 있습니다. 이메일 인증 완료, 비밀번호 설정, 본 약관 동의 후 계정이 즉시 활성화되며 관리자가 구성한 기본 조직과 역할에 참여합니다. 조직, 역할, 모델 할당량, 프로젝트 및 플러그인 권한은 백엔드 정책에 따라 결정됩니다. 이메일, 비밀번호, 기기를 안전하게 보관하고 타인의 신원을 도용하지 마십시오.
 
 2. 작업 내용과 실행 권한
-SoduWork는 대화, 이슈 관리, 도구 및 에이전트 실행 기능을 제공합니다. 모델이나 플러그인에 전송되는 내용은 사용자가 실제로 선택하고 승인한 작업에 따라 달라집니다. 계정 등록과 인증 코드 작업은 대규모 모델을 호출하지 않습니다. AI 출력은 실제 상황에 맞게 확인하시기 바랍니다. 외부 시스템과 관련된 작업은 제품 내 확인과 조직 권한에 따라 실행됩니다.
+Nekowork는 대화, 이슈 관리, 도구 및 에이전트 실행 기능을 제공합니다. 모델이나 플러그인에 전송되는 내용은 사용자가 실제로 선택하고 승인한 작업에 따라 달라집니다. 계정 등록과 인증 코드 작업은 대규모 모델을 호출하지 않습니다. AI 출력은 실제 상황에 맞게 확인하시기 바랍니다. 외부 시스템과 관련된 작업은 제품 내 확인과 조직 권한에 따라 실행됩니다.
 
 3. 조직과 개인 데이터
 기본 조직에 참여하면 팀 공유 콘텐츠는 기존 조직 권한에 따라 표시됩니다. 개인 프로필, 개인 지식 베이스, 계정 자격 증명은 본인 권한 범위에서 접근되며, 팀 이슈, 산출물, 감사 기록은 조직 관리 규칙을 따릅니다.
@@ -183,7 +183,7 @@ SoduWork는 대화, 이슈 관리, 도구 및 에이전트 실행 기능을 제�
 5. 서비스 문의 및 약관 변경
 계정, 데이터 또는 서비스 문제는 위 이메일로 문의하시기 바랍니다. 본 약관에 실질적인 변경이 있으면 새 버전을 게시하고 사용자에게 알립니다. 동의를 다시 받아야 하는 처리는 재확인합니다.
 """,
-        "privacy": """SoduWork 개인정보 처리방침
+        "privacy": """Nekowork 개인정보 처리방침
 버전: {version}
 개인정보 처리자: {operator}
 개인정보 문의 이메일: {contact}

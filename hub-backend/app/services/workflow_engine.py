@@ -382,14 +382,14 @@ async def _verified_git_delivery(session: AsyncSession, task: models.Task,
     try:
         from . import code_delivery
         delivery = await code_delivery.check(
-            session, task, who="SoduWork", force=True,
+            session, task, who="Nekowork", force=True,
             branch_hint=branch, head_hint=str(status.get("gitHead") or ""),
             scm_hint={"provider": str(executor.get("provider") or ""),
                       "runnerId": str(executor.get("runnerId") or ""),
                       "ref": ref})
     except Exception as exc:  # noqa: BLE001
         raise workflow_contracts.WorkflowContractError(
-            "SoduWork 无法核对远端代码提交：" + str(exc)[:500]) from exc
+            "Nekowork 无法核对远端代码提交：" + str(exc)[:500]) from exc
     # Ordinary Git branches become committed candidates; Gerrit uses verified patchsets.
     # Both represent immutable repository versions fetchable by quality gates.
     # Do not reject a valid Gerrit change merely because it has no ordinary remote task branch.
@@ -572,7 +572,7 @@ async def _schedule_locked(session: AsyncSession, run_id: str) -> None:
             "nodeType": failed_node.get("type") or "",
             "error": run.error,
             "canRetry": (failed_node.get("type") or "") in RETRYABLE_GATE_TYPES,
-        }, actor="SoduWork")
+        }, actor="Nekowork")
         failed_task = await session.get(models.Task, run.task_id)
         if failed_task is not None and failed_task.status == "doing":
             from . import task_status
@@ -586,7 +586,7 @@ async def _schedule_locked(session: AsyncSession, run_id: str) -> None:
         run.state, run.finished_at, run.current_nodes = "succeeded", _now(), []
         _event(session, run.id, "run.succeeded")
         task_events.record(session, run.task_id, "plugin.completed",
-                           {"runId": run.id, "pluginVersionId": run.plugin_version_id}, actor="SoduWork")
+                           {"runId": run.id, "pluginVersionId": run.plugin_version_id}, actor="Nekowork")
 
 
 
@@ -880,7 +880,7 @@ async def _execute_ai(session: AsyncSession, run: am.WorkflowRun, nr: am.NodeRun
     await execution_sessions.record_dispatch(
         session, task, result, workflow_run_id=run.id, node_run_id=nr.id)
     task_events.record(session, task.id, "plugin.node_started",
-                       {"runId": run.id, "node": nr.node_key, **nr.executor}, actor="SoduWork")
+                       {"runId": run.id, "node": nr.node_key, **nr.executor}, actor="Nekowork")
 
 
 def _record_ai_dispatch(session: AsyncSession, task: models.Task, run: am.WorkflowRun,
@@ -891,7 +891,7 @@ def _record_ai_dispatch(session: AsyncSession, task: models.Task, run: am.Workfl
     task_events.record(session, task.id, ai_exec.EV_DISPATCHED, {
         "ref": result.get("issueId") or "", "issueId": result.get("issueId") or "",
         "identifier": result.get("identifier") or "", "url": result.get("url") or "",
-        "by": "SoduWork 插件", "provider": result.get("provider") or "",
+        "by": "Nekowork 插件", "provider": result.get("provider") or "",
         "runnerId": result.get("runnerId") or "", "host": result.get("host") or "",
         "assigneeId": result.get("assigneeId") or kind,
         "assigneeType": result.get("assigneeType") or "agent",
@@ -900,7 +900,7 @@ def _record_ai_dispatch(session: AsyncSession, task: models.Task, run: am.Workfl
         "model": result.get("model") or "",
         "reasoningEffort": result.get("reasoningEffort") or "",
         "plugin": {"runId": run.id, "nodeId": nr.id, "node": nr.node_key},
-    }, actor="SoduWork")
+    }, actor="Nekowork")
 
 
 async def _same_runner_as_ai(session: AsyncSession, run: am.WorkflowRun):
@@ -1185,7 +1185,7 @@ async def _begin_rework(session: AsyncSession, run: am.WorkflowRun, source: am.N
     task_events.record(session, run.task_id, "plugin.rework", {
         "runId": run.id, "from": source.node_key, "retryFrom": retry_from,
         "round": count, "feedback": feedback_by_node[retry_from][:500],
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     await session.flush()
     return True
 
@@ -1268,7 +1268,7 @@ async def _execute_node(session: AsyncSession, outbox: am.WorkflowOutbox) -> Non
         cfg = dict(node.get("config") or {})
         manifest = await _requirement_manifest(session, task, cfg)
         artifact, _ = await release_control.ensure_requirement_candidate(
-            session, task, manifest, source_ref=run.id, who="SoduWork")
+            session, task, manifest, source_ref=run.id, who="Nekowork")
         gate_context = {**cfg, "workflowRunId": run.id, "nodeRunId": nr.id,
                         "nodeKey": nr.node_key}
         req = await release_control.ensure_request(
@@ -1282,7 +1282,7 @@ async def _execute_node(session: AsyncSession, outbox: am.WorkflowOutbox) -> Non
         action = str(cfg.get("action") or "review")
         if workflow_contracts.review_requires_code(version.workflow, node):
             from . import code_delivery
-            await code_delivery.check(session, task, who="SoduWork", force=True)
+            await code_delivery.check(session, task, who="Nekowork", force=True)
             artifact = await release_control.latest_artifact(session, task.id)
             if artifact is None or artifact.kind != "code" or not artifact.commit_sha:
                 raise ValueError("开发节点还没有提交可审阅的代码版本")
@@ -1290,7 +1290,7 @@ async def _execute_node(session: AsyncSession, outbox: am.WorkflowOutbox) -> Non
             refs, text = await _review_material(session, run, version, node)
             artifact, _ = await release_control.ensure_current_output(
                 session, task, source_ref=run.id, workflow_run_id=run.id,
-                source_refs=refs, text=text, who="SoduWork")
+                source_refs=refs, text=text, who="Nekowork")
         gate_context = {**cfg, "workflowRunId": run.id, "nodeRunId": nr.id,
                         "nodeKey": nr.node_key}
         req = await release_control.ensure_request(
@@ -1344,9 +1344,9 @@ async def _execute_node(session: AsyncSession, outbox: am.WorkflowOutbox) -> Non
             task_events.record(session, task.id, "plugin.reauth_required", {
                 "runId": run.id, "node": nr.node_key, "commit": artifact.commit_sha,
                 "requestId": rid,
-            }, actor="SoduWork")
+            }, actor="Nekowork")
         else:
-            result = await code_delivery.merge_approved(session, task, who="SoduWork")
+            result = await code_delivery.merge_approved(session, task, who="Nekowork")
             if not result.get("ok"):
                 nr.output = dict(result)
                 raise ValueError(result.get("error") or "代码没有成功合并")
@@ -1358,7 +1358,7 @@ async def _execute_node(session: AsyncSession, outbox: am.WorkflowOutbox) -> Non
             env = await environment_service.environment_for_task(
                 session, task, key=str(cfg["environmentKey"]))
             env_id = env.id if env else ""
-        result = await deployments.request_environment(session, task, env_id, "SoduWork")
+        result = await deployments.request_environment(session, task, env_id, "Nekowork")
         if not result.get("ok"):
             message = str(result.get("error") or "部署节点没能排入环境")
             if str(result.get("failureKind") or "") == "configuration":
@@ -1374,7 +1374,7 @@ async def _execute_node(session: AsyncSession, outbox: am.WorkflowOutbox) -> Non
     elif kind == "deploy_chain":
         # Development plugins declare use of the organization release chain.
         # Environment count, names, dependencies, and approvals come from environment configuration.
-        await deployments.queue_automatic(session, task, "SoduWork")
+        await deployments.queue_automatic(session, task, "Nekowork")
         status = await deployments.chain_status(session, task)
         if not status.get("ok"):
             message = str(status.get("error") or "企业发布链尚未配置")
@@ -1528,7 +1528,7 @@ async def recover_ai_output(
         "runId": run.id, "node": recovered.node_key, "attempt": recovered.attempt,
         "sourceAttempt": source.attempt, "ref": ref,
         "files": list(receipt.get("received") or []),
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     await session.commit()
     await _schedule(session, run)
     return recovered
@@ -1773,7 +1773,7 @@ async def _poll_node(session: AsyncSession, run: am.WorkflowRun, nr: am.NodeRun)
                 missing = list(receipt.get("missing") or [])
                 detail = ("；缺少：" + "、".join(missing[:8])) if missing else ""
                 nr.state, nr.error = "failed", (
-                    "AI 已完成，但产出没有完整回传到 SoduWork" + detail + "，将按节点策略重试")
+                    "AI 已完成，但产出没有完整回传到 Nekowork" + detail + "，将按节点策略重试")
             else:
                 version = await _version(session, run)
                 definition = next((x for x in _nodes(version)
@@ -1916,7 +1916,7 @@ async def _poll_node(session: AsyncSession, run: am.WorkflowRun, nr: am.NodeRun)
                 # Approval authorizes deployment but does not prove it happened.
                 # Wait for actual execution, checks, and any rollback before marking the node complete.
                 env_id = str((nr.output or {}).get("environmentId") or req.environment_id or "")
-                result = await deployments.request_environment(session, task, env_id, "SoduWork")
+                result = await deployments.request_environment(session, task, env_id, "Nekowork")
                 if not result.get("ok"):
                     nr.state, nr.error, nr.finished_at = (
                         "failed", str(result.get("error") or "审批通过后部署排队失败")[:1200], _now())
@@ -2314,7 +2314,7 @@ async def _watch_stalled(session: AsyncSession, run: am.WorkflowRun) -> int:
         task_events.record(session, run.task_id, "plugin.stalled", {
             "runId": run.id, "node": nr.node_key, "nodeType": nr.node_type,
             "state": nr.state, "idleHours": max(1, hours),
-        }, actor="SoduWork")
+        }, actor="Nekowork")
         await session.commit()
         try:
             from ..realtime import hub

@@ -113,11 +113,11 @@ def auto_dir(client, repo) -> tuple[str, str]:
     if root and repo is not None:
         d = repo_dir(root, repo)
         if d:
-            return d, "用的是这台 SoduWork 设的工作目录"
+            return d, "用的是这台 Nekowork 设的工作目录"
     awd = (getattr(repo, "ai_work_dir", "") or "").strip() if repo is not None else ""
     if awd:
-        return awd, "这台 SoduWork 还没报过工作目录，回落到工程配的 AI 干活目录"
-    return "", "既没有 SoduWork 的工作目录，工程也没配 AI 干活目录"
+        return awd, "这台 Nekowork 还没报过工作目录，回落到工程配的 AI 干活目录"
+    return "", "既没有 Nekowork 的工作目录，工程也没配 AI 干活目录"
 
 
 def plan(work_root: str, repo, task_id: str, device_path: str = "",
@@ -214,7 +214,7 @@ def ensure_repo(d: str, repo, git_creds: dict | None = None) -> dict:
     """
     if not d:
         return {"ok": False, "dir": "", "cloned": False,
-                "detail": "这台 SoduWork 还没设工作目录（桌宠 → 设置 → 工作目录）"}
+                "detail": "这台 Nekowork 还没设工作目录（桌宠 → 设置 → 工作目录）"}
     url = str(getattr(repo, "git_url", "") or "").strip()
     env = _repo_env(repo, git_creds)
     # Add repository hosts to NO_PROXY while preserving other services' existing proxy settings.

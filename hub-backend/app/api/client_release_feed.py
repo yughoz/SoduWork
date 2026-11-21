@@ -92,7 +92,7 @@ async def list_stable_releases(session: AsyncSession = Depends(get_session)):
         releases, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")).hexdigest()
     return JSONResponse({
-        "schemaVersion": 1, "product": "SoduWork", "snapshotId": snapshot,
+        "schemaVersion": 1, "product": "Nekowork", "snapshotId": snapshot,
         "generatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "nextCursor": None, "releases": releases,
     }, media_type="application/json; charset=utf-8", headers={"Cache-Control": "no-store"})

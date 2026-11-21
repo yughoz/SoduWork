@@ -1,7 +1,7 @@
-"""Platform-correct DeepSeek Harness runtime managed by SoduWork.
+"""Platform-correct DeepSeek Harness runtime managed by Nekowork.
 
 The ACP adapter ships a version-locked DSH archive. That archive can be
-produced on another platform, so npm can omit optional native packages. SoduWork
+produced on another platform, so npm can omit optional native packages. Nekowork
 extracts the verified archive into a staging directory, downloads only the
 exact native packages recorded in its lock file, verifies their hashes,
 and atomically activates the complete runtime through DSH_PATH.
@@ -282,7 +282,7 @@ def _has_exact_package(root: str, package: str, version: str, *, target=None) ->
 def _runtime_issue_at(root: str, expected_version: str = "", *, executable: str = "", target=None) -> str:
     version = _installed_version_at(root)
     if not version:
-        return ("DeepSeek Harness 适配器已安装，但 SoduWork 执行运行时尚未准备好。"
+        return ("DeepSeek Harness 适配器已安装，但 Nekowork 执行运行时尚未准备好。"
                 "请在 Agent 管理的 DeepSeek Harness 卡片上点「修复安装」后重试。")
     if expected_version and version != expected_version:
         return ("DeepSeek Harness 执行运行时版本不匹配：当前 %s，需要 %s。"
@@ -311,7 +311,7 @@ def _storage_env(env: dict, runtime_root: str) -> None:
         return
     loader = Path(__file__).with_name("dsh_session_storage.mjs")
     if not loader.is_file():
-        raise RuntimeError("DeepSeek Harness 存储兼容组件缺失，请更新 SoduWork")
+        raise RuntimeError("DeepSeek Harness 存储兼容组件缺失，请更新 Nekowork")
     env["SODUWORK_DSH_STORAGE_RUNTIME"] = runtime_root
     env["NODE_OPTIONS"] = "--import=" + loader.resolve().as_uri()
 
@@ -323,7 +323,7 @@ def _host_env(env: dict, runtime_root: str) -> None:
     _storage_env(env, runtime_root)
     loader = Path(__file__).with_name("dsh_acp_settlement.mjs")
     if not loader.is_file():
-        raise RuntimeError("DeepSeek Harness 子代理等待组件缺失，请更新 SoduWork")
+        raise RuntimeError("DeepSeek Harness 子代理等待组件缺失，请更新 Nekowork")
     env["SODUWORK_DSH_ACP_SETTLEMENT"] = "1"
     env["NODE_OPTIONS"] = (env.get("NODE_OPTIONS", "") +
                            " --import=" + loader.resolve().as_uri()).strip()
@@ -473,7 +473,7 @@ def _stage_parent(stage: str) -> str:
     root = os.path.abspath(stage)
     name = os.path.basename(root)
     if not name.startswith(".dsh-host-stage-"):
-        raise RuntimeError("拒绝操作非 SoduWork DSH 临时目录")
+        raise RuntimeError("拒绝操作非 Nekowork DSH 临时目录")
     return root
 
 
@@ -735,7 +735,7 @@ def _probe_runtime(executable: str, runtime_root: str,
                     },
                     "clientInfo": {
                         "name": "soduwork-runtime-probe",
-                        "title": "SoduWork Runtime Probe", "version": "1",
+                        "title": "Nekowork Runtime Probe", "version": "1",
                     },
                 },
             }

@@ -18,13 +18,13 @@ async def execution(session, task_id):
 async def preflight(session, connection, binding):
     client, task, runner = await connections.target(session, connection, binding.task_id, binding.runner_id, quota=True)
     if task.status == "cancel" or task.archived_at:
-        raise HTTPException(409, "任务已关闭，请在 SoduWork 恢复后重新发送")
+        raise HTTPException(409, "任务已关闭，请在 Nekowork 恢复后重新发送")
     if await task_status.engine_owns(session, [task.id]):
         raise HTTPException(409, "工作流正在接管此任务，请在原会话处理")
     approval = await session.scalar(select(am.ApprovalRequest.id).where(
         am.ApprovalRequest.task_id == task.id, am.ApprovalRequest.status == "pending").limit(1))
     if approval:
-        raise HTTPException(409, "任务等待审批，请先在 SoduWork 完成审批")
+        raise HTTPException(409, "任务等待审批，请先在 Nekowork 完成审批")
     row = await execution(session, task.id)
     if row and row.runner_id != binding.runner_id:
         raise HTTPException(409, "会话执行机已变更，请重新绑定")
@@ -38,7 +38,7 @@ async def preflight(session, connection, binding):
             return client, row, "等待执行机同步现有会话，未重复启动任务"
         from . import managed_work_route
         if managed_work_route.is_managed(task):
-            raise HTTPException(409, "工程任务请先在 SoduWork 按审批流程启动")
+            raise HTTPException(409, "工程任务请先在 Nekowork 按审批流程启动")
         if not binding.options.get("allowStart"):
             raise HTTPException(409, "尚未授权远程启动此任务")
         from . import im_targets
@@ -55,7 +55,7 @@ async def submit(session, client, binding, inbox):
     from . import managed_work_route
     task = await session.get(Task, binding.task_id, with_for_update=True, populate_existing=True)
     if task is None or managed_work_route.is_managed(task):
-        raise HTTPException(409, "任务流程已变更，请在 SoduWork 检查后重新绑定")
+        raise HTTPException(409, "任务流程已变更，请在 Nekowork 检查后重新绑定")
     from .task_dispatch import dispatch
     return await dispatch(binding.task_id, {"brief": inbox.text,
         "assigneeId": "runner:" + binding.runner_id + ":" + binding.options["agentId"],
@@ -116,9 +116,9 @@ async def final_text(session, row, inbox, binding=None):
     if truncated and answer:
         answer = "本轮输出较长，以下仅为部分内容；完整结果请在原会话查看。\n\n" + answer
     if terminal_state != "done":
-        return "本轮执行未正常完成，请在 SoduWork 原会话查看原因。" + ("\n\n" + answer if answer else "")
+        return "本轮执行未正常完成，请在 Nekowork 原会话查看原因。" + ("\n\n" + answer if answer else "")
     if not answer:
-        return "本轮已结束，未收到可回传的文字结果。请在 SoduWork 原会话查看执行记录与成果。"
+        return "本轮已结束，未收到可回传的文字结果。请在 Nekowork 原会话查看执行记录与成果。"
     return answer
 
 

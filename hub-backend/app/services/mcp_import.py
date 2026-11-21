@@ -134,7 +134,7 @@ def _normalise(name: str, raw: dict, kind: str) -> dict:
     if len(headers_source) > 10:
         warnings.append("请求头超过 10 项，仅导入前 10 项")
     if raw.get("env_vars"):
-        warnings.append("Codex env_vars 只声明变量名，SoduWork 不读取宿主机隐式密钥；请在编辑页补值")
+        warnings.append("Codex env_vars 只声明变量名，Nekowork 不读取宿主机隐式密钥；请在编辑页补值")
     if raw.get("bearer_token_env_var") or raw.get("env_http_headers"):
         warnings.append("环境变量引用的 HTTP 凭据未复制；请在编辑页安全补录")
 

@@ -81,7 +81,7 @@ async def authenticated_client(
         except device_auth.DeviceAuthError as exc:
             raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
     else:
-        raise HTTPException(status_code=401, detail="需要有效的 SoduWork 设备会话")
+        raise HTTPException(status_code=401, detail="需要有效的 Nekowork 设备会话")
     if device_auth.should_write_last_seen(client.id):
         if isinstance(client, DevicePrincipal):
             result = await session.execute(update(Client).where(

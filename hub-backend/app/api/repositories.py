@@ -58,11 +58,11 @@ async def _client_in_scope(session: AsyncSession, user: User, client_id: str) ->
         return
     client = await session.get(models.Client, client_id)
     if client is None or not client.user_ref:
-        raise HTTPException(status_code=403, detail="The selected SoduWork code account is not in your organization")
+        raise HTTPException(status_code=403, detail="The selected Nekowork code account is not in your organization")
     owner = await session.get(models.User, client.user_ref)
     scope = await _scope(session, user)
     if owner is None or scope is not None and owner.org_id not in scope:
-        raise HTTPException(status_code=403, detail="The selected SoduWork code account is not in your organization")
+        raise HTTPException(status_code=403, detail="The selected Nekowork code account is not in your organization")
 
 
 @router.get("/repository-catalog")

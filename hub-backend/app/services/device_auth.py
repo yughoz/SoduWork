@@ -1,4 +1,4 @@
-"""SoduWork device enrollment, activation and short-lived session verification."""
+"""Nekowork device enrollment, activation and short-lived session verification."""
 from __future__ import annotations
 
 import asyncio
@@ -103,7 +103,7 @@ def secret_matches(client: Client | None, secret: str) -> bool:
 
 def issue_session(client: Client) -> tuple[str, int]:
     if client.auth_state != "active" or not client.user_ref:
-        raise DeviceAuthError("这台 SoduWork 还没有被管理员激活", 403)
+        raise DeviceAuthError("这台 Nekowork 还没有被管理员激活", 403)
     token = sign_claims(
         {"cid": client.id, "uid": client.user_ref, "ver": int(client.auth_version or 1)},
         ttl_seconds=SESSION_TTL_SECONDS,
@@ -114,7 +114,7 @@ def issue_session(client: Client) -> tuple[str, int]:
 
 def issue_proxy_ticket(client: Client, *, quota_runtime: str = "", quota_binding: str = "") -> tuple[str, int]:
     if client.auth_state != "active" or not client.user_ref:
-        raise DeviceAuthError("这台 SoduWork 还没有被管理员激活", 403)
+        raise DeviceAuthError("这台 Nekowork 还没有被管理员激活", 403)
     from .model_quota import managed_runtime
     runtime = managed_runtime(quota_runtime)
     token = sign_claims(
@@ -129,7 +129,7 @@ def issue_proxy_ticket(client: Client, *, quota_runtime: str = "", quota_binding
 
 def issue_mcp_ticket(client: Client) -> tuple[str, int]:
     if client.auth_state != "active" or not client.user_ref:
-        raise DeviceAuthError("这台 SoduWork 还没有被管理员激活", 403)
+        raise DeviceAuthError("这台 Nekowork 还没有被管理员激活", 403)
     token = sign_claims(
         {"cid": client.id, "uid": client.user_ref, "ver": int(client.auth_version or 1)},
         ttl_seconds=AGENT_TTL_SECONDS,
@@ -152,7 +152,7 @@ def issue_plugin_mcp_ticket(
     headers and secrets remain on the Hub and are re-resolved on every call.
     """
     if client.auth_state != "active" or not client.user_ref:
-        raise DeviceAuthError("这台 SoduWork 还没有被管理员激活", 403)
+        raise DeviceAuthError("这台 Nekowork 还没有被管理员激活", 403)
     bindings = list(dict.fromkeys(
         str(value or "").strip()[:36] for value in (binding_ids or [])
         if str(value or "").strip()))[:3]
@@ -182,9 +182,9 @@ def issue_plugin_mcp_ticket(
 def _assert_active_binding_loaded(client: Client | None, owner: User | None,
                                   claims: dict) -> None:
     if client is None:
-        raise DeviceAuthError("这台 SoduWork 尚未登记", 401, code="DEVICE_NOT_REGISTERED")
+        raise DeviceAuthError("这台 Nekowork 尚未登记", 401, code="DEVICE_NOT_REGISTERED")
     if client.auth_state != "active" or not client.user_ref:
-        raise DeviceAuthError("这台 SoduWork 尚未激活或已被停用", 403, code="DEVICE_INACTIVE")
+        raise DeviceAuthError("这台 Nekowork 尚未激活或已被停用", 403, code="DEVICE_INACTIVE")
     if owner is None or not owner.is_active or owner.account_deleted_at:
         raise DeviceAuthError("设备所属账号不存在或已停用", 403, code="DEVICE_OWNER_INACTIVE")
     if int(claims.get("ver") or 0) != int(client.auth_version or 1):
@@ -266,14 +266,14 @@ async def client_from_proxy_ticket(session: AsyncSession, token: str) -> Client:
 
 
 async def principal_from_mcp_ticket(session: AsyncSession, token: str) -> tuple[Client, dict]:
-    """Accept either the ordinary SoduWork-tool ticket or a per-turn plugin ticket."""
+    """Accept either the ordinary Nekowork-tool ticket or a per-turn plugin ticket."""
     token_type = "device-mcp"
     claims = verify_claims(token, token_type=token_type)
     if claims is None:
         token_type = "plugin-mcp"
         claims = verify_claims(token, token_type=token_type)
     if not claims:
-        raise DeviceAuthError("SoduWork 工具凭证已失效，请重新打开对话", 401)
+        raise DeviceAuthError("Nekowork 工具凭证已失效，请重新打开对话", 401)
     from . import auth_principals, shared_auth_cache
     if shared_auth_cache.reads_enabled():
         principal, claims = await auth_principals.from_token(session, token, token_type=token_type)
@@ -338,7 +338,7 @@ async def client_from_transport(
     elif allow_legacy:
         client = await client_from_secret(session, expected, secret)
     else:
-        raise DeviceAuthError("需要有效的 SoduWork 设备会话", 401)
+        raise DeviceAuthError("需要有效的 Nekowork 设备会话", 401)
     if client.id != expected:
         raise DeviceAuthError("设备会话与设备标识不匹配", 401)
     return client
@@ -356,9 +356,9 @@ async def assert_active_binding(session: AsyncSession, client: Client | None, cl
 async def assert_active_owner(session: AsyncSession, client: Client | None) -> None:
     """Validate the mutable device-owner state before minting or accepting credentials."""
     if client is None:
-        raise DeviceAuthError("这台 SoduWork 尚未登记", 401)
+        raise DeviceAuthError("这台 Nekowork 尚未登记", 401)
     if client.auth_state != "active" or not client.user_ref:
-        raise DeviceAuthError("这台 SoduWork 尚未激活或已被停用", 403)
+        raise DeviceAuthError("这台 Nekowork 尚未激活或已被停用", 403)
     from .auth_principals import user_snapshot
     user = await user_snapshot(session, client.user_ref)
     if user is None or not user["is_active"] or user["account_deleted_at"]:

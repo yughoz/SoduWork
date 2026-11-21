@@ -317,7 +317,7 @@ async def _pull_artifacts(session: AsyncSession, tid: str, ctx: dict, s: dict, r
         code = {}
         try:
             from . import code_delivery
-            code = await code_delivery.check(session, t, who="SoduWork", force=True)
+            code = await code_delivery.check(session, t, who="Nekowork", force=True)
         except Exception as e:  # noqa: BLE001 - Preserve ingested outputs.
             log.warning("Code delivery check failed: %s", type(e).__name__)
         if not code.get("applies"):
@@ -329,7 +329,7 @@ async def _pull_artifacts(session: AsyncSession, tid: str, ctx: dict, s: dict, r
                 try:
                     from . import release_control as _release
                     artifact, created = await _release.ensure_current_output(
-                        session, t, source_ref=ref, who="SoduWork", automatic_round=round_no)
+                        session, t, source_ref=ref, who="Nekowork", automatic_round=round_no)
                     # Retry a missing approval after a prior candidate-only commit.
                     # Workflow nodes keep their own gates and never reach this path.
                     await _release.ensure_request(session, t, artifact, "review")

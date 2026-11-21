@@ -322,7 +322,7 @@ def _compose(t, ctx: dict) -> str:
             "不要进入其他 `.soduwork/worktrees`，不要重新 clone 或初始化项目。\n"
             f"需要修改时，在当前 detached HEAD 上完成提交，再用 `git push origin HEAD:{branch}` "
             "非强推更新同一远端任务分支；不得另建分支。若逐项核对后确认无需源码改动，"
-            "不要制造空提交，保留真实核对证据并结束本轮，SoduWork 会重试失败门禁。"
+            "不要制造空提交，保留真实核对证据并结束本轮，Nekowork 会重试失败门禁。"
         )
     if ctx.get("planDeliver"):
         parts.append(str(ctx["planDeliver"]))
@@ -330,11 +330,11 @@ def _compose(t, ctx: dict) -> str:
         parts.append("这是自适应办公对话。普通咨询直接用自然语言回答；只有用户在本轮明确要求生成文件、程序或其他成果时，才写入工作目录并进行必要验证。")
     else:
         parts.append("产出请直接写成文件放在工作目录里——**本地执行不需要上传**，"
-                     "SoduWork 会自己从这个目录把新文件收走。")
+                     "Nekowork 会自己从这个目录把新文件收走。")
         parts.append(
             "需要生成文件、程序或其他可验证结果时，必须实际调用可用工具完成并核验真实结果；"
             "不得只输出计划、承诺、‘将要执行’或完成说明。纯咨询、分析与说明类任务可以直接回答。")
-    # Include the SoduWork task ID in the instructions.
+    # Include the Nekowork task ID in the instructions.
     # The agent needs this ID to construct the required task-specific branch name.
     # Do not leave branch identity implicit.
     # Pi loads skills through --skill; other runtimes receive the same skill context in the prompt.
@@ -353,7 +353,7 @@ def _compose(t, ctx: dict) -> str:
             names = "、".join(str(name) for name in mcp_specs)[:500]
             parts.append(
                 "【本节点获准使用的 MCP】\n连接：" + names + "。凭据只在本轮进程内，"
-                "不得读取、回显或写入成果。只能通过 SoduWork MCP 桥调用；桥会隐藏并拒绝"
+                "不得读取、回显或写入成果。只能通过 Nekowork MCP 桥调用；桥会隐藏并拒绝"
                 "绑定未批准的工具，不得改用底座自己的全局 MCP 配置绕过。\n"
                 "先查看允许的工具：`node " + bridge_arg + " list <连接名>`\n"
                 "再按真实参数调用：`node " + bridge_arg +
@@ -383,7 +383,7 @@ def _compose(t, ctx: dict) -> str:
         parts.append("\n".join(lines))
     tid = getattr(t, "id", "") or ""
     if tid and not conversation_mode:
-        parts.append("---\n由 SoduWork 派发 · SoduWork 任务 " + str(tid))
+        parts.append("---\n由 Nekowork 派发 · Nekowork 任务 " + str(tid))
     return "\n\n".join(p for p in parts if p)
 
 
@@ -532,7 +532,7 @@ def _dispatch_sync_once(cfg: dict, t, files: list | None = None,
 
 
         return {"ok": False, "error":
-                "个人插件「%s」没有在这台执行机上完成装载：个人插件自动化只能在装有 SoduWork 客户端的本人电脑上运行"
+                "个人插件「%s」没有在这台执行机上完成装载：个人插件自动化只能在装有 Nekowork 客户端的本人电脑上运行"
                 % str((ctx.get("personalPlugin") or {}).get("key"))}
     # The orchestration layer has already resolved the task's skills into context.
     # Pass supported skill paths through runtime arguments, such as Pi's --skill.

@@ -65,7 +65,7 @@ export default function Overview() {
     return (
       <div className="card">
         <div className="empty" style={{ padding: '40px 24px', lineHeight: 1.7 }}>
-          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>{tx("你的账号暂无运营数据权限")}</div>{tx("当前角色未开通「查看需求 / 查看 SoduWork」等权限，因此看不到运营看板。")}<br />{tx("如需查看，请联系管理员为你的角色分配相应权限点。")}</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>{tx("你的账号暂无运营数据权限")}</div>{tx("当前角色未开通「查看需求 / 查看 Nekowork」等权限，因此看不到运营看板。")}<br />{tx("如需查看，请联系管理员为你的角色分配相应权限点。")}</div>
       </div>
     )
   }
@@ -86,7 +86,7 @@ export default function Overview() {
   const clientUser = {}; cl.forEach((c) => { clientUser[c.id] = c.ownerUserId })
   const dept = {}
   const ensure = (oid) => {
-    if (!dept[oid]) dept[oid] = { oid, name: oid === '__none__' ? tx("未归属 SoduWork") : (orgName[oid] || tx("未命名部门")), members: new Set(), boxes: 0, online: 0, total: 0, done: 0, open: 0, overdue: 0, stuck: 0 }
+    if (!dept[oid]) dept[oid] = { oid, name: oid === '__none__' ? tx("未归属 Nekowork") : (orgName[oid] || tx("未命名部门")), members: new Set(), boxes: 0, online: 0, total: 0, done: 0, open: 0, overdue: 0, stuck: 0 }
     return dept[oid]
   }
   ul.forEach((u) => { if (u.orgId) ensure(u.orgId).members.add(u.id) })
@@ -124,7 +124,7 @@ export default function Overview() {
         <Metric label={tx("需求池")} value={tk.length} note={tx("待整理与澄清 {0} · 已关闭 {1}", [summary.preparing, summary.closed])} />
         <Metric label={tx("需求交付率")} value={rate + '%'} note={tx("{0} / {1} 已交付，不含已关闭", [done, tk.length])} tone="good" />
         <Metric label={tx("待处理风险")} value={attention} note={tx("逾期 {0} · 执行异常 {1}", [overdue, stuck])} tone={attention ? 'risk' : 'good'} />
-        <Metric label={tx("SoduWork 在线率")} value={onlineRate + '%'} note={tx("{0} / {1} 台在线", [online, cl.length])} tone={onlineRate < 60 && cl.length ? 'warn' : ''} />
+        <Metric label={tx("Nekowork 在线率")} value={onlineRate + '%'} note={tx("{0} / {1} 台在线", [online, cl.length])} tone={onlineRate < 60 && cl.length ? 'warn' : ''} />
       </div>
 
       <div ref={mainGridRef} className="gov-main-grid">
@@ -135,7 +135,7 @@ export default function Overview() {
           {deptRows.length > 0 && <div className="gov-dept-table" tabIndex={0} role="region" aria-label={tx("部门需求态势")}>
             <div className="gov-dept-head"><span>{tx("部门与在线情况")}</span><span>{tx("完成进度")}</span><span>{tx("需求")}</span><span>{tx("风险")}</span></div>
             {deptRows.map((d) => <article key={d.oid} className={d.overdue + d.stuck ? 'has-risk' : ''}>
-              <div className="gov-dept-name"><b title={d.name}>{d.name}</b><small>{tx("{0} 人 · SoduWork {1}/{2} 在线", [d.members, d.online, d.boxes])}</small></div>
+              <div className="gov-dept-name"><b title={d.name}>{d.name}</b><small>{tx("{0} 人 · Nekowork {1}/{2} 在线", [d.members, d.online, d.boxes])}</small></div>
               <div className="gov-dept-progress"><span><i style={{ width: d.rate + '%' }} /></span><b>{d.rate}%</b></div>
               <div className="gov-dept-count"><b>{d.total}</b><small>{tx("{0} 未完成", [d.open])}</small></div>
               <div className="gov-dept-risk"><b>{d.overdue + d.stuck}</b><small>{tx("逾期 {0} · 执行异常 {1}", [d.overdue, d.stuck])}</small></div>
@@ -169,7 +169,7 @@ export default function Overview() {
         <section className="gov-section gov-network">
           <header><div><h3>{tx("终端与业务来源")}</h3></div><button type="button" onClick={() => navTo('clients')}>{tx("查看执行网络")}<Icon name="external" /></button></header>
           <div className="gov-network-ledger">
-            {mayViewClients && <div><b>{online}<small> / {cl.length}</small></b><span>{tx("在线 SoduWork")}</span></div>}
+            {mayViewClients && <div><b>{online}<small> / {cl.length}</small></b><span>{tx("在线 Nekowork")}</span></div>}
             {mayManageBindings && <div><b>{ua.length}</b><span>{tx("未分配需求")}</span></div>}
             {mayManageIntegrations && <div><b>{it.filter((i) => i.enabled).length}<small> / {it.length}</small></b><span>{tx("启用集成源")}</span></div>}
           </div>

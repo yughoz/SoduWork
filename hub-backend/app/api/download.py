@@ -24,10 +24,10 @@ router = APIRouter(prefix="/api/v1/download", tags=["download"])
 
 # hub-backend/downloads/
 _DIR = Path(__file__).resolve().parent.parent.parent / "downloads"
-_DISPLAY_NAME = "SoduWork-Setup.exe"
+_DISPLAY_NAME = "Nekowork-Setup.exe"
 _LEGACY_FILENAME = "soduwork.exe"
-_VERSIONED_PACKAGE = re.compile(r"^SoduWork-(\d+)\.(\d+)\.(\d+)-Setup\.exe$")
-_MOBILE_DISPLAY_NAME = "SoduWork-Mobile.apk"
+_VERSIONED_PACKAGE = re.compile(r"^Nekowork-(\d+)\.(\d+)\.(\d+)-Setup\.exe$")
+_MOBILE_DISPLAY_NAME = "Nekowork-Mobile.apk"
 
 
 # Public Linux downloads from the release channel.
@@ -255,13 +255,13 @@ async def client_mac_download(arch: str, session=Depends(get_session)):
 def _pkg() -> Path:
     # Do not infer release order from mtime, which changes during copies and restores.
     versioned = []
-    for package in _DIR.glob("SoduWork-*-Setup.exe"):
+    for package in _DIR.glob("Nekowork-*-Setup.exe"):
         match = _VERSIONED_PACKAGE.fullmatch(package.name)
         if match:
             versioned.append((tuple(map(int, match.groups())), package))
     if versioned:
         return max(versioned, key=lambda item: item[0])[1]
-    branded = _DIR / "SoduWork-Setup.exe"
+    branded = _DIR / "Nekowork-Setup.exe"
     if branded.is_file():
         return branded
     return _DIR / _LEGACY_FILENAME

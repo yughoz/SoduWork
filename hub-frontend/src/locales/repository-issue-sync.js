@@ -52,7 +52,7 @@ export default {
   '请先保存设置，再立即同步。': 'Save settings before running sync.',
   '仓库成员关联': 'Repository member mapping',
   '已关联 {0} / {1}': '{0} / {1} mapped',
-  '仅已验证身份或明确关联的仓库成员可查看并认领。同名不会自动授权；待关联成员需选择对应的 SoduWork 账号。': 'Only repository members with verified identities or explicit mappings can view and claim Issues. Matching names do not grant access. Choose a SoduWork account for each unmapped member.',
+  '仅已验证身份或明确关联的仓库成员可查看并认领。同名不会自动授权；待关联成员需选择对应的 Nekowork 账号。': 'Only repository members with verified identities or explicit mappings can view and claim Issues. Matching names do not grant access. Choose a Nekowork account for each unmapped member.',
   '仓库成员已失效': 'Repository membership inactive',
   '已关联': 'Mapped',
   '待关联': 'Unmapped',

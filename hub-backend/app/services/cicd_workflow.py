@@ -146,5 +146,5 @@ async def publish_cicd(session: AsyncSession, run, task, nr, node: dict) -> dict
     task_events.record(session, task.id, "plugin.node_published", {
         "runId": run.id, "node": nr.node_key, "customer": output["customer"],
         "version": output["version"], "deployStatus": output["deployStatus"],
-    }, actor="SoduWork")
+    }, actor="Nekowork")
     return require_evidence("publish", output)

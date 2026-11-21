@@ -165,7 +165,7 @@ def parse(data: bytes) -> dict:
                 adapter = plugin_adapters.adapt_skill_bundle(zf, names, root, checksum)
     if adapter is None:
         raise ValueError(
-            "找不到 SoduWork、Codex 或 Claude 插件入口（plugin.json / "
+            "找不到 Nekowork、Codex 或 Claude 插件入口（plugin.json / "
             ".codex-plugin/plugin.json / .claude-plugin/plugin.json / skills/*/SKILL.md）")
     normalized, wf, report = normalize(adapter["manifest"], adapter.get("workflow"))
     from . import plugin_resources

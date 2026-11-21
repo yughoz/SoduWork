@@ -69,8 +69,8 @@ async def connect(credentials):
     if value.get("id") != credentials["application_id"] or value.get("verify_key") != credentials["public_key"]:
         raise transport.TransportError("platform_credentials_rejected")
     commands = {}
-    for name, argument, description in (("pair", "code", "Pair this chat with your SoduWork desktop"),
-            ("soduwork", "text", "Send a request to your paired SoduWork desktop")):
+    for name, argument, description in (("pair", "code", "Pair this chat with your Nekowork desktop"),
+            ("soduwork", "text", "Send a request to your paired Nekowork desktop")):
         value = await transport.request(BASE + "/applications/" + credentials["application_id"] + "/commands",
             {"name": name, "type": 1, "description": description, "integration_types": [0], "contexts": [0, 1],
              "options": [{"type": 3, "name": argument, "description": "Pairing code" if name == "pair" else "Your request",

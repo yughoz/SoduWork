@@ -38,7 +38,7 @@ def transport_supported(llm: dict | None) -> bool:
     row = dict(llm or {})
     routing = row.get("imageRouting")
     if routing == "vision-fallback":
-        # Fallback is implemented by SoduWork's proxy, not by an arbitrary vendor.
+        # Fallback is implemented by Nekowork's proxy, not by an arbitrary vendor.
         return row.get("visionFallbackAvailable") is True and urlsplit(
             str(row.get("base") or "")).path.rstrip("/").endswith("/api/v1/ai-proxy/v1")
     return routing == "native" or "image" in (row.get("input") or [])

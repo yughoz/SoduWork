@@ -24,7 +24,7 @@ MCP_TEMPLATES: tuple[dict, ...] = (
         "template": {"name": "文件与目录", "type": "stdio", "command": "npx",
                      "args": ["-y", "@modelcontextprotocol/server-filesystem",
                               "${SODUWORK_WORK_ROOT}"],
-                     "description": "只访问本次授权的 SoduWork 工作根目录", "enabled": False},
+                     "description": "只访问本次授权的 Nekowork 工作根目录", "enabled": False},
     },
     {
         "key": "mcp-git", "kind": "mcp", "name": "Git 仓库",

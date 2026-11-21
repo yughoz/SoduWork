@@ -158,6 +158,6 @@ async def reconcile_identical_pending(session, task_id):
         'versionId': latest.id, 'supersededVersionIds': old_ids,
         'cancelledRequestIds': [r.id for r in requests if r.artifact_version_id in old_ids],
         'reason': 'identical-undecided-file-candidates',
-    }, actor='SoduWork')
+    }, actor='Nekowork')
     await session.flush()
     return old_ids

@@ -67,7 +67,7 @@ export function UsageTrend({ trend }) {
     </header>
     <div className="oi-trend-summary"><span><i />{meta.label}<small>{tx("单位：")}{meta.unit}</small></span>
       <span>{tx("日均 ")}<b>{average == null ? '—' : number(average)}</b><em />{tx("单日最高 ")}<b>{seriesPeak == null ? '—' : number(seriesPeak)}</b></span></div>
-    {values.length === 0 ? <div className="oi-chart-empty"><Icon name="activity" /><b>{tx("暂无趋势数据")}</b><span>{tx("开始使用 SoduWork 后，这里会展示每日变化。")}</span></div> :
+    {values.length === 0 ? <div className="oi-chart-empty"><Icon name="activity" /><b>{tx("暂无趋势数据")}</b><span>{tx("开始使用 Nekowork 后，这里会展示每日变化。")}</span></div> :
       <div className="oi-trend-plot" ref={plotRef}>
         <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" tabIndex="0" role="img"
           aria-label={tx("{0}每日趋势，使用左右方向键查看日期，Home 和 End 跳到首尾。{1}", [meta.label, selected != null && selected >= 0 ? `${shortDate(trend[selected].date)}，${number(values[selected])}${meta.unit}。` : ''])}

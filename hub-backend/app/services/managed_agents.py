@@ -1,4 +1,4 @@
-"""SoduWork-managed Agent runtimes.
+"""Nekowork-managed Agent runtimes.
 
 OpenCode is distributed as an official native executable. Installing it through
 npm global mode made every employee machine depend on Node, global directory
@@ -295,7 +295,7 @@ def _download(url: str, target: Path, expected: str,
         try:
             offset = partial.stat().st_size if partial.is_file() else 0
             received = offset
-            headers = {"User-Agent": "SoduWork-Agent-Runtime/1"}
+            headers = {"User-Agent": "Nekowork-Agent-Runtime/1"}
             if offset:
                 headers["Range"] = "bytes=%d-" % offset
             request = urllib.request.Request(url, headers=headers)
@@ -420,7 +420,7 @@ def _remove_managed() -> tuple[bool, str]:
         _active_file().unlink(missing_ok=True)
         if active:
             shutil.rmtree(_root() / active, ignore_errors=False)
-        return True, "SoduWork 管理的 OpenCode 已移除；系统中独立安装的版本未受影响。"
+        return True, "Nekowork 管理的 OpenCode 已移除；系统中独立安装的版本未受影响。"
     except OSError as exc:
         return False, "OpenCode \u79fb\u9664\u5931\u8d25\uff1a" + str(exc)[:140]
 
@@ -449,10 +449,10 @@ def _install(action: str, say: Callable[[str], None]) -> tuple[bool, str]:
         if issue := runtime_issue():
             return False, issue
         if current == OPENCODE_VERSION:
-            return True, "\u5df2\u7ecf\u662f SoduWork \u7ba1\u7406\u7248 %s" % current
+            return True, "\u5df2\u7ecf\u662f Nekowork \u7ba1\u7406\u7248 %s" % current
         if current:
-            return True, "\u5f53\u524d\u662f %s\uff1bSoduWork \u56fa\u5b9a\u7248\u672c\u4e3a %s" % (current, OPENCODE_VERSION)
-        return True, "SoduWork 将安装固定版本 %s，并自动准备执行依赖。" % OPENCODE_VERSION
+            return True, "\u5f53\u524d\u662f %s\uff1bNekowork \u56fa\u5b9a\u7248\u672c\u4e3a %s" % (current, OPENCODE_VERSION)
+        return True, "Nekowork 将安装固定版本 %s，并自动准备执行依赖。" % OPENCODE_VERSION
     key = platform_key()
     filename, expected = OPENCODE_ARTIFACTS[key]
     target = _root() / OPENCODE_VERSION

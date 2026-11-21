@@ -79,7 +79,7 @@ async def cleanup_abnormal(
                 "previousStatus": previous,
                 "reason": "one_click_workbench_cleanup",
             },
-            actor="SoduWork",
+            actor="Nekowork",
         )
         cleaned.append(tid)
 

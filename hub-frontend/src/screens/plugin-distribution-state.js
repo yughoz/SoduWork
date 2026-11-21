@@ -11,7 +11,7 @@ function sourceState(version) {
     return {
       state: 'done',
       title: tx("来源已核验"),
-      detail: signature === 'platform' ? tx("SoduWork 平台版本") : tx("发布者签名有效"),
+      detail: signature === 'platform' ? tx("Nekowork 平台版本") : tx("发布者签名有效"),
     }
   }
   if (signature === 'unknown-key') {

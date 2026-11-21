@@ -431,7 +431,7 @@ class BridgeAccess:
             if not native_mode:
                 raise AccessError("ACCESS_POLICY_UNSUPPORTED: Agent did not advertise the requested permission mode")
             # Always apply, including restored native sessions. A saved wider
-            # native mode must not override the current SoduWork policy.
+            # native mode must not override the current Nekowork policy.
             bridge.request("session/set_mode", {"sessionId": bridge.session_id,
                                                 "modeId": native_mode})
         result = self.call("/applied", {"mode": self.mode, "nativeMode": native_mode})

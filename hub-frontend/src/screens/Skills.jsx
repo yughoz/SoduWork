@@ -188,7 +188,7 @@ function SkillCatalog({ rows, allowed, legacy, onToggle, submissions }) {
     <div className={'cap-admin-body cap-admin-skill-body' + (submissions.length ? ' has-personal' : '')}>
       <section className="cap-admin-discovered">
         <div className="cap-admin-section-title">
-          <div><b>{tx("已发现的 Skill")}</b><span>{tx("自动扫描 SoduWork 内置、公司导入与标准技能目录")}</span></div>
+          <div><b>{tx("已发现的 Skill")}</b><span>{tx("自动扫描 Nekowork 内置、公司导入与标准技能目录")}</span></div>
           <em>{rows.length}{tx(" 项")}</em>
         </div>
         {rows.length === 0 ? (
@@ -207,7 +207,7 @@ function SkillCatalog({ rows, allowed, legacy, onToggle, submissions }) {
                     <span className="cap-admin-card-desc" title={item.description || tx("暂无用途说明")}>{item.description || tx("暂无用途说明")}</span>
                     <span className="cap-admin-passport">
                       <i className={on ? 'ok' : ''}>{on ? tx("已开放") : tx("未开放")}</i>
-                      <i>{item.inUse || 0}{tx(" 台 SoduWork 在用")}</i>
+                      <i>{item.inUse || 0}{tx(" 台 Nekowork 在用")}</i>
                       {!item.portable && <i title={tx("目标 Runner 也必须安装同名 Skill；建议导入公司能力库固化版本")}>{tx("需执行机同名能力")}</i>}
                       {item.compatibility && <i title={item.compatibility}>{tx("有环境要求")}</i>}
                     </span>
@@ -319,7 +319,7 @@ function sourceLabel(item, data) {
   if (/[\\/][.]codex[\\/]/.test(root)) return 'Codex'
   if (/[\\/][.]pi[\\/]/.test(root)) return 'Pi'
   if (/[\\/][.]agents[\\/]/.test(root)) return tx("通用目录")
-  return tx("SoduWork 内置")
+  return tx("Nekowork 内置")
 }
 
 function formatBytes(value) {

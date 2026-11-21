@@ -1,6 +1,6 @@
 """Adapters for third-party agent plugin packages.
 
-The workflow engine only understands SoduWork's small, versioned manifest.  Import adapters
+The workflow engine only understands Nekowork's small, versioned manifest.  Import adapters
 translate package metadata into that contract; they never execute third-party hooks or code.
 """
 from __future__ import annotations
@@ -51,9 +51,9 @@ def _version(value, digest: str, warnings: list[str]) -> str:
     if re.fullmatch(r"[0-9]+\.[0-9]+", raw):
         return raw + ".0"
     if raw:
-        warnings.append(f"原包版本「{raw}」不是 SemVer，SoduWork 已按内容生成不可变版本号")
+        warnings.append(f"原包版本「{raw}」不是 SemVer，Nekowork 已按内容生成不可变版本号")
     else:
-        warnings.append("原包没有版本号，SoduWork 已按内容生成不可变版本号")
+        warnings.append("原包没有版本号，Nekowork 已按内容生成不可变版本号")
     return "0.0.0+" + digest[:12]
 
 
@@ -177,7 +177,7 @@ def discover_mcp_names(zf: zipfile.ZipFile, names: dict[str, zipfile.ZipInfo],
     for path in dict.fromkeys(paths):
         found.update(_mcp_keys(_json(zf, names[path], "MCP 配置")))
     if found:
-        warnings.append("MCP 只导入逻辑连接名；命令、地址、环境变量和密钥需由管理员在 SoduWork 中重新配置")
+        warnings.append("MCP 只导入逻辑连接名；命令、地址、环境变量和密钥需由管理员在 Nekowork 中重新配置")
     return sorted(found), warnings
 
 
@@ -214,13 +214,13 @@ def skill_bundle_root(names: dict[str, zipfile.ZipInfo]) -> str | None:
 
 def adapt_skill_bundle(zf: zipfile.ZipFile, names: dict[str, zipfile.ZipInfo],
                        root: str, digest: str) -> dict:
-    """Convert Claude's valid manifest-free Skill layout into SoduWork's safe contract."""
+    """Convert Claude's valid manifest-free Skill layout into Nekowork's safe contract."""
     skills, warnings = discover_skills(zf, names, root)
     if not skills:
         raise ValueError("无清单插件里没有可识别的 Agent Skill")
     folder = root.rstrip("/").rsplit("/", 1)[-1] if root else ""
     display_name = folder or skills[0]["name"] or "Claude Skill 插件"
-    warnings.insert(0, "原包未提供 plugin.json，SoduWork 已按 Claude Code 默认目录发现 Skill")
+    warnings.insert(0, "原包未提供 plugin.json，Nekowork 已按 Claude Code 默认目录发现 Skill")
     names_text = "、".join(item["name"] for item in skills)
     manifest = {
         "schemaVersion": 1,

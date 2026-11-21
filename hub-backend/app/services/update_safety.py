@@ -151,7 +151,7 @@ async def _sweep_stale_sessions(
             session.add(models.TaskEvent(
                 task_id=item.task_id,
                 kind="execution.session_swept",
-                actor="SoduWork",
+                actor="Nekowork",
                 detail={"sessionId": item.id, "ref": item.ref,
                         "swept": True, "by": "update-safety",
                         "taskStatus": status or "", "runnerId": item.runner_id},

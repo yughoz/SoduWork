@@ -267,7 +267,7 @@ async def _ingest_one_legacy(session: AsyncSession, integration: models.Integrat
     if ext_repo:
         t.ext_repo = ext_repo[:200]
     # Fill repository, priority, and requester fields only when empty.
-    # Repeated ingestion must preserve manual changes made in SoduWork.
+    # Repeated ingestion must preserve manual changes made in Nekowork.
     if repo_id and not (getattr(t, "repo_id", "") or ""):
         t.repo_id = repo_id
     if project_id and not t.project_id:

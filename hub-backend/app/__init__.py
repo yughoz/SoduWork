@@ -1,1 +1,1 @@
-"""SoduWork Hub application package."""
+"""Nekowork Hub application package."""

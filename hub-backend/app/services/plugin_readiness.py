@@ -91,7 +91,7 @@ async def binding_readiness(session: AsyncSession, version: am.PluginVersion,
                 "verification": "declaration",
             })
             warnings.append(
-                f"应用 MCP（{names}）由 SoduWork 客户端读取已保存的应用凭据；"
+                f"应用 MCP（{names}）由 Nekowork 客户端读取已保存的应用凭据；"
                 "本次只核对接入声明，未验证用户凭据或服务连通性。"
                 "实际使用仍检查安装授权、凭据和应用服务响应。")
             wanted_mcp = [name for name in wanted_mcp if name not in owned]

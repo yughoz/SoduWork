@@ -29,7 +29,7 @@ function summarizeDetail(d) {
 export function detailText(a) {
   const d = a.detail || {}
   const bits = []
-  if (a.action === 'task.dispatch') bits.push(tx("下发 {0} 个 SoduWork", [d.dispatched ?? 0]))
+  if (a.action === 'task.dispatch') bits.push(tx("下发 {0} 个 Nekowork", [d.dispatched ?? 0]))
   else if (a.action === 'task.dispatch.sub') bits.push(tx("「{0}」→ {1} 盒", [d.title || '', d.boxes ?? 0]))
   else if (a.action === 'task.advance') bits.push('→ ' + (d.toStage || '') + (d.via === 'admin' ? tx(" · 管理端") : tx(" · 桌宠")))
   else if (a.action === 'task.reject') bits.push(tx("打回 → ") + (d.toStage || '') + (d.note ? ' · ' + d.note : ''))

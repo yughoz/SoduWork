@@ -62,7 +62,7 @@ def public_request(row):
               "createdAt": iso_utc(row.created_at), "errorCode": row.error_code,
               "expiresAt": iso_utc(row.expires_at) if row.expires_at else None}
     if row.kind == "export" and row.status == "completed":
-        result.update(filename="SoduWork-personal-data.zip",
+        result.update(filename="Nekowork-personal-data.zip",
                       downloadUrl=f"/api/v1/client-auth/me/exports/{row.id}/download")
     return result
 

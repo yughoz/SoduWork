@@ -46,7 +46,7 @@ def _safe_source(url: URL) -> dict[str, Any]:
 def _write_manifest(backup: Path, engine: str, source: URL, schema_revision: str = "") -> Path:
     payload = {
         "formatVersion": 1,
-        "product": "SoduWork",
+        "product": "Nekowork",
         "engine": engine,
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "source": _safe_source(source),

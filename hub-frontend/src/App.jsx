@@ -51,16 +51,16 @@ try {
 const NAV = localeMap(() => ([
   { id: 'overview', label: '治理总览', sub: '企业 AI 运行与协同状态', icon: 'grid', Comp: Overview, group: '总览', perm: 'task.view' },
   { id: 'insights', label: '运营分析', sub: '采用度、插件使用、自动化健康与产出', icon: 'activity', Comp: OperationsInsights, group: '总览', perm: 'operations.view' },
-  { id: 'automation-templates', label: '自动化模板', sub: '配置员工可直接套用的自动化工作模板', icon: 'sparkle', Comp: AutomationTemplates, group: 'AI 运行', perm: 'task.dispatch' },
-  { id: 'operations', label: '运行监控', sub: 'Hub、Runner、请求与执行链路健康', icon: 'pulse', Comp: OperationsCenter, group: 'AI 运行', perm: 'operations.view' },
-  { id: 'clients', label: '执行网络', sub: '集中管理员工终端、Runner 执行机与接单状态', icon: 'monitor', Comp: Clients, group: 'AI 运行', perm: 'client.view' },
-  { id: 'client-releases', label: '客户端发布', sub: '上传已签名安装包、启用或停用各平台版本', icon: 'send', Comp: ClientReleases, group: 'AI 运行', perm: 'client.update' },
-  { id: 'usage', label: '用量与成本', sub: '按成员、场景、Agent 与模型治理企业 AI 消耗', icon: 'chart', Comp: UsageCenter, group: 'AI 运行', perm: 'client.view' },
-  { id: 'tokens', label: 'Token LLM', sub: 'New API token balance and usage', icon: 'key', Comp: TokenDashboard, group: 'AI 运行', perm: 'client.view' },
-  { id: 'quotas', label: '额度管理', sub: '套餐、模型额度与成员分配', icon: 'chart', Comp: QuotaManagement, group: 'AI 运行', perm: 'quota.manage' },
+  { id: 'automation-templates', label: '自动化模板', sub: '配置员工可直接套用的自动化工作模板', icon: 'sparkle', Comp: AutomationTemplates, group: 'AI', perm: 'task.dispatch' },
+  { id: 'operations', label: '运行监控', sub: 'Hub、Runner、请求与执行链路健康', icon: 'pulse', Comp: OperationsCenter, group: 'AI', perm: 'operations.view' },
+  { id: 'clients', label: '执行网络', sub: '集中管理员工终端、Runner 执行机与接单状态', icon: 'monitor', Comp: Clients, group: 'AI', perm: 'client.view' },
+  { id: 'client-releases', label: '客户端发布', sub: '上传已签名安装包、启用或停用各平台版本', icon: 'send', Comp: ClientReleases, group: 'AI', perm: 'client.update' },
+  { id: 'usage', label: '用量与成本', sub: '按成员、场景、Agent 与模型治理企业 AI 消耗', icon: 'chart', Comp: UsageCenter, group: 'AI', perm: 'client.view' },
+  { id: 'tokens', label: 'Token LLM', sub: 'New API token balance and usage', icon: 'key', Comp: TokenDashboard, group: 'AI', perm: 'client.view' },
+  { id: 'quotas', label: '额度管理', sub: '套餐、模型额度与成员分配', icon: 'chart', Comp: QuotaManagement, group: 'AI', perm: 'quota.manage' },
   // Treat automation as a plugin execution mode rather than a separate capability catalog.
-  { id: 'projects', label: '项目与仓库', sub: '项目、代码仓库、流程和发布目标的治理入口', icon: 'box', Comp: Projects, group: 'AI 运行', perm: 'task.view' },
-  { id: 'repositories', label: '仓库目录', sub: '企业代码资产全量目录、同步健康与项目挂载', icon: 'file', Comp: Repositories, group: 'AI 运行', perm: 'task.view' },
+  { id: 'projects', label: '项目与仓库', sub: '项目、代码仓库、流程和发布目标的治理入口', icon: 'box', Comp: Projects, group: 'AI', perm: 'task.view' },
+  { id: 'repositories', label: '仓库目录', sub: '企业代码资产全量目录、同步健康与项目挂载', icon: 'file', Comp: Repositories, group: 'AI', perm: 'task.view' },
   { id: 'models', label: '模型目录', sub: '模型服务与企业模型配置', icon: 'key', Comp: ModelCatalog, group: '能力配置', perm: 'integration.manage' },
   { id: 'plugins', label: '插件与应用', sub: '企业能力、工作流与运行治理', icon: 'plug', Comp: PluginCenter, group: '能力配置', perm: 'plugin.manage' },
   { id: 'capabilities', label: '能力目录', sub: '统一治理 Skill、连接器与企业开放策略', icon: 'layers', Comp: Capabilities, group: '能力配置', perm: 'integration.manage' },
@@ -247,8 +247,8 @@ export default function App() {
       <div className="app">
         <div className="landing">
           <img src="/soduwork.png" alt="" className="logo-box" style={{ width: 44, height: 44 }} />
-          <h2>{tx("SoduWork 管理端是管理端")}</h2>
-          <p>{tx("你好，")}{(me && (me.displayName || me.username)) || tx("同事")}{tx("。日常需求、收件箱认领和工作日报都在")}<b>{tx("桌面端「SoduWork」")}</b>{tx("里完成；")}<br />{tx("这里是负责人与管理员使用的管理控制台。如需管理权限，请联系管理员为你的角色开通。")}</p>
+          <h2>{tx("Nekowork 管理端是管理端")}</h2>
+          <p>{tx("你好，")}{(me && (me.displayName || me.username)) || tx("同事")}{tx("。日常需求、收件箱认领和工作日报都在")}<b>{tx("桌面端「Nekowork」")}</b>{tx("里完成；")}<br />{tx("这里是负责人与管理员使用的管理控制台。如需管理权限，请联系管理员为你的角色开通。")}</p>
           <button className="btn btn-ghost" onClick={() => { setToken(''); setUser(''); setAuthed(false); setMe(null); setShowLogin(false) }}>{tx("退出登录")}</button>
         </div>
         <ToastHost />

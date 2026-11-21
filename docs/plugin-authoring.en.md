@@ -2,7 +2,7 @@
 
 [简体中文](plugin-authoring.md) · **English** · [Documentation](README.md)
 
-A SoduWork plugin is a portable capability package containing instructions, skills, MCP connections, tools, permissions, and an optional workflow. Source examples live in `hub-backend/plugins/*.json`.
+A Nekowork plugin is a portable capability package containing instructions, skills, MCP connections, tools, permissions, and an optional workflow. Source examples live in `hub-backend/plugins/*.json`.
 
 Application authors can use the built-in application developer from Applications → Add → Develop application. Application drafts use root `template: "app"`, real HTTP(S) pages in `ui.contributions` / `workspace.navigation`, and `source.openMode: "workspace"`. Installing local HTML resources does not start a server. The default independent application window is 1280×800 and supports maximize/fullscreen. Versioning and export follow the same plugin lifecycle. See the [application-authoring skill, Chinese](../skills/app-developer/SKILL.md).
 

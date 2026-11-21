@@ -556,7 +556,7 @@ async def generate_video(session: AsyncSession, client: models.Client, arguments
     if not conf:
         raise ValueError("当前用户尚未配置可用的视频模型或 API Key")
     if conf.get("kind") != "openai-compat":
-        raise ValueError("当前视频模型暂不支持 SoduWork 媒体生成通道")
+        raise ValueError("当前视频模型暂不支持 Nekowork 媒体生成通道")
     payload, prompt, endpoint = _payload(arguments, conf)
     config = model_catalog.model_config(conf.get("config"), "video")
     generation_id = arguments.get("generationId", "")

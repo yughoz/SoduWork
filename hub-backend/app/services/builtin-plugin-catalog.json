@@ -5,7 +5,7 @@
   },
   "autonomous-dev-iterator": {
     "name": "自主迭代研发引擎",
-    "description": "以深度研究产出创意、GitHub 开源项目为参照基准，进行架构合理性与轻量级判断，研发成型的成品；经质量门自检与 AI 独立审查后交人工验收。多轮持续迭代完善由 SoduWork 任务调度反复触发本流程实现。"
+    "description": "以深度研究产出创意、GitHub 开源项目为参照基准，进行架构合理性与轻量级判断，研发成型的成品；经质量门自检与 AI 独立审查后交人工验收。多轮持续迭代完善由 Nekowork 任务调度反复触发本流程实现。"
   },
   "deep-research": {
     "name": "深度研究",
@@ -29,7 +29,7 @@
   },
   "goal-delivery-harness": {
     "name": "目标交付 Harness",
-    "description": "SoduWork built-in durable goal and delivery harness."
+    "description": "Nekowork built-in durable goal and delivery harness."
   },
   "knowledge-synthesis": {
     "name": "材料研读与知识综述",
@@ -72,20 +72,20 @@
     "description": "把业务流程沉淀为可复用 Skill，支持新建、调整、校验和多平台导出。交付真实技能包、资源、变更说明与验证报告。"
   },
   "soduwork-batch-release-149": {
-    "name": "【SoduWork 专用】批量发布 149",
-    "description": "SoduWork 发布窗口专用流程：只集成明确选择的待发布固定提交，完成发布前检查、自动合并、项目发布链、健康检查和发布回执。"
+    "name": "【Nekowork 专用】批量发布 149",
+    "description": "Nekowork 发布窗口专用流程：只集成明确选择的待发布固定提交，完成发布前检查、自动合并、项目发布链、健康检查和发布回执。"
   },
   "soduwork-bugfix-149": {
     "name": "Bug 修复 · 上线 149",
-    "description": "SoduWork 自有工程的缺陷修复闭环：先稳定复现并限定最小修复范围，再完成质量门禁、AI 审查、自动合并、149 发布、健康核对和带截图证据的人工验收；无法复现时安全转人工。"
+    "description": "Nekowork 自有工程的缺陷修复闭环：先稳定复现并限定最小修复范围，再完成质量门禁、AI 审查、自动合并、149 发布、健康核对和带截图证据的人工验收；无法复现时安全转人工。"
   },
   "soduwork-change-149": {
     "name": "需求交付 · 上线 149",
-    "description": "SoduWork 自有工程的新需求与需求变更闭环：先形成完整需求和验收基线，再完成全链路实现、质量门禁、AI 审查、自动合并、149 发布、健康核对和带截图证据的人工验收。"
+    "description": "Nekowork 自有工程的新需求与需求变更闭环：先形成完整需求和验收基线，再完成全链路实现、质量门禁、AI 审查、自动合并、149 发布、健康核对和带截图证据的人工验收。"
   },
   "soduwork-fast-change": {
-    "name": "【SoduWork 专用】快速改动",
-    "description": "SoduWork 日间轻量研发：Codex 一次完成 Bug 或小需求的实现、自测、自审与推送，只形成待发布固定提交，不合并、不打包、不部署。"
+    "name": "【Nekowork 专用】快速改动",
+    "description": "Nekowork 日间轻量研发：Codex 一次完成 Bug 或小需求的实现、自测、自审与推送，只形成待发布固定提交，不合并、不打包、不部署。"
   },
   "software-delivery": {
     "name": "需求到生产 · 标准研发交付",

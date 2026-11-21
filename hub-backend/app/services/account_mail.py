@@ -25,7 +25,7 @@ from ..models import AppSetting
 
 SETTING_KEY = "account_mail_settings_v1"
 DEFAULTS = {"enabled": False, "host": "smtp.126.com", "port": 465, "security": "ssl",
-            "username": "", "senderAddress": "", "senderName": "SoduWork"}
+            "username": "", "senderAddress": "", "senderName": "Nekowork"}
 PURPOSES = {"register": "注册账号", "login": "登录账号", "reset_password": "重设密码",
             "bind_email": "绑定邮箱", "change_email": "更换邮箱", "delete_account": "注销账号",
             "set_password": "设置密码", "reauthentication": "验证账号身份", "test": "邮件服务测试"}
@@ -116,7 +116,7 @@ def _validate(data, *, require_enabled=True):
         raise MailConfigurationError("SMTP 端口无效")
     username = address(data.get("username"))
     sender = address(data.get("senderAddress") or username)
-    name = str(data.get("senderName") or "SoduWork").strip()
+    name = str(data.get("senderName") or "Nekowork").strip()
     if len(name) > 80 or any(ord(c) < 32 for c in name):
         raise MailConfigurationError("发件人名称无效")
     return {**data, "host": host, "port": port, "username": username,
@@ -199,9 +199,9 @@ def _message(config, row, payload):
     message["To"] = address(payload["recipient"])
     message["Date"] = format_datetime(utcnow())
     message["Message-ID"] = "<" + row.id + "@" + config["senderAddress"].rsplit("@", 1)[1] + ">"
-    message["Subject"] = "SoduWork · " + PURPOSES[row.purpose]
+    message["Subject"] = "Nekowork · " + PURPOSES[row.purpose]
     if row.purpose == "test":
-        message.set_content("这是一封由管理员主动发送的 SoduWork 邮件服务测试邮件。\n如收到此邮件，说明当前 SMTP 投递已到达你的邮箱。\n本邮件不包含验证码，也不会修改账号。")
+        message.set_content("这是一封由管理员主动发送的 Nekowork 邮件服务测试邮件。\n如收到此邮件，说明当前 SMTP 投递已到达你的邮箱。\n本邮件不包含验证码，也不会修改账号。")
     else:
         message.set_content("你正在" + PURPOSES[row.purpose] + "。\n\n验证码：" + payload["code"] +
                             "\n\n验证码在申请后 5 分钟内有效，请勿转发。若非本人操作，请忽略本邮件。")

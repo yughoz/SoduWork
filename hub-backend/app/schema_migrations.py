@@ -91,7 +91,7 @@ def _database_state(connection) -> tuple[Literal["empty", "legacy", "versioned"]
         return "legacy", ()
     sample = ", ".join(sorted(business_tables)[:8])
     raise SchemaMigrationError(
-        "Database has tables but is neither a recognized SoduWork database nor versioned: " + sample
+        "Database has tables but is neither a recognized Nekowork database nor versioned: " + sample
     )
 
 

@@ -20,7 +20,7 @@ async def resolve_repo(session: AsyncSession, schedule, *,
         client_id = str(getattr(schedule, "owner_client_id", "") or "")
         client = await session.get(models.Client, client_id) if client_id else None
     if client is None:
-        raise ValueError("请先选择任务归属的 SoduWork")
+        raise ValueError("请先选择任务归属的 Nekowork")
 
     from .task_execution_options import _visible_repos
 

@@ -27,7 +27,7 @@ function updateSingleLineAccount(event, setAccount) {
   else setTimeout(restore, 0)
 }
 
-function Brand() { return <span className="public-brand"><img src="/soduwork.png" alt="" className="logo-box" /><b>SoduWork</b></span> }
+function Brand() { return <span className="public-brand"><img src="/soduwork.png" alt="" className="logo-box" /><b>Nekowork</b></span> }
 export default function Login({ onLogin, onBack, initialError = '' }) {
   useLocale()
   const formId = useId()
@@ -56,10 +56,10 @@ export default function Login({ onLogin, onBack, initialError = '' }) {
   return <div className="public-login public-theme workbench-login">
     <header className="login-workbench-header">
       <Brand /><span className="login-platform-caption">{tx('企业智能工作台')}</span>
-      {onBack && <button type="button" className="public-login-back" onClick={onBack}><span aria-hidden="true">←</span>{tx('返回 SoduWork 首页')}</button>}
+      {onBack && <button type="button" className="public-login-back" onClick={onBack}><span aria-hidden="true">←</span>{tx('返回 Nekowork 首页')}</button>}
     </header>
     <aside className="login-story">
-      <div className="login-capability-orbit" role="img" aria-label={'SoduWork ' + tx('管理端能力')}>
+      <div className="login-capability-orbit" role="img" aria-label={'Nekowork ' + tx('管理端能力')}>
         <svg className="login-orbit-mesh" viewBox="0 0 520 500" fill="none" aria-hidden="true">
           <defs><radialGradient id={`${formId}-mesh`}><stop stopColor="currentColor" stopOpacity=".08" /><stop offset="1" stopColor="currentColor" stopOpacity="0" /></radialGradient></defs>
           <ellipse cx="260" cy="250" rx="220" ry="210" fill={`url(#${formId}-mesh)`} />
@@ -85,7 +85,7 @@ export default function Login({ onLogin, onBack, initialError = '' }) {
         <div className="login-mobile-brand"><Brand /></div>
         <div className="login-head"><span className="public-eyebrow">{tx('SODUWORK 管理端')}</span><h1 className="login-title" id={`${formId}-title`}>{tx('欢迎回来。')}</h1><p className="login-sub">{tx('登录你的账号，继续管理团队的工作空间。')}</p></div>
         {err && <div id={`${formId}-error`} className="login-error" role="alert">{err}</div>}
-        {providers.length > 0 && <div className="login-sso">{providers.map(item => <button type="button" className="login-sso-button" key={item.key} disabled={busy} onClick={() => window.location.assign(item.startUrl)}><span className="login-sso-mark" aria-hidden="true">S</span><span>{tx('使用 {0} 登录', [item.name])}</span><b aria-hidden="true">→</b></button>)}<div className="login-divider"><span>{tx('或使用 SoduWork 账号')}</span></div></div>}
+        {providers.length > 0 && <div className="login-sso">{providers.map(item => <button type="button" className="login-sso-button" key={item.key} disabled={busy} onClick={() => window.location.assign(item.startUrl)}><span className="login-sso-mark" aria-hidden="true">S</span><span>{tx('使用 {0} 登录', [item.name])}</span><b aria-hidden="true">→</b></button>)}<div className="login-divider"><span>{tx('或使用 Nekowork 账号')}</span></div></div>}
         <div className="login-field"><label className="f-lbl" htmlFor={`${formId}-account`}>{tx('账号')}</label><input id={`${formId}-account`} className="f-in" name="username" autoComplete="username" value={user} onBeforeInput={blockAccountLineBreak} onChange={event => updateSingleLineAccount(event, setAccount)} placeholder={tx('输入你的账号')} autoCapitalize="none" spellCheck={false} required autoFocus aria-describedby={err ? `${formId}-error` : undefined} /></div>
         <div className="login-field"><label className="f-lbl" htmlFor={`${formId}-password`}>{tx('密码')}</label><div className="login-password"><input id={`${formId}-password`} className="f-in" name="password" autoComplete="current-password" type={revealed ? 'text' : 'password'} value={pass} onChange={event => setPass(event.target.value)} placeholder={tx('输入你的密码')} required aria-describedby={err ? `${formId}-error` : undefined} /><button className="login-password-toggle" type="button" onClick={() => setRevealed(!revealed)} aria-label={revealed ? tx('隐藏密码') : tx('显示密码')} aria-pressed={revealed}>{revealed ? tx('隐藏') : tx('显示')}</button></div></div>
         <button type="submit" className="login-submit" disabled={busy}>{busy ? tx('正在登录…') : tx('进入控制台')}<span aria-hidden="true">→</span></button>

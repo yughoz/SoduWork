@@ -23,7 +23,7 @@ async function fetchSafe(path, options = {}, timeout = REQUEST_TIMEOUT, consume 
   } catch (error) {
     if (options.signal?.aborted) throw error
     if (error && error.name === 'AbortError') throw new Error(tx("请求超时，请稍后重试"))
-    throw new Error(tx("无法连接 SoduWork 服务，请检查后台地址或网络"))
+    throw new Error(tx("无法连接 Nekowork 服务，请检查后台地址或网络"))
   } finally {
     window.clearTimeout(timer)
   }

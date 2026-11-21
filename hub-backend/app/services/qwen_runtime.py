@@ -24,7 +24,7 @@ except ImportError:  # Direct script entry used by the source Runner bridge.
 SETTINGS_ENV = "QWEN_CODE_SYSTEM_SETTINGS_PATH"
 DEFAULTS_ENV = "QWEN_CODE_SYSTEM_DEFAULTS_PATH"
 MODEL_LABEL_ENV = "SODUWORK_QWEN_MODEL_LABEL"
-MODEL_LABEL = "SoduWork managed model"
+MODEL_LABEL = "Nekowork managed model"
 _JSON_COMMENTS = re.compile(r'("(?:\\.|[^"\\])*")|//[^\r\n]*|/\*[\s\S]*?\*/')
 
 
@@ -32,7 +32,7 @@ def apply_env(env: dict) -> None:
     """Bind only the reviewed host preload; native tools never inherit it."""
     loader = Path(__file__).with_name("qwen_acp_outcome.mjs")
     if not loader.is_file():
-        raise RuntimeError("Qwen Code 任务结算组件缺失，请更新 SoduWork")
+        raise RuntimeError("Qwen Code 任务结算组件缺失，请更新 Nekowork")
     env.pop("NODE_OPTIONS", None)
     env["SODUWORK_QWEN_ACP_OUTCOME"] = "1"
     env["NODE_OPTIONS"] = "--import=" + loader.resolve().as_uri()

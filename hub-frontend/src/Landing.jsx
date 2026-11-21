@@ -26,7 +26,7 @@ const governance = localeMap(() => ([
 ]))
 
 function Brand() {
-  return <span className="public-brand"><img src="/soduwork.png" alt="" className="logo-box" /><b>SoduWork</b></span>
+  return <span className="public-brand"><img src="/soduwork.png" alt="" className="logo-box" /><b>Nekowork</b></span>
 }
 
 function platform() {
@@ -107,7 +107,7 @@ export default function Landing({ onLogin }) {
   return <div className="welcome public-theme" id="top">
     <a className="public-skip" href="#public-main">{tx('跳到主要内容')}</a>
     <header className="public-header"><div className="public-wrap public-nav">
-      <a href="#top" aria-label={tx('SoduWork 首页')}><Brand /></a>
+      <a href="#top" aria-label={tx('Nekowork 首页')}><Brand /></a>
       <nav aria-label={tx('网站导航')}><a href="#platform">{tx('工作方式')}</a><a href="#enterprise">{tx('企业管理')}</a><a href="#downloads">{tx('下载客户端')}</a></nav>
       <button type="button" className="public-nav-login" onClick={onLogin}>{tx('进入管理后台')}<Glyph name="arrow" size={17} /></button>
     </div></header>
@@ -116,7 +116,7 @@ export default function Landing({ onLogin }) {
         <LandingAtmosphere />
         <div className="public-hero-copy"><span className="public-eyebrow"><i />{tx('为人与 AI 一起工作而设计')}</span>
           <h1>{tx('让想法向前一步。')}<br /><span>{tx('让工作真正完成。')}</span></h1>
-          <p>{tx('对话、需求协作、自动化与知识沉淀，在同一个工作空间自然衔接。SoduWork 陪团队从一个想法，走到一份可以交付的成果。')}</p>
+          <p>{tx('对话、需求协作、自动化与知识沉淀，在同一个工作空间自然衔接。Nekowork 陪团队从一个想法，走到一份可以交付的成果。')}</p>
           <div className="public-hero-actions"><Download pkgs={pkgs} /><a className="w-cta w-cta-ghost" href="#platform">{tx('看看如何工作')}<Glyph name="arrow" size={17} /></a></div>
           <DownloadMeta pkgs={pkgs} onRetry={loadPkg} />
           <a className="public-all-platforms" href="#downloads">{tx('查看桌面端与移动端下载')}<span>↗</span></a>
@@ -139,8 +139,8 @@ export default function Landing({ onLogin }) {
         <div className="public-enterprise-copy"><span className="public-eyebrow">{tx('团队的工作空间，企业的管理视角')}</span><h2>{tx('让能力向前，')}<br />{tx('也让边界清楚。')}</h2><p>{tx('员工在客户端完成工作，管理员在后台配置组织、模型与能力，查看运行状态和用量。协作有共同规则，关键操作有据可查。')}</p><button className="w-cta w-cta-dark" type="button" onClick={onLogin}>{tx('进入管理后台')}<Glyph name="arrow" size={18} /></button></div>
         <div className="public-governance"><header><Brand /><span>{tx('管理端能力')}</span></header>{governance.map(([icon, title, text]) => <div className="public-governance-row" key={title}><span><Glyph name={icon} /></span><div><h3>{title}</h3><p>{text}</p></div><Glyph name="check" size={16} /></div>)}<footer><Glyph name="shield" size={16} />{tx('权限按角色配置，能力按企业策略开放')}</footer></div>
       </section>
-      <section className="public-downloads" id="downloads"><div className="public-wrap"><div className="public-section-head"><div><span className="public-eyebrow">{tx('从一项真实工作开始')}</span><h2>{tx('把 SoduWork，带在身边。')}</h2></div><p>{tx('选择适合你设备的客户端。在电脑与手机上，继续同一个工作空间里的事。')}</p></div><PlatformDownloads pkgs={pkgs} onRetry={loadPkg} /><div className="public-download-help"><span>{tx('安装包版本与大小以当前发布信息为准。')}</span><button type="button" className="public-text-button" onClick={onLogin}>{tx('管理员？进入管理后台')}<Glyph name="arrow" size={16} /></button></div></div></section>
+      <section className="public-downloads" id="downloads"><div className="public-wrap"><div className="public-section-head"><div><span className="public-eyebrow">{tx('从一项真实工作开始')}</span><h2>{tx('把 Nekowork，带在身边。')}</h2></div><p>{tx('选择适合你设备的客户端。在电脑与手机上，继续同一个工作空间里的事。')}</p></div><PlatformDownloads pkgs={pkgs} onRetry={loadPkg} /><div className="public-download-help"><span>{tx('安装包版本与大小以当前发布信息为准。')}</span><button type="button" className="public-text-button" onClick={onLogin}>{tx('管理员？进入管理后台')}<Glyph name="arrow" size={16} /></button></div></div></section>
     </main>
-    <footer className="public-footer public-wrap"><div><a href="#top"><Brand /></a><p>{tx('好想法，值得一个好结果。')}</p></div><nav aria-label={tx('页脚导航')}><a href="#platform">{tx('工作方式')}</a><a href="#downloads">{tx('下载客户端')}</a><button type="button" onClick={onLogin}>{tx('进入管理后台')}</button></nav><small>{commit ? `build ${commit}` : 'SoduWork'}</small></footer>
+    <footer className="public-footer public-wrap"><div><a href="#top"><Brand /></a><p>{tx('好想法，值得一个好结果。')}</p></div><nav aria-label={tx('页脚导航')}><a href="#platform">{tx('工作方式')}</a><a href="#downloads">{tx('下载客户端')}</a><button type="button" onClick={onLogin}>{tx('进入管理后台')}</button></nav><small>{commit ? `build ${commit}` : 'Nekowork'}</small></footer>
   </div>
 }

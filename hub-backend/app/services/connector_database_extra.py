@@ -1,4 +1,4 @@
-"""Five read-only database adapters defined by SoduWork and checked against their protocols."""
+"""Five read-only database adapters defined by Nekowork and checked against their protocols."""
 from __future__ import annotations
 
 import base64

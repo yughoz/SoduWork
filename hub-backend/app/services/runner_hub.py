@@ -64,7 +64,7 @@ def clean_agent_inventory(value) -> list[dict]:
     """Keep runner inventory aligned with the active Agent catalog.
 
     Runners can outlive a catalog update and continue to report an executable
-    that SoduWork no longer offers. Filtering at the registry boundary prevents
+    that Nekowork no longer offers. Filtering at the registry boundary prevents
     stale Claude Code entries from appearing in management pages or being
     selected for new work, while preserving the rest of each inventory row.
     """
@@ -101,8 +101,8 @@ def clean_skill_names(value) -> list[str]:
 
 _SKILL_SOURCE_LABELS = {
     "pi": "Pi", "codex": "Codex", "claude": "Claude Code",
-    "agents": "Agent Skills", "soduwork": "SoduWork 本机",
-    "builtin": "SoduWork 内置", "local": "本机 Skill",
+    "agents": "Agent Skills", "soduwork": "Nekowork 本机",
+    "builtin": "Nekowork 内置", "local": "本机 Skill",
 }
 
 
@@ -436,7 +436,7 @@ def drop(runner_id: str, ws=None) -> bool:
 
 
 async def disconnect_client(client_id: str, code: int = 4403, *, _local: bool = False) -> None:
-    """Drop every runner authenticated as a revoked/rebound SoduWork device."""
+    """Drop every runner authenticated as a revoked/rebound Nekowork device."""
     from .cluster_bus import bus
     if bus.enabled and not _local:
         await bus.broadcast({"kind": "revoke", "device": client_id, "code": code})

@@ -20,7 +20,7 @@ export default function Bindings() {
   return (
     <>
       <div className="toolbar integration-toolbar">
-        <span className="hintline">{tx("外部处理人 → SoduWork 的绑定 · 未匹配的聚合需求进入未分配池，手动认领到 SoduWork")}</span>
+        <span className="hintline">{tx("外部处理人 → Nekowork 的绑定 · 未匹配的聚合需求进入未分配池，手动认领到 Nekowork")}</span>
         <div className="integration-toolbar-actions">
           <LiveDot />
           <button className="btn btn-ghost" onClick={() => { bindings.reload(); unassigned.reload() }}><Icon name="refresh" />{tx("刷新")}</button>
@@ -28,7 +28,7 @@ export default function Bindings() {
       </div>
       <div ref={listRef} className="split integration-bindings admin-viewport-list" tabIndex={0} role="region" aria-label={tx("处理人绑定")}>
         <div className="card">
-          <div className="card-head"><h3>{tx("处理人绑定")}</h3><span className="hint">{tx("外部处理人 → SoduWork")}</span></div>
+          <div className="card-head"><h3>{tx("处理人绑定")}</h3><span className="hint">{tx("外部处理人 → Nekowork")}</span></div>
           <div>
             {bl.length === 0 && <div className="empty">{tx("还没有绑定。ingest 进来的需求若匹配不到绑定，会进右侧未分配池。")}</div>}
             {bl.map((b) => (
@@ -51,7 +51,7 @@ export default function Bindings() {
               <div className="ua-item" key={t.id}>
                 <div className="ua-top"><b>{t.title}</b>{t.urgent && <span className="flag flag-u">{tx("紧急")}</span>}</div>
                 <div className="ua-meta"><SourceChip task={t} />{tx("处理人 ")}<span className="mono">{t.externalActor || '—'}</span>{tx("（未绑定）")}</div>
-                <div className="ua-actions admin-card-actions"><button className="admin-card-action is-primary" onClick={() => setAssignTask(t)}>{tx("分配到 SoduWork")}</button></div>
+                <div className="ua-actions admin-card-actions"><button className="admin-card-action is-primary" onClick={() => setAssignTask(t)}>{tx("分配到 Nekowork")}</button></div>
               </div>
             ))}
           </div>
@@ -59,7 +59,7 @@ export default function Bindings() {
       </div>
 
       {delTarget && <Confirm title={tx("删除绑定")} danger confirmText={tx("删除")}
-        text={tx("删除「{0}」→ SoduWork 的绑定？该处理人之后聚合进来的需求将进入未分配池，需再次手动认领。", [delTarget.externalActor])}
+        text={tx("删除「{0}」→ Nekowork 的绑定？该处理人之后聚合进来的需求将进入未分配池，需再次手动认领。", [delTarget.externalActor])}
         onClose={() => setDelTarget(null)}
         onConfirm={async () => { await api.deleteBinding(delTarget.id); toast(tx("已删除绑定")); setDelTarget(null); bindings.reload() }} />}
 
@@ -79,25 +79,25 @@ function AssignModal({ task, clients, onClose, onDone }) {
   const online = clients.filter((c) => c.online).length
 
   async function go() {
-    if (!cid) { toast(tx("请先选一个 SoduWork")); return }
+    if (!cid) { toast(tx("请先选一个 Nekowork")); return }
     setBusy(true)
     try {
       await api.assign(task.id, { client_id: cid, create_binding: makeBinding && !!task.externalActor })
-      toast(tx("已分配到 SoduWork"))
+      toast(tx("已分配到 Nekowork"))
       onDone()
     } catch (e) { toast(tx("失败：") + e.message) }
     setBusy(false)
   }
 
   return (
-    <Modal title={tx("分配到 SoduWork")} icon="link" onClose={onClose}
+    <Modal title={tx("分配到 Nekowork")} icon="link" onClose={onClose}
       foot={<><button className="btn btn-ghost" onClick={onClose}>{tx("取消")}</button>
         <button className="btn btn-primary" disabled={busy || !cid} onClick={go}><Icon name="check" />{busy ? tx("分配中…") : tx("确认分配")}</button></>}>
-      <div className="muted" style={{ fontSize: 14.5, marginBottom: 8 }}>{tx("把需求 ")}<b style={{ color: 'var(--ink)' }}>{task.title}</b>{tx(" 分配给一个 SoduWork 处理。")}{task.externalActor && <>{tx("处理人 ")}<span className="mono">{task.externalActor}</span>。</>}
+      <div className="muted" style={{ fontSize: 14.5, marginBottom: 8 }}>{tx("把需求 ")}<b style={{ color: 'var(--ink)' }}>{task.title}</b>{tx(" 分配给一个 Nekowork 处理。")}{task.externalActor && <>{tx("处理人 ")}<span className="mono">{task.externalActor}</span>。</>}
       </div>
-      <label className="f-lbl">{tx("选择 SoduWork（当前在线 ")}{online}{tx(" 台）")}</label>
+      <label className="f-lbl">{tx("选择 Nekowork（当前在线 ")}{online}{tx(" 台）")}</label>
       <div className="box-pick">
-        {clients.length === 0 && <span className="muted">{tx("还没有注册的 SoduWork，先让一个 SoduWork 上线。")}</span>}
+        {clients.length === 0 && <span className="muted">{tx("还没有注册的 Nekowork，先让一个 Nekowork 上线。")}</span>}
         {clients.map((c) => (
           <span key={c.id} className={'bp' + (cid === c.id ? ' on' : '')} onClick={() => setCid(c.id)}>
             <span className="av">{(c.name || c.id).slice(0, 1)}</span>{c.name || c.id}{!c.online && <span className="muted" style={{ fontSize: 14.5 }}>{tx("·离线")}</span>}
@@ -107,7 +107,7 @@ function AssignModal({ task, clients, onClose, onDone }) {
       {task.externalActor && (
         <label className="chkline" style={{ marginTop: 12 }}>
           <input type="checkbox" checked={makeBinding} onChange={(e) => setMakeBinding(e.target.checked)} />
-          <span>{tx("顺便建绑定：以后「")}{task.externalActor}{tx("」的需求自动分到该 SoduWork")}</span>
+          <span>{tx("顺便建绑定：以后「")}{task.externalActor}{tx("」的需求自动分到该 Nekowork")}</span>
         </label>
       )}
     </Modal>

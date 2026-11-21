@@ -235,7 +235,7 @@ def preview_scope(operation, policy, read_scope):
                 'shell': shell, 'shellFlags': flags, 'node': os.path.realpath(node),
                 # The ACP bridge always chooses allow_once (decision: accept).
                 # These optional proposals are only applied by distinct native
-                # allow_always options, which SoduWork never selects for this grant.
+                # allow_always options, which Nekowork never selects for this grant.
                 'execution': {key: value for key, value in args.items()
                               if key not in {'command', 'cwd', 'threadId', 'turnId', 'itemId', 'reason',
                                              'proposedExecpolicyAmendment', 'proposedNetworkPolicyAmendments',

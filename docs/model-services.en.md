@@ -48,8 +48,8 @@ Zhipu documents separate endpoints and credentials for its standard API and Codi
 | Coding Plan, OpenAI-compatible | `https://open.bigmodel.cn/api/coding/paas/v4` |
 | Coding Plan, Anthropic | `https://open.bigmodel.cn/api/anthropic` |
 
-Check your subscription, API key category, endpoint and model against the provider’s current documentation. Coding Plan also has supported-tool and product restrictions: changing an endpoint does not establish that SoduWork is eligible. See the [official Coding Plan FAQ](https://docs.bigmodel.cn/cn/coding-plan/faq) for eligibility and billing rules.
+Check your subscription, API key category, endpoint and model against the provider’s current documentation. Coding Plan also has supported-tool and product restrictions: changing an endpoint does not establish that Nekowork is eligible. See the [official Coding Plan FAQ](https://docs.bigmodel.cn/cn/coding-plan/faq) for eligibility and billing rules.
 
-When the provider returns error code `1113` or a recognized insufficient-balance/quota category, SoduWork reports a billing problem and retains only the allowlisted diagnostic code. Automatic retries stop because retrying cannot replenish a balance or change a subscription. Check the provider’s billing console and API key type before trying again. An ordinary rate-limit `429` without a recognized billing code remains eligible for bounded retries.
+When the provider returns error code `1113` or a recognized insufficient-balance/quota category, Nekowork reports a billing problem and retains only the allowlisted diagnostic code. Automatic retries stop because retrying cannot replenish a balance or change a subscription. Check the provider’s billing console and API key type before trying again. An ordinary rate-limit `429` without a recognized billing code remains eligible for bounded retries.
 
-SoduWork does not display raw upstream error bodies, credentials or internal addresses in these diagnostics. A passing local regression with a simulated provider verifies this behavior; it does not verify a particular paid account’s balance or entitlement.
+Nekowork does not display raw upstream error bodies, credentials or internal addresses in these diagnostics. A passing local regression with a simulated provider verifies this behavior; it does not verify a particular paid account’s balance or entitlement.

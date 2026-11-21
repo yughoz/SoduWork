@@ -1,4 +1,4 @@
-"""Encrypted, content-addressed full backup bundles for SoduWork.
+"""Encrypted, content-addressed full backup bundles for Nekowork.
 
 The database backup remains the transactional source of truth. File sources are
 copied into immutable blobs and deduplicated by SHA-256 before the bundle is
@@ -128,7 +128,7 @@ def _decrypt_file(source: Path, target: Path, key: bytes) -> None:
     with source.open("rb") as src:
         header = src.read(HEADER_SIZE)
         if header[: len(MAGIC)] != MAGIC:
-            raise FullBackupError("This is not a SoduWork full backup")
+            raise FullBackupError("This is not a Nekowork full backup")
         nonce = header[len(MAGIC): len(MAGIC) + NONCE_SIZE]
         expected_size = struct.unpack(">Q", header[-8:])[0]
         cipher_size = total - HEADER_SIZE - TAG_SIZE
@@ -373,7 +373,7 @@ def create_bundle(*, database_url: str, sources: Iterable[str], output: str | Pa
         blob_meta = [{"sha256": path.name, "size": path.stat().st_size}
                      for path in sorted(blob_root.iterdir()) if not path.name.startswith(".")]
         manifest = {
-            "formatVersion": FORMAT_VERSION, "product": "SoduWork", "kind": "full-backup",
+            "formatVersion": FORMAT_VERSION, "product": "Nekowork", "kind": "full-backup",
             "backupId": backup_id, "createdAt": _utc_now(), "release": release.strip(),
             "consistency": {"database": "transactional-logical-backup",
                             "files": "stable-file-snapshot"},
@@ -395,7 +395,7 @@ def create_bundle(*, database_url: str, sources: Iterable[str], output: str | Pa
                 archive.add(blob_root / blob["sha256"], arcname="blobs/" + blob["sha256"], recursive=False)
         _encrypt_file(plain_tar, destination, key)
     sidecar = {
-        "formatVersion": FORMAT_VERSION, "product": "SoduWork",
+        "formatVersion": FORMAT_VERSION, "product": "Nekowork",
         "kind": "full-backup-envelope", "backupId": backup_id,
         "createdAt": manifest["createdAt"], "release": manifest["release"],
         "cipher": "AES-256-GCM", "filename": destination.name,
@@ -610,7 +610,7 @@ def extract_bundle(bundle_path: str | Path, key_file: str | Path, target_path: s
 
 
 def parser() -> argparse.ArgumentParser:
-    root = argparse.ArgumentParser(description="SoduWork encrypted full backup operations")
+    root = argparse.ArgumentParser(description="Nekowork encrypted full backup operations")
     commands = root.add_subparsers(dest="command", required=True)
     keygen = commands.add_parser("keygen", help="create a new 256-bit backup key")
     keygen.add_argument("--output", required=True)

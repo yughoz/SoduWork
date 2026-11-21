@@ -129,13 +129,13 @@ def _prompt(version: am.PluginVersion, case: dict) -> str:
                 for item in report.get("resultContract") or []
                 if isinstance(item, dict)}
     expected = [contract[key] for key in case.get("expectedOutputs") or [] if key in contract]
-    return """你正在执行 SoduWork 插件发布评测，不是正式业务任务。
+    return """你正在执行 Nekowork 插件发布评测，不是正式业务任务。
 
 【安全边界】
 - 只验证当前插件版本声明的工作能力；不得执行审批、合并、部署、发消息、改生产数据等副作用。
 - 只使用本次明确下发的 Skill、MCP 与运行能力；不要寻找或读取其他凭据。
 - 不要向用户提问。信息不足时记录假设与限制，不要越权补数据。
-- 所有验证在当前隔离工作目录完成，不创建正式 SoduWork 任务。
+- 所有验证在当前隔离工作目录完成，不创建正式 Nekowork 任务。
 
 【插件说明】
 %s

@@ -321,7 +321,7 @@ async def update_repo(rid: str, body: dict = Body(default_factory=dict),
             kept[key] = ai_prompts.normalize({key: raw})[key]   # Normalize each field and apply its fallback.
         r.dev_flow = kept
     if "deployTargets" in body:
-        # Multiple {name, env, cmd, auto} targets; administrators define commands and SoduWork triggers them.
+        # Multiple {name, env, cmd, auto} targets; administrators define commands and Nekowork triggers them.
         v = body.get("deployTargets")
         r.deploy_targets = [
             {"name": str(x.get("name") or "")[:60], "env": str(x.get("env") or "")[:60],
@@ -406,10 +406,10 @@ async def add_project_task(pid: str, body: dict = Body(default_factory=dict),
         raise HTTPException(status_code=400, detail="请填需求标题")
     box = body.get("target")
     if not box:
-        raise HTTPException(status_code=400, detail="请选落哪个 SoduWork")
+        raise HTTPException(status_code=400, detail="请选落哪个 Nekowork")
     vis = await _visible_client_ids(session, user)
     if vis is not None and box not in vis:
-        raise HTTPException(status_code=403, detail="无权下发到该 SoduWork")
+        raise HTTPException(status_code=403, detail="无权下发到该 Nekowork")
     data = {"title": title, "note": body.get("note") or "", "handler": body.get("handler") or "me",
             "projectId": pid, "deps": body.get("deps") or [],
             "triageStage": body.get("triageStage") or "ready",

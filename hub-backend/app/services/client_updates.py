@@ -232,7 +232,7 @@ def supports_canonical_installer(current: str) -> bool:
 
 
 def installer_supported_by_client(artifact_name: str, current: str) -> bool:
-    """Accept only the canonical SoduWork installer for the current client."""
+    """Accept only the canonical Nekowork installer for the current client."""
     return installer_brand_rank(artifact_name) == 0 and supports_canonical_installer(current)
 
 
@@ -328,18 +328,18 @@ RELEASE_PLATFORM_SUFFIXES: dict[str, frozenset[str]] = {
 }
 
 
-# Accept only current SoduWork packages.
-_INSTALLER_STEM = r"SoduWork"
+# Accept only current Nekowork packages.
+_INSTALLER_STEM = r"Nekowork"
 
 
 def _expected_installer_names(platform: str, arch: str, version: str) -> set[str]:
     if platform == "android":
-        return {f"SoduWork-Mobile-{version}.apk"}
+        return {f"Nekowork-Mobile-{version}.apk"}
     base = "mac" if platform == "darwin" else platform
     if platform == "win32":
-        return {f"SoduWork-{version}-Setup.exe"}
+        return {f"Nekowork-{version}-Setup.exe"}
     names = set()
-    for inner in (f"SoduWork-{version}-{base}-{arch}", f"SoduWork-{version}-{base}"):
+    for inner in (f"Nekowork-{version}-{base}-{arch}", f"Nekowork-{version}-{base}"):
         for suffix in RELEASE_PLATFORM_SUFFIXES[platform]:
             names.add(f"{inner}{suffix}")
     return names

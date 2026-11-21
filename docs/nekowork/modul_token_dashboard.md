@@ -46,7 +46,7 @@ Admin (console, `/nekowork/dashboard`): summary semua user — total saldo, siap
 | GET | `/api/nekowork/usage/me` | Saldo + usage user sendiri (dipakai console & client app) |
 | GET | `/api/nekowork/usage` | Admin: ringkasan semua user |
 
-Client app: satu app Nekowork sederhana yang render endpoint `/usage/me` di panel app client (mekanisme app SoduWork — detail packaging menyusul, catatan implementasi).
+Client app: satu app Nekowork sederhana yang render endpoint `/usage/me` di panel app client (mekanisme app Nekowork — detail packaging menyusul, catatan implementasi).
 
 ## 5. RBAC
 

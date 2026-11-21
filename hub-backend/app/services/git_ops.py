@@ -86,7 +86,7 @@ def _git(cwd: str, *args: str, git_creds: dict | None = None,
     # Supply commit identity explicitly for merge operations.
     # Server processes may have no global Git identity configured.
     cmd = ["git", "--no-pager", "-c", "http.proxy=", "-c", "https.proxy=",
-           "-c", "user.name=SoduWork", "-c", "user.email=soduwork@local", *args]
+           "-c", "user.name=Nekowork", "-c", "user.email=soduwork@local", *args]
     limit = max(1.0, float(timeout if timeout is not None else _TIMEOUT))
     proc: subprocess.Popen | None = None
     try:
@@ -387,7 +387,7 @@ def merge_to(server_dir: str, branch: str, target: str,
     c, o = run("checkout", "-B", target, f"origin/{target}")
     if c != 0:
         return {"ok": False, "error": "切到目标分支失败：" + o[:200], "steps": steps}
-    c, o = run("merge", "--no-ff", f"origin/{branch}", "-m", f"自动合并 {branch} → {target}（SoduWork）")
+    c, o = run("merge", "--no-ff", f"origin/{branch}", "-m", f"自动合并 {branch} → {target}（Nekowork）")
     if c != 0:
         run("merge", "--abort")           # Abort a failed merge and restore a clean state.
         # Distinguish conflicts from identity, hook, and other Git failures.

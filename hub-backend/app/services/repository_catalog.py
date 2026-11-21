@@ -1,6 +1,6 @@
 """Canonical GitLab/GitHub repository catalog and project-specific mappings.
 
-Secrets are resolved from a selected SoduWork code account for one request and are
+Secrets are resolved from a selected Nekowork code account for one request and are
 never persisted in the integration or repository catalog.
 """
 from __future__ import annotations
@@ -113,7 +113,7 @@ async def _runtime_config(session: AsyncSession, integration: models.Integration
         raise ValueError("这个代码源还没配拉取账号：在「仓库目录」里填上用户名和密码/令牌，再同步")
     client = await session.get(models.Client, selected)
     if client is None:
-        raise ValueError("原来绑定的 SoduWork 设备已不存在——请改用固定拉取账号（填用户名+密码/令牌）")
+        raise ValueError("原来绑定的 Nekowork 设备已不存在——请改用固定拉取账号（填用户名+密码/令牌）")
     git = code_creds.resolve(client)
     if provider == "gitlab":
         token = _text(git.get("token"), 4096)

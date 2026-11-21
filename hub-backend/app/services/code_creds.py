@@ -85,7 +85,7 @@ def _readiness(g: dict) -> dict:
         "pushReady": push_ready,
         "ready": ident and push_ready,
         # Avoid repeating the configured-state heading in the status description.
-        "why": "；".join(why) or "这台 SoduWork 派出去的代码活，都会用这个身份提交、用这套凭据推。",
+        "why": "；".join(why) or "这台 Nekowork 派出去的代码活，都会用这个身份提交、用这套凭据推。",
     }
 
 
@@ -294,7 +294,7 @@ _HINTS = [
     ("could not read username", "没拿到用户名/密码——token 没配上，或者被这台机器的凭据管理器截胡了"),
     ("authentication failed", "账号或 token 不对（GitLab 上常见的是要用 access token 而不是登录密码）"),
     ("invalid username or password", "账号或 token 不对"),
-    ("unprotected private key", "私钥文件权限太松，ssh 拒绝用它——SoduWork 会自动收紧，"
+    ("unprotected private key", "私钥文件权限太松，ssh 拒绝用它——Nekowork 会自动收紧，"
                                 "还报这个说明这台机器的权限设置拦住了"),
     ("permission denied (publickey", "远端不认这把私钥——对应的公钥加到账号上了吗？"),
     ("enter passphrase", "这把私钥带口令，后台进程输不了——请换一把不带口令的"),

@@ -222,7 +222,7 @@ async def prepare(
         result = {"ok": False, "reason": "图片不是可安全转交给视觉路由的内联数据"}
     text = _observation(result, len(refs), unsupported)
     for index, (container, key, _) in enumerate(refs):
-        replacement = text if index == 0 else "[该图片已转换为上方的 SoduWork 视觉观察，不再向主模型发送原图。]"
+        replacement = text if index == 0 else "[该图片已转换为上方的 Nekowork 视觉观察，不再向主模型发送原图。]"
         container[key] = {"type": text_type, "text": replacement}
     return payload, {
         "imageBlocks": len(refs),

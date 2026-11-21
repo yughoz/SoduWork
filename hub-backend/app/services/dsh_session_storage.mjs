@@ -1,4 +1,4 @@
-// SoduWork host-only compatibility for DSH's JSONL persistence backend.
+// Nekowork host-only compatibility for DSH's JSONL persistence backend.
 // Retain its exclusive writer lease and atomic, write-through publication.
 // Some Windows encryption filters classify .tmp and .jsonl/.zstd differently;
 // keeping the original suffix prevents a same-directory EXDEV at publication.
@@ -51,7 +51,7 @@ async function verifiedEntry(root, name) {
   const manifest = JSON.parse(await readFile(join(directory, 'package.json'), 'utf8'));
   const expected = String(process.env.SODUWORK_DSH_STORAGE_VERSION || '').trim() || await runtimeVersion(root);
   if (manifest.name !== '@deepseek-ai/' + name || !expected || manifest.version !== expected) {
-    throw new Error('DeepSeek Harness storage version does not match the bundled runtime; repair the runtime or update SoduWork before running.');
+    throw new Error('DeepSeek Harness storage version does not match the bundled runtime; repair the runtime or update Nekowork before running.');
   }
   return join(directory, 'lib', 'index.js');
 }
@@ -66,7 +66,7 @@ async function configureFileStaging(root) {
   for (const method of ['writeText', 'editText']) {
     const original = LocalFileSystem?.prototype?.[method];
     if (typeof original !== 'function' || original.length !== 4) {
-      throw new Error('DeepSeek Harness file interface changed; update its SoduWork adapter before running.');
+      throw new Error('DeepSeek Harness file interface changed; update its Nekowork adapter before running.');
     }
     LocalFileSystem.prototype[method] = function (...args) {
       // Retain upstream locking, version guards, sandbox checks, ACL handling,
@@ -97,7 +97,7 @@ if (runtimeRoot) {
         && Persistence.prototype.writeSyncedTempFile.length === 2) {
       Persistence.prototype.writeSyncedTempFile = writeSyncedTempFile;
     } else if (typeof persistence?.apply !== 'function') {
-      throw new Error('DeepSeek Harness storage interface is unsupported; update SoduWork before running.');
+      throw new Error('DeepSeek Harness storage interface is unsupported; update Nekowork before running.');
     }
     await configureFileStaging(runtimeRoot);
   }

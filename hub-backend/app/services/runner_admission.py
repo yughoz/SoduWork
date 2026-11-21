@@ -1,4 +1,4 @@
-"""Admission and adaptive resource budget for one SoduWork Runner.
+"""Admission and adaptive resource budget for one Nekowork Runner.
 
 Conversation admission is deliberately unbounded: accepting a message and launching
 another Agent process are different decisions. Background work has a bounded backlog.

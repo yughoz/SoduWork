@@ -397,7 +397,7 @@ async def chain_status(session: AsyncSession, task: models.Task) -> dict:
 
 
 async def request_environment(session: AsyncSession, task: models.Task, env_id: str,
-                              who: str = "SoduWork") -> dict:
+                              who: str = "Nekowork") -> dict:
     """Queue the current version for an environment according to its prerequisite and approval
     policy.
     """
@@ -463,7 +463,7 @@ async def request_environment(session: AsyncSession, task: models.Task, env_id: 
                      for x in runs]}
 
 
-async def queue_automatic(session: AsyncSession, task: models.Task, who: str = "SoduWork") -> dict:
+async def queue_automatic(session: AsyncSession, task: models.Task, who: str = "Nekowork") -> dict:
     """Queue automatic environments whose prerequisites are satisfied, supporting arbitrary
     configured chain lengths.
     """
@@ -537,14 +537,14 @@ async def redeploy_target(session: AsyncSession, target: am.DeploymentTarget,
         task_id=task.id, artifact_version_id=artifact.id,
         environment_id=env.id, target_id=target.id, state="queued",
         attempt=attempt, idempotency_key=key, commit_sha=last_ok.commit_sha,
-        result={"redeploy": True, "requestedBy": who or "SoduWork"})
+        result={"redeploy": True, "requestedBy": who or "Nekowork"})
     session.add(row)
     await session.flush()
     task_events.record(session, task.id, "release.redeploy_requested",
                        {"runId": row.id, "versionId": artifact.id,
                         "environmentId": env.id, "targetId": target.id,
                         "attempt": attempt, "commit": last_ok.commit_sha},
-                       actor=who or "SoduWork")
+                       actor=who or "Nekowork")
     await session.commit()
     await _publish_update(session, row)
     before = _progress_signature(row)
@@ -705,7 +705,7 @@ async def _try_start(session: AsyncSession, run: am.DeploymentRun) -> bool:
         if gate:
             if _mark_release_waiting(run, gate):
                 task_events.record(session, run.task_id, "release.deploy_waiting",
-                                   {"runId": run.id, **gate}, actor="SoduWork")
+                                   {"runId": run.id, **gate}, actor="Nekowork")
                 await session.commit()
             return False
         if _clear_release_waiting(run):
@@ -856,7 +856,7 @@ async def _discard_run_client_release(
         task_events.record(session, run.task_id, "release.client_discarded", {
             "runId": run.id, "releaseId": str(info["id"]),
             "version": str(info.get("version") or ""),
-        }, actor="SoduWork")
+        }, actor="Nekowork")
     return discarded
 
 
@@ -905,7 +905,7 @@ async def _activate_environment_client_releases(
         task_events.record(session, task.id, "release.client_activated", {
             "artifactVersionId": artifact.id, "environmentId": env.id,
             "releaseId": item["id"], "version": item["version"],
-        }, actor="SoduWork")
+        }, actor="Nekowork")
     return activated
 
 
@@ -919,7 +919,7 @@ async def _after_terminal(session: AsyncSession, run: am.DeploymentRun) -> None:
     task_events.record(session, run.task_id, "release.deploy_finished",
                        {"runId": run.id, "versionId": artifact.id,
                         "environmentId": env.id, "state": run.state,
-                        "error": run.error}, actor="SoduWork")
+                        "error": run.error}, actor="Nekowork")
     if run.state != "succeeded":
         await _discard_environment_client_releases(
             session, artifact.id, env.id)
@@ -958,16 +958,16 @@ async def _after_terminal(session: AsyncSession, run: am.DeploymentRun) -> None:
                 task_events.record(session, task.id, "release.acceptance_requested", {
                     "requestId": request.id, "versionId": artifact.id,
                     "environmentId": env.id,
-                }, actor="SoduWork")
+                }, actor="Nekowork")
         # Recompute automatic successors from prerequisite relationships after the environment passes.
         if accepted:
             await _activate_environment_client_releases(session, task, artifact, env)
-            await queue_automatic(session, task, who="SoduWork")
+            await queue_automatic(session, task, who="Nekowork")
         if policy.get("marksDelivery") and await delivery_complete(session, task):
             artifact.state = "released"
             from . import code_delivery
             state = await code_delivery.read_state(session, task.id)
-            await code_delivery.settle_delivered(session, task, state, who="SoduWork")
+            await code_delivery.settle_delivered(session, task, state, who="Nekowork")
     await session.commit()
 
 

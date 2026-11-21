@@ -37,7 +37,7 @@ async def save_one(session, client, body):
         if not unchanged:
             raise HTTPException(409, "连接已在其他位置修改，请重新打开后再保存")
         if mcp_servers.is_builtin(old):
-            raise HTTPException(403, "SoduWork 内置连接器只能启用或停用")
+            raise HTTPException(403, "Nekowork 内置连接器只能启用或停用")
     try:
         clean = mcp_servers.personal_spec(mcp_servers.restore(raw, old or {}))
     except (ValueError, TypeError) as exc:

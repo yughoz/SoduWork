@@ -333,7 +333,7 @@ async def deliver_artifacts(session, task, *, conversation_id: str, turn_id: str
     # code_delivery retains control of code candidates and workflow gates; this path stores receipts and manifests.
     try:
         from . import code_delivery
-        code = await code_delivery.check(session, task, who="SoduWork", force=True)
+        code = await code_delivery.check(session, task, who="Nekowork", force=True)
     except Exception:  # noqa: BLE001 - Code-delivery checks must not prevent artifact storage.
         code = {}
     review_request_id = ""

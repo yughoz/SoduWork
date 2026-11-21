@@ -1,6 +1,6 @@
 # Modul: MCP Nekowork (`/mcp`)
 
-> Port Super MCP Nekorp (`corp.nekoding.xyz/api/mcp`) jadi endpoint MCP di Hub SoduWork — konsumen lama (Hermes, Maus, Cursor) pindah tanpa ubah pola pemakaian.
+> Port Super MCP Nekorp (`corp.nekoding.xyz/api/mcp`) jadi endpoint MCP di Hub Nekowork — konsumen lama (Hermes, Maus, Cursor) pindah tanpa ubah pola pemakaian.
 
 ---
 

@@ -1,4 +1,4 @@
-"""Build governed SoduWork plugin packages from the employee-facing maker.
+"""Build governed Nekowork plugin packages from the employee-facing maker.
 
 The maker emits the same immutable package consumed by the normal import path.
 Preview and submission therefore cannot bypass parsing, quarantine, trust review or binding.
@@ -305,7 +305,7 @@ def build(body: dict, signature: dict | None = None) -> bytes:
     manifest = {
         "schemaVersion": 1, "key": key, "name": name, "version": version,
         "description": description,
-        "author": _text(body.get("author"), 120) or "SoduWork 员工",
+        "author": _text(body.get("author"), 120) or "Nekowork 员工",
         "inputs": public_inputs,
         "setup": install_setup,
         "ui": plugin_ui,

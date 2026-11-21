@@ -56,7 +56,7 @@ export async function importLegalDocument(file, { signal } = {}) {
     source.querySelectorAll('[class]').forEach(node => {
       const styles = converted.styles[node.getAttribute('class')]
       node.removeAttribute('class')
-      if (styles) node.setAttribute('style', globalThis.SoduWorkLegalHtml.safeStyle(Object.entries(styles).map(([key, value]) => `${key}:${value}`).join(';')))
+      if (styles) node.setAttribute('style', globalThis.NekoworkLegalHtml.safeStyle(Object.entries(styles).map(([key, value]) => `${key}:${value}`).join(';')))
     })
     source.querySelectorAll('a').forEach(node => {
       const href = node.getAttribute('href') || ''
@@ -66,7 +66,7 @@ export async function importLegalDocument(file, { signal } = {}) {
     if (heading && heading.textContent.trim() && heading.textContent.trim().length <= 200) {
       title = heading.textContent.trim()
     }
-    html = content = globalThis.SoduWorkLegalHtml.sanitize(DOMPurify, source.innerHTML)
+    html = content = globalThis.NekoworkLegalHtml.sanitize(DOMPurify, source.innerHTML)
   } else {
     content = decodeText(buffer)
     html = extension === 'md' ? DOMPurify.sanitize(marked.parse(content), options) : ''

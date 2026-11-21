@@ -375,7 +375,7 @@ async def _resolve_user(session: AsyncSession, row: IdentityProvider, claims: di
     if link is not None:
         user = await session.get(User, link.user_id)
         if user is None or not user.is_active or user.account_deleted_at:
-            raise IdentityError("绑定的 SoduWork 账号不存在或已停用")
+            raise IdentityError("绑定的 Nekowork 账号不存在或已停用")
     else:
         if not row.jit_enabled:
             raise IdentityError("账号尚未绑定，且该身份源没有开启自动开户")

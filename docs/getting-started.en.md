@@ -1,4 +1,4 @@
-# Run SoduWork from source
+# Run Nekowork from source
 
 [简体中文](getting-started.md) · **English** · [Back to README](../README.md) · [Developer guide](development.en.md)
 
@@ -9,7 +9,7 @@ Your first run has four steps: install the prerequisites, extract the source, st
 ## Install, extract and start
 
 1. Install [Python 3.12 or newer](https://www.python.org/downloads/) and [Node.js 22.19 or newer](https://nodejs.org/). On Windows, enable **Add Python to PATH**. Keep the default Node installation options, including npm. Close old terminals after installation.
-2. Download the source ZIP and **extract all files** into a normal folder you can write to, such as `C:/SoduWork`. Avoid system application directories; do not run files from inside the ZIP.
+2. Download the source ZIP and **extract all files** into a normal folder you can write to, such as `C:/Nekowork`. Avoid system application directories; do not run files from inside the ZIP.
 3. Open the folder containing `README.md`, `start.py`, and `client`, then use your platform's launcher:
 
    | Platform | Default entry point |
@@ -34,7 +34,7 @@ On Windows, desktop startup also prepares and verifies a private PortableGit com
 The terminal prints these key lines (use the actual address shown):
 
 ```text
-SoduWork is ready: http://127.0.0.1:18989
+Nekowork is ready: http://127.0.0.1:18989
 Administrator: admin
 ```
 
@@ -273,7 +273,7 @@ Install `.deb` or `.rpm` packages through your distribution's software installer
 
 Start the application as the ordinary user logged into that desktop. First access may show the system's keyring creation or unlock dialog; use a protected keyring. Do not choose an empty password or disable the sandbox to bypass startup errors. If the keyring is locked or its service is temporarily unavailable, preserve the existing device credentials, restore the system service, then fully quit and reopen the application. Do not delete `device-auth.json`, remove keyring items, or convert credentials to plaintext.
 
-On a profile without existing device credentials, if the system keyring is unavailable, SoduWork offers an encrypted local vault for device sign-in. Choose a separate passphrase of 12–256 characters and keep it safe. You will need it every time you start the desktop, including after installing a keyring. The passphrase stays on this computer and cannot be recovered through the Hub. Other integrations that require the system keyring still need that service.
+On a profile without existing device credentials, if the system keyring is unavailable, Nekowork offers an encrypted local vault for device sign-in. Choose a separate passphrase of 12–256 characters and keep it safe. You will need it every time you start the desktop, including after installing a keyring. The passphrase stays on this computer and cannot be recovered through the Hub. Other integrations that require the system keyring still need that service.
 
 The source launcher's Linux desktop mode rejects root users (including launches through `sudo`) before creating instance data or installing dependencies. This check also applies to `--check --desktop` and `--prepare-only --desktop`. Run `sh start.sh --desktop` in an ordinary user's graphical session; use `sh start.sh` for a headless server.
 
@@ -285,11 +285,11 @@ To use management while resolving desktop setup, double-click `start.cmd` on Win
 
 If Git reports an unfinished rebase or merge, finish or safely abort that operation before starting. An intermediate checkout can temporarily restore an older launcher, including its former Keychain and Electron branding behavior. Run `git status` and confirm your intended branch is checked out. Stop the previous source session, then rerun `sh start.sh --desktop`; a running client continues using its previous application copy until restarted.
 
-Source desktop startup prepares a separate cached `SoduWork.app` with the product name and icon. It keeps the development profile separate and does not modify the installed client or the downloaded Electron bundle. This local development bundle uses ad-hoc signing; it is not a signed and notarized release installer.
+Source desktop startup prepares a separate cached `Nekowork.app` with the product name and icon. It keeps the development profile separate and does not modify the installed client or the downloaded Electron bundle. This local development bundle uses ad-hoc signing; it is not a signed and notarized release installer.
 
 The macOS desktop retains your operating-system home so it can access the default Keychain. Its application data and workspace remain separate from the installed client, and the local Hub still uses an isolated home and database.
 
-If the default macOS Keychain is missing, startup shows a recovery page before opening the normal workspace. Use **Open Keychain Access** to inspect the login/default Keychain, then quit and restart SoduWork after correcting the system settings. If access is denied or cancelled, the login page reports the secure-storage failure and preserves existing credentials. SoduWork does not reset Keychains or fall back to plaintext storage. Only reset a Keychain when advised by [Apple Support](https://support.apple.com/guide/keychain-access/kyca2429/mac).
+If the default macOS Keychain is missing, startup shows a recovery page before opening the normal workspace. Use **Open Keychain Access** to inspect the login/default Keychain, then quit and restart Nekowork after correcting the system settings. If access is denied or cancelled, the login page reports the secure-storage failure and preserves existing credentials. Nekowork does not reset Keychains or fall back to plaintext storage. Only reset a Keychain when advised by [Apple Support](https://support.apple.com/guide/keychain-access/kyca2429/mac).
 
 ### Page stops working after closing the terminal
 
@@ -306,7 +306,7 @@ Run these from the source root. The table uses the macOS/Linux wrapper. Windows 
 | Check prerequisites only | `sh start.sh --check --desktop` |
 | Download and build without starting | `sh start.sh --prepare-only --desktop` |
 | Do not open a browser automatically | `sh start.sh --desktop --no-browser` |
-| Use a dedicated data directory | `sh start.sh --desktop --data-dir "D:/SoduWork-data"` |
+| Use a dedicated data directory | `sh start.sh --desktop --data-dir "D:/Nekowork-data"` |
 
 Use the same data directory for preparation and startup. With `--password-stdin`, the launcher reads the first password only after preparation succeeds. Keep passwords out of command arguments and scripts. On Windows this mode returns immediately on failure. For other unattended invocations, set `SODUWORK_NO_PAUSE=1` to skip the keypress on failure.
 
@@ -322,15 +322,15 @@ Use the same data directory for preparation and startup. It must be outside the 
 
 | Platform | Default private data directory |
 | --- | --- |
-| Windows | `%LOCALAPPDATA%\SoduWork\source-service` |
-| macOS | `~/Library/Application Support/SoduWork/source-service` |
+| Windows | `%LOCALAPPDATA%\Nekowork\source-service` |
+| macOS | `~/Library/Application Support/Nekowork/source-service` |
 | Linux | `$XDG_DATA_HOME/soduwork/source-service`, or `~/.local/share/soduwork/source-service` |
 
 On Windows, an empty or relative `LOCALAPPDATA` counts as unset and falls back to `%USERPROFILE%\AppData\Local`. Absolute `LOCALAPPDATA` values are preserved. The selected data directory must still be outside the source checkout and either empty or already initialized by this launcher.
 
 On Linux, an unset, empty, or relative `XDG_DATA_HOME` falls back to `~/.local/share`. Absolute values, including paths with spaces, are preserved. An explicit `--data-dir` takes precedence. Existing data is not moved; use its absolute path with `--data-dir` if it was previously stored under a relative XDG directory. The source-directory safety check still applies.
 
-The directory contains the database, attachments, service signing key, logs, and reusable dependencies. The desktop profile normally lives in `desktop-profile/` inside this directory. On macOS, data directories inside `~/Library/Application Support/SoduWork` or `soduwork` use separate desktop profiles under `~/Library/Application Support/SoduWork Development/`, outside the installed client profile. The default retains `source-service-desktop`; custom directories use `source-service-desktop-<directory-id>`, derived from the full data path. If that profile does not exist, a safe existing development profile at `source-service-desktops/<directory-id>/` is reused. When both exist, the standard profile takes precedence. Hub data and accounts stay in place; profile files are never moved or merged. Unsafe output links into installed profiles are rejected before writing files. `--check --desktop` prints the selected desktop profile without creating it. Treat the data directory and desktop profile as private. Never commit it or include it in a source archive. The launcher does not inherit the checkout's `.env`, production database settings, or model credentials.
+The directory contains the database, attachments, service signing key, logs, and reusable dependencies. The desktop profile normally lives in `desktop-profile/` inside this directory. On macOS, data directories inside `~/Library/Application Support/Nekowork` or `soduwork` use separate desktop profiles under `~/Library/Application Support/Nekowork Development/`, outside the installed client profile. The default retains `source-service-desktop`; custom directories use `source-service-desktop-<directory-id>`, derived from the full data path. If that profile does not exist, a safe existing development profile at `source-service-desktops/<directory-id>/` is reused. When both exist, the standard profile takes precedence. Hub data and accounts stay in place; profile files are never moved or merged. Unsafe output links into installed profiles are rejected before writing files. `--check --desktop` prints the selected desktop profile without creating it. Treat the data directory and desktop profile as private. Never commit it or include it in a source archive. The launcher does not inherit the checkout's `.env`, production database settings, or model credentials.
 
 Before updating source, stop the service and back up the entire data directory and any separate desktop profile. Then update the source and run the same launcher again. To roll back, restore the matching source version and data backup together. Do not delete a database to reset a forgotten password.
 

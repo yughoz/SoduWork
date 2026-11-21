@@ -412,7 +412,7 @@ export function ClientCell({ id, clients }) {
   // Unnamed automatically registered devices may expose only their raw identity.
   // Show a compact product label with the ID suffix and retain the full ID in the tooltip.
   if (/^u-[a-z0-9]+(-[a-z0-9]+)+$/i.test(nm)) {
-    return <span className="cli" title={nm}><span className="ava" style={{ filter: 'grayscale(1)' }}>{tx("盒")}</span><span className="nm muted">SoduWork ·{nm.slice(-6)}</span></span>
+    return <span className="cli" title={nm}><span className="ava" style={{ filter: 'grayscale(1)' }}>{tx("盒")}</span><span className="nm muted">Nekowork ·{nm.slice(-6)}</span></span>
   }
   return <span className="cli"><span className="ava">{nm.slice(0, 1)}</span><span className="nm">{nm}</span></span>
 }
@@ -481,13 +481,13 @@ export function BoxPick({ clients, selected, onToggle, onSet }) {
   return (
     <div>
       <div className="bp-bar">
-        <div className="searchbox sm filter-input"><Icon name="search" /><input ref={searchRef} aria-label={tx("搜索 SoduWork")} value={q} onChange={(e) => setQ(e.target.value)} placeholder={tx("搜索 SoduWork…")} />{q && <button type="button" className="filter-clear" aria-label={tx("清空搜索 SoduWork")} title={tx("清空")} onClick={() => { setQ(''); searchRef.current?.focus() }}>×</button>}</div>
+        <div className="searchbox sm filter-input"><Icon name="search" /><input ref={searchRef} aria-label={tx("搜索 Nekowork")} value={q} onChange={(e) => setQ(e.target.value)} placeholder={tx("搜索 Nekowork…")} />{q && <button type="button" className="filter-clear" aria-label={tx("清空搜索 Nekowork")} title={tx("清空")} onClick={() => { setQ(''); searchRef.current?.focus() }}>×</button>}</div>
         <span className="muted xsm">{tx("已选 ")}{selected.length}</span>
         {onSet && <a className="bp-act" onClick={() => onSet(onlineIds)}>{tx("全选在线")}</a>}
         {onSet && selected.length > 0 && <a className="bp-act" onClick={() => onSet([])}>{tx("清空")}</a>}
       </div>
       <div className="box-pick scroll">
-        {shown.length === 0 && <span className="muted">{tx("无匹配 SoduWork")}</span>}
+        {shown.length === 0 && <span className="muted">{tx("无匹配 Nekowork")}</span>}
         {shown.map((c) => (
           <span key={c.id} className={'bp' + (selected.includes(c.id) ? ' on' : '')} onClick={() => onToggle(c.id)} title={c.name || c.id}>
             <span className="av">{(c.name || c.id).slice(0, 1)}</span><span className="bp-name">{c.name || c.id}</span>{!c.online && <span className="muted" style={{ fontSize: 14.5 }}>{tx("·离线")}</span>}

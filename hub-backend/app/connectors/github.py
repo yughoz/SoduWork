@@ -105,7 +105,7 @@ class _Client:
             handlers.append(urllib.request.HTTPSHandler(context=context))
         self.opener = urllib.request.build_opener(*handlers)
         self.auth = {"Authorization": "Bearer " + token, "Accept": "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "SoduWork-repository-sync"}
+            "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "Nekowork-repository-sync"}
 
     def json(self, endpoint: str, *, method="GET", data=None):
         if not endpoint.startswith("/") or endpoint.startswith("//"):

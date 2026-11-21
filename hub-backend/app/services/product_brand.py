@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-NAME = "SoduWork"
+NAME = "Nekowork"
 CATALOG = json.loads(Path(__file__).with_name("builtin-plugin-catalog.json").read_text(encoding="utf-8"))
 
 

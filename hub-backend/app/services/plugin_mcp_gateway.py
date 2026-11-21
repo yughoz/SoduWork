@@ -385,7 +385,7 @@ async def _runner_connector(client: models.Client | None, operation: str,
         if client is None:
             raise ValueError("当前没有在线 Runner，无法读取本地 MCP 工具目录")
         raise ValueError(
-            "这台电脑的 Runner 不在线，无法使用本机 MCP；请先启动 SoduWork")
+            "这台电脑的 Runner 不在线，无法使用本机 MCP；请先启动 Nekowork")
     reply = await runner.call(operation, {
         "name": name,
         "spec": dict(spec or {}),
@@ -418,7 +418,7 @@ async def _connector_call(name: str, spec: dict, tool: str,
                           session=None, claims: dict | None = None):
     if plugin_builtin.is_virtual_mcp(name):
         if tool not in {"generate_video", "generate_image"}:
-            raise ValueError("当前 SoduWork 媒体能力不支持这个工具")
+            raise ValueError("当前 Nekowork 媒体能力不支持这个工具")
         from . import image_generation
         generate = image_generation.generate_image if tool == "generate_image" else video_generation.generate_video
         return await generate(

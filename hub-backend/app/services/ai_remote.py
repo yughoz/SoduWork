@@ -225,7 +225,7 @@ def _task_payload(t) -> dict:
 
 
 def _file_parts(item) -> tuple[str, bytes | None, str]:
-    """Accept SoduWork's attachment tuple shape: name, bytes, and content type."""
+    """Accept Nekowork's attachment tuple shape: name, bytes, and content type."""
     if isinstance(item, (tuple, list)):
         name = str(item[0] if item else "")
         data = item[1] if len(item) > 1 else None
@@ -307,7 +307,7 @@ def _skill_preflight(r, items: list[dict] | None) -> dict:
     missing = [name for name in local if name not in available]
     if missing:
         return {"ok": False, "required": local, "missing": missing,
-                "error": "执行机 %s 缺少 Skill：%s。请在目标机器安装同名 Skill，或导入 SoduWork 能力库固化版本" %
+                "error": "执行机 %s 缺少 Skill：%s。请在目标机器安装同名 Skill，或导入 Nekowork 能力库固化版本" %
                          (r.host or r.id, "、".join(missing))}
     return {"ok": True, "required": local, "missing": []}
 

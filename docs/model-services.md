@@ -48,8 +48,8 @@
 | Coding Plan，OpenAI 兼容 | `https://open.bigmodel.cn/api/coding/paas/v4` |
 | Coding Plan，Anthropic | `https://open.bigmodel.cn/api/anthropic` |
 
-请按照供应商当前文档核对订阅、API Key 类型、接口地址和模型。Coding Plan 还限制受支持的工具和产品场景，修改接口地址并不代表 SoduWork 已获得使用资格。资格和计费规则请参阅[官方 Coding Plan 常见问题](https://docs.bigmodel.cn/cn/coding-plan/faq)。
+请按照供应商当前文档核对订阅、API Key 类型、接口地址和模型。Coding Plan 还限制受支持的工具和产品场景，修改接口地址并不代表 Nekowork 已获得使用资格。资格和计费规则请参阅[官方 Coding Plan 常见问题](https://docs.bigmodel.cn/cn/coding-plan/faq)。
 
-供应商返回错误码 `1113` 或已识别的余额/额度不足类型时，SoduWork 会显示计费问题，并只保留允许公开的诊断码。自动重试会停止，因为重试不能补充余额或改变订阅。请先核对供应商账单和 API Key 类型。没有已识别计费码的普通限流 `429` 仍可按既有上限重试。
+供应商返回错误码 `1113` 或已识别的余额/额度不足类型时，Nekowork 会显示计费问题，并只保留允许公开的诊断码。自动重试会停止，因为重试不能补充余额或改变订阅。请先核对供应商账单和 API Key 类型。没有已识别计费码的普通限流 `429` 仍可按既有上限重试。
 
 这些诊断不会显示原始上游错误正文、凭据或内部地址。模拟供应商的本地回归通过只能验证上述行为，不能验证某个付费账户的余额或使用资格。

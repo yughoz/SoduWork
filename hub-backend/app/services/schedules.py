@@ -312,7 +312,7 @@ def _failure_hint(error: str) -> str:
         return ("到 Agent 管理 → Runner → 管理本机能力里授权后，"
                 "在自动化里点「立即执行」即可补跑。")
     if "版本过旧" in error:
-        return "升级这台电脑的 SoduWork 客户端后，重新启用这条自动化。"
+        return "升级这台电脑的 Nekowork 客户端后，重新启用这条自动化。"
     if "免费办公文档引擎" in error or "缺少" in error:
         return "到 Agent 管理 → Runner 查看能力探测详情，补齐环境后点「立即执行」。"
     return ""
@@ -353,7 +353,7 @@ async def _notify_failure(session: AsyncSession, s, out: dict) -> None:
 
 
 async def execute_one(session: AsyncSession, s, trigger: str = "timer",
-                      who: str = "SoduWork（自动化）",
+                      who: str = "Nekowork（自动化）",
                       idempotency_key: str = "",
                       execution_instance: str = "") -> dict:
     """Create an immutable attempt before handing work to a substrate."""
@@ -626,14 +626,14 @@ async def list_runs(session: AsyncSession, schedule_id: str, *,
     return [run_to_api(item) for item in rows]
 
 
-async def run_one(session: AsyncSession, s, who: str = "SoduWork（定时）",
+async def run_one(session: AsyncSession, s, who: str = "Nekowork（定时）",
                   schedule_run_id: str = "", conversation_title: str = "") -> dict:
     """Run one automation occurrence as an ordinary conversation."""
     if not s.owner_client_id:
-        return {"ok": False, "error": "没配自动化落在哪台 SoduWork 上"}
+        return {"ok": False, "error": "没配自动化落在哪台 Nekowork 上"}
     client = await session.get(models.Client, s.owner_client_id, populate_existing=True)
     if client is None:
-        return {"ok": False, "error": "配的那台 SoduWork 不在了"}
+        return {"ok": False, "error": "配的那台 Nekowork 不在了"}
     if not await _account_can_run(session, s, client):
         return {"ok": False, "code": "SCHEDULE_OWNER_CHANGED",
                 "error": "执行设备的登录账号已变更，请原账号登录后再执行"}

@@ -111,4 +111,4 @@ def preserve_manual_history(session, task, previous_status, next_status):
             or task.actual_start_at or task.actual_end_at):
         from . import task_events
         task_events.record(session, task.id, STARTED_EVENT,
-                           {"from": previous_status, "to": next_status}, actor="SoduWork")
+                           {"from": previous_status, "to": next_status}, actor="Nekowork")

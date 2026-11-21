@@ -209,11 +209,11 @@ def substrate_options(agents: list[dict], required: list[str], current_client_id
         if not compatible:
             note = "当前设备上的在线 Runner 尚未具备这项工作需要的全部能力"
         elif group["busySeats"] >= group["onlineSeats"]:
-            note = "当前设备上的席位正在忙；SoduWork 会排队并防止重复派发"
+            note = "当前设备上的席位正在忙；Nekowork 会排队并防止重复派发"
         elif group["runnerLoad"]:
             note = "当前设备另有 %s 项工作在执行；仍可继续派发并独立运行" % group["runnerLoad"]
         else:
-            note = "SoduWork 将在当前设备上按能力与负载选择可用席位"
+            note = "Nekowork 将在当前设备上按能力与负载选择可用席位"
         group["note"] = note
         group["status"] = "ready" if group["available"] else "blocked"
         group["requiredCapabilities"] = sorted(needed)

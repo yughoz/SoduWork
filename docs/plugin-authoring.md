@@ -1,10 +1,10 @@
-# SoduWork 企业能力包编写指南（schemaVersion 1）
+# Nekowork 企业能力包编写指南（schemaVersion 1）
 
 **简体中文** · [English](plugin-authoring.en.md) · [文档导航](README.zh-CN.md)
 
 应用作者可从“应用 → 添加 → 开发应用”使用内置开发技能，它继承插件开发助手的基础规范，并提供独立窗口、公共 H5 SDK、页面与对话/刷新联动及验证流程。应用草稿根级使用 `template: "app"`，声明真实 HTTP(S) 的 `ui.contributions` / `workspace.navigation` 页面，`source.openMode` 为 `workspace`；本地 HTML 资源不会由安装器自动启动。未声明窗口大小时默认 1280×800，仍可最大化/全屏。安装、版本和 `.soduwork-plugin` 导出继续使用本指南的同一链路；“安装并打开”进入应用独立窗口。详见[应用开发技能](../skills/app-developer/SKILL.md)。
 
-> 这份文档面向插件作者。SoduWork 插件是可安装、可授权、可发布的企业能力包，可以包含
+> 这份文档面向插件作者。Nekowork 插件是可安装、可授权、可发布的企业能力包，可以包含
 > Instructions、Skill、MCP、工具、权限声明与可选工作流。可运行样例见 `hub-backend/plugins/*.json`。
 
 插件不等于工作流：单步方法、知识型 Skill、系统连接器可以直接从对话或任务调用；只有需要
@@ -38,10 +38,10 @@
 
 ### 两种作者入口
 
-- 普通员工在客户端“插件 → 制作个人插件”编写方法，也可以打开内置“插件开发助手”，让 SoduWork
+- 普通员工在客户端“插件 → 制作个人插件”编写方法，也可以打开内置“插件开发助手”，让 Nekowork
   通过对话生成 `soduwork-plugin-draft.json`，再导入并安装到本机。制作、预检、安装、启停和删除都在
   客户端完成，默认仅自己可见，不需要管理员，不会自动上传。
-- 专业作者在客户端插件工坊或受版本控制的源码仓库中维护插件，也可导入 SoduWork/Codex/Claude 插件包。
+- 专业作者在客户端插件工坊或受版本控制的源码仓库中维护插件，也可导入 Nekowork/Codex/Claude 插件包。
   复杂 DAG 应在代码中维护并接受代码评审，避免在线画布产生无法审查的隐式配置。
 
 > 管理端不是插件编辑器。它只提供起步包下载与候选包导入，并负责静态预检、隔离、评测、审批、
@@ -322,7 +322,7 @@ DAG 只用 `dependsOn` 表达，必须无环，节点数 1～100。
 文件类 `ai_review` 必须声明必交 `decision`，平台按本次节点的证据校验；代码类审查仍需固定
 Git 版本及 `code-review.json`，两者不会互相替代。两类 AI 复核都不能替代后续人工批准。
 
-运行时 SoduWork 生成有边界的上下文快照，保存输入 key、来源节点、产出 key、校验和与是否截断。
+运行时 Nekowork 生成有边界的上下文快照，保存输入 key、来源节点、产出 key、校验和与是否截断。
 不同 Agent 不共享隐式终端历史，也不会把整段旧会话无限塞给下一个模型。
 
 ## 每个节点使用不同 Agent 和模型
@@ -464,7 +464,7 @@ Pi 或 Runner 对话生成草稿后，宿主会在原逻辑轮次完成前重新
 
 ## Codex 与 Claude 插件导入
 
-SoduWork 能识别 `.codex-plugin/plugin.json` 与 `.claude-plugin/plugin.json`，转换成统一不可变
+Nekowork 能识别 `.codex-plugin/plugin.json` 与 `.claude-plugin/plugin.json`，转换成统一不可变
 能力包模型。能映射的 Instructions、Skill、Agent 和真实工作流会进入能力报告；Hook、任意二进制或无法安全表达的
 组件不会静默执行，而会显示为适配提醒或阻断项。导入成功不代表外部插件全部语义都已支持，
 必须查看预检报告并模拟。

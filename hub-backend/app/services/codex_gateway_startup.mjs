@@ -18,12 +18,12 @@ function configuration(env) {
     const authorization = gateway.headers?.Authorization;
     if (typeof authorization !== 'string' || !authorization.startsWith('Bearer ') || /[\r\n]/.test(authorization)) throw Error();
     return { authorization, provider: {
-      name: 'SoduWork', base_url: gateway.baseUrl, wire_api: 'responses',
+      name: 'Nekowork', base_url: gateway.baseUrl, wire_api: 'responses',
       env_http_headers: { Authorization: AUTH_ENV },
       http_headers: { 'X-Client-Feature-ID': 'codex' },
     } };
   } catch {
-    throw Error('Invalid SoduWork managed Codex gateway configuration');
+    throw Error('Invalid Nekowork managed Codex gateway configuration');
   }
 }
 

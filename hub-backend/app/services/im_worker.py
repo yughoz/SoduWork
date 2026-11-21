@@ -67,7 +67,7 @@ async def _step(session, route, inbox):
     if inbox.status == "sending":
         # The previous lease died after persisting intent. Never replay the RPC.
         await _finish(session, inbox, "uncertain", "执行送达结果待核对",
-            "尚未确认上一条消息是否送达。为避免重复执行，已暂停此会话队列，请在 SoduWork 核对。")
+            "尚未确认上一条消息是否送达。为避免重复执行，已暂停此会话队列，请在 Nekowork 核对。")
         return
     if inbox.status == "uncertain":
         inbox.available_at = connections.now() + timedelta(seconds=60)
@@ -83,7 +83,7 @@ async def _step(session, route, inbox):
             answer = await im_execution.final_text(session, row, inbox, binding) if row else None
         except HTTPException:
             await _finish(session, inbox, "uncertain", "执行机缺少消息关联回执，请升级并核对原会话",
-                "无法确认本条消息对应的执行结果，请升级桌面执行机并在 SoduWork 核对原会话；系统不会转发其他轮次的结果。")
+                "无法确认本条消息对应的执行结果，请升级桌面执行机并在 Nekowork 核对原会话；系统不会转发其他轮次的结果。")
             return
         if answer is not None:
             await _finish(session, inbox, "done", "本轮结果已进入回传队列", answer)
@@ -92,7 +92,7 @@ async def _step(session, route, inbox):
                 .replace(tzinfo=connections.now().tzinfo)).total_seconds()
             if elapsed >= 86400:
                 await _finish(session, inbox, "uncertain", "超过24小时未收到本条消息的确定结果，请核对原会话",
-                    "本条消息超过24小时未收到可核对的结果，已暂停后续自动派发，请在 SoduWork 原会话检查；系统不会重复执行。")
+                    "本条消息超过24小时未收到可核对的结果，已暂停后续自动派发，请在 Nekowork 原会话检查；系统不会重复执行。")
                 return
             if elapsed >= 60 and (not inbox.diagnosed_at or
                     (connections.now() - inbox.diagnosed_at.replace(tzinfo=connections.now().tzinfo)).total_seconds() >= 60):
@@ -100,7 +100,7 @@ async def _step(session, route, inbox):
                 inbox.diagnosed_at = connections.now()
                 if diagnosis == "failed":
                     await _finish(session, inbox, "rejected", "执行机确认本条消息未完成，请检查原会话",
-                        "执行机确认本条消息未能完成，请在 SoduWork 原会话查看原因。")
+                        "执行机确认本条消息未能完成，请在 Nekowork 原会话查看原因。")
                     return
                 inbox.detail = {"offline": "执行机离线，等待重连后核对本条消息结果",
                     "queued": "执行机已接收，本条消息正在等待前序工作完成"}.get(diagnosis,
@@ -112,7 +112,7 @@ async def _step(session, route, inbox):
         client, row, waiting = await im_execution.preflight(session, connection, binding)
     except HTTPException as exc:
         # Local policy errors are bounded by this adapter; never relay arbitrary upstream details.
-        message = str(exc.detail) if isinstance(exc.detail, str) else "当前任务不能远程执行，请在 SoduWork 检查"
+        message = str(exc.detail) if isinstance(exc.detail, str) else "当前任务不能远程执行，请在 Nekowork 检查"
         await _finish(session, inbox, "rejected", message[:160], message[:160])
         return
     if waiting:
@@ -131,12 +131,12 @@ async def _step(session, route, inbox):
             result = await im_execution.submit(session, client, binding, inbox)
         if not follow_up and (result.get("already") or result.get("reused")):
             await _finish(session, inbox, "rejected", "任务已由另一条请求启动，本条未重新派发",
-                "此任务刚由另一条请求启动，本条消息未重新派发。请在 SoduWork 检查原会话后再发送。")
+                "此任务刚由另一条请求启动，本条消息未重新派发。请在 Nekowork 检查原会话后再发送。")
             return
         if not result.get("ok") or result.get("uncertain") or result.get("pending"):
             status = "rejected" if result.get("delivery") == "rejected" else "uncertain"
             await _finish(session, inbox, status, "执行机未确认接受消息",
-                "执行机未确认接受消息，请在 SoduWork 核对；系统不会自动重复执行。")
+                "执行机未确认接受消息，请在 Nekowork 核对；系统不会自动重复执行。")
             return
         if not inbox.ref:
             inbox.ref = str(result.get("ref") or result.get("issueId") or "")
@@ -150,7 +150,7 @@ async def _step(session, route, inbox):
         if (not isinstance(admission_key, str) or admission_key != expected_key
                 or not re.fullmatch(r"(?:comment|dispatch):[A-Za-z0-9][A-Za-z0-9._:-]{7,127}", admission_key)):
             await _finish(session, inbox, "uncertain", "执行机缺少消息关联回执，请升级并核对原会话",
-                "执行机已接收请求，但版本缺少可靠的消息关联回执。请升级桌面执行机并在 SoduWork 核对原会话；系统不会自动重复执行。")
+                "执行机已接收请求，但版本缺少可靠的消息关联回执。请升级桌面执行机并在 Nekowork 核对原会话；系统不会自动重复执行。")
             return
         inbox.admission_key = admission_key
         inbox.accepted_at = connections.now()
@@ -164,7 +164,7 @@ async def _step(session, route, inbox):
         current = await session.get(im.IMInbox, inbox_id)
         if current:
             await _finish(session, current, "uncertain", "执行送达结果待核对",
-                "执行送达结果待核对，已暂停自动发送。请在 SoduWork 原会话检查。")
+                "执行送达结果待核对，已暂停自动发送。请在 Nekowork 原会话检查。")
         raise
 
 

@@ -3,7 +3,7 @@
 [中文](linux-package-verification.md) · [Documentation](README.md)
 
 Signed Linux releases contain an embedded OpenPGP signature in the RPM, a detached
-`.asc` signature for each DEB, RPM and tar.gz, and `SoduWork-Linux-Signing-Key.asc`.
+`.asc` signature for each DEB, RPM and tar.gz, and `Nekowork-Linux-Signing-Key.asc`.
 The release manifest records the primary key fingerprint and the hashes of these
 exact files. Older releases without these assets have not retroactively acquired
 signatures.
@@ -20,11 +20,11 @@ Download the RPM and public key from the same release. Inspect the key, compare
 its full fingerprint, then import it into the system RPM keyring:
 
 ```sh
-gpg --show-keys --with-fingerprint SoduWork-Linux-Signing-Key.asc
+gpg --show-keys --with-fingerprint Nekowork-Linux-Signing-Key.asc
 # Continue only after independently confirming the displayed fingerprint.
-sudo rpm --import SoduWork-Linux-Signing-Key.asc
-rpmkeys --checksig --verbose SoduWork-X.Y.Z-linux.rpm
-sudo dnf --setopt=localpkg_gpgcheck=True install ./SoduWork-X.Y.Z-linux.rpm
+sudo rpm --import Nekowork-Linux-Signing-Key.asc
+rpmkeys --checksig --verbose Nekowork-X.Y.Z-linux.rpm
+sudo dnf --setopt=localpkg_gpgcheck=True install ./Nekowork-X.Y.Z-linux.rpm
 ```
 
 Replace `X.Y.Z` with the downloaded version. The verification must report a valid
@@ -36,21 +36,21 @@ third-party key trusted, so first-time installation still requires key import.
 ## Debian, Ubuntu and tar.gz downloads
 
 APT authenticates repository metadata (`InRelease` / `Release.gpg`), rather than
-automatically checking a detached signature next to a downloaded DEB. SoduWork's
+automatically checking a detached signature next to a downloaded DEB. Nekowork's
 GitHub Release assets are standalone downloads, not an APT repository. Verify the
 download explicitly before installation:
 
 ```sh
-gpg --show-keys --with-fingerprint SoduWork-Linux-Signing-Key.asc
+gpg --show-keys --with-fingerprint Nekowork-Linux-Signing-Key.asc
 # Continue only after independently confirming the displayed fingerprint.
-gpg --import SoduWork-Linux-Signing-Key.asc
-gpg --verify SoduWork-X.Y.Z-linux.deb.asc SoduWork-X.Y.Z-linux.deb
+gpg --import Nekowork-Linux-Signing-Key.asc
+gpg --verify Nekowork-X.Y.Z-linux.deb.asc Nekowork-X.Y.Z-linux.deb
 # Install only if verification succeeds with the expected signing fingerprint.
-sudo apt install ./SoduWork-X.Y.Z-linux.deb
+sudo apt install ./Nekowork-X.Y.Z-linux.deb
 ```
 
-For the archive, run `gpg --verify SoduWork-X.Y.Z-linux.tar.gz.asc
-SoduWork-X.Y.Z-linux.tar.gz` before extracting it. A GnuPG owner-trust warning is
+For the archive, run `gpg --verify Nekowork-X.Y.Z-linux.tar.gz.asc
+Nekowork-X.Y.Z-linux.tar.gz` before extracting it. A GnuPG owner-trust warning is
 distinct from a bad signature; independently compare the signing fingerprint.
 If an APT repository is introduced later, it also needs signed repository
 metadata and a repository-scoped `Signed-By` key configuration.
@@ -86,7 +86,7 @@ baselines and new candidates always require signatures.
 The separate package-validation workflow stays unsigned and emits checksum
 evidence only; its outputs cannot be promoted into a public release. Real signing
 regressions use temporary fixture keys in Linux CI. A fixture round trip does not
-prove that a production key is configured or that an actual SoduWork desktop
+prove that a production key is configured or that an actual Nekowork desktop
 installer has passed the full native acceptance matrix.
 
 To test the configured key on real installers, manually run **Native package

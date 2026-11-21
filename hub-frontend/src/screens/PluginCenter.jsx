@@ -610,7 +610,7 @@ function BulkImportModal({ data, busy, onClose, onConfirm }) {
     <div className="plugin-bulk-import">
       <section className="plugin-bulk-summary"><Icon name="shield" /><div>
         <b>{tx("只导入有明确使用权的插件包")}</b>
-        <p>{tx("SoduWork 不抓取未知市场。宽松开源许可证可直接识别；企业自有或已获授权的包需要人工确认使用权。")}</p>
+        <p>{tx("Nekowork 不抓取未知市场。宽松开源许可证可直接识别；企业自有或已获授权的包需要人工确认使用权。")}</p>
       </div></section>
       <label><span>{tx("来源名称")}</span><input value={sourceLabel} maxLength={80}
         placeholder={tx("例如：企业自有插件库")}
@@ -653,7 +653,7 @@ function SimulationModal({ plugin, version, initialProjectId = '', onClose }) {
     setBusy(false)
   }
   return <Modal scope="plugin-page" wide title={tx("预检与模拟 · {0}", [plugin.name])} icon="check" onClose={onClose} foot={<><button className="btn btn-ghost" onClick={onClose}>{tx("关闭")}</button><button className="btn btn-primary" disabled={busy} onClick={run}>{busy ? tx("正在体检…") : result ? tx("重新模拟") : tx("开始模拟")}</button></>}>
-    <p className="plugin-modal-intro">{tx("选择真实项目与执行器，SoduWork 只检查版本、技能、Runner、仓库和环境，不创建需求、不拉代码、也不启动进程。")}</p>
+    <p className="plugin-modal-intro">{tx("选择真实项目与执行器，Nekowork 只检查版本、技能、Runner、仓库和环境，不创建需求、不拉代码、也不启动进程。")}</p>
     {loadError && <LoadIssue message={loadError} onRetry={loadProjects} />}
     <div className="form-pair"><Field label={tx("模拟项目")}><SelectMenu className="f-in" value={projectId} onChange={(e) => setProjectId(e.target.value)}><option value="">{tx("组织通用场景")}</option>{projects.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</SelectMenu></Field><AgentChoice value={agentKind} onChange={setAgentKind} /></div>
     {!result && <div className="plugin-sim-empty"><Icon name="check" /><b>{tx("尚未运行模拟")}</b><span>{tx("点击“开始模拟”，一次看清能不能跑、缺什么、会经过哪些节点。")}</span></div>}

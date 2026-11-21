@@ -1,4 +1,4 @@
-"""Change native executors at an idle turn boundary without changing SoduWork ref."""
+"""Change native executors at an idle turn boundary without changing Nekowork ref."""
 from __future__ import annotations
 
 import uuid
@@ -68,8 +68,8 @@ def resume(ref, text, cfg):
             scoped = dict(run)
             skill_read_scope.for_run(scoped, fresh)
             brief = _handoff_brief(ref, text).replace(
-                "[SoduWork 上下文自动压缩：同一会话继续]",
-                "[SoduWork 执行底座或模型已切换：继续同一会话]")
+                "[Nekowork 上下文自动压缩：同一会话继续]",
+                "[Nekowork 执行底座或模型已切换：继续同一会话]")
             old = dict(run)
             segments = list(run.get("contextSegments") or [])
             segments.append({**selection.current(run), "sid": run.get("cliSid") or "",

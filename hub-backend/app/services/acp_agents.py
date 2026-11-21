@@ -1,6 +1,6 @@
-"""ACP Agent catalog and the command adapter used by SoduWork Runner.
+"""ACP Agent catalog and the command adapter used by Nekowork Runner.
 
-Keep this module dependency-free.  ACP agents evolve independently from SoduWork;
+Keep this module dependency-free.  ACP agents evolve independently from Nekowork;
 the rest of the execution stack must only know the stable profile contract.
 """
 from __future__ import annotations
@@ -20,7 +20,7 @@ CATALOG: dict[str, dict] = acp_specs()
 
 
 def find_bin(key: str) -> str | None:
-    """Find an installed ACP agent without mistaking SoduWork itself for one."""
+    """Find an installed ACP agent without mistaking Nekowork itself for one."""
     spec = CATALOG.get(key) or {}
     override = os.environ.get("SODUWORK_AGENT_%s_BIN" % key.upper().replace("-", "_"))
     if override:
@@ -64,7 +64,7 @@ def run_args(session_id: str, mode: str, _ws: str | None = None,
     """Opaque metadata consumed by :func:`command_argv`, never by the agent."""
     # `_env_for` runs inside the worker after this function has built the start
     # args, so recording the mode here lets Codex apply the same read/write gate
-    # as SoduWork's outer ACP bridge without putting it on the agent command line.
+    # as Nekowork's outer ACP bridge without putting it on the agent command line.
     if isinstance(_cfg, dict):
         _cfg["_soduwork_agent_mode"] = str(mode or "work")
     return ["--soduwork-session", str(session_id or ""), "--soduwork-mode", str(mode or "work")]
@@ -109,7 +109,7 @@ def executable_command(key: str, executable: str) -> list[str]:
 
 def command_argv(key: str, exe: str, args: list[str], ws: str,
                  cfg: dict | None = None) -> list[str]:
-    """Wrap one installed ACP agent in SoduWork's normalized JSON event bridge."""
+    """Wrap one installed ACP agent in Nekowork's normalized JSON event bridge."""
     session, mode = _metadata(args)
     policy = dict((cfg or {}).get("accessPolicy") or {})
     permission = "readonly" if policy.get("mode") == "readonly" or mode == "plan" else "workspace"
@@ -257,7 +257,7 @@ def inject_llm_env(key: str, env: dict, llm: dict, *, mode: str = "work") -> Non
             "_meta": {"gateway": {
                 "baseUrl": base.rstrip("/"),
                 "headers": {"Authorization": "Bearer " + secret} if secret else {},
-                "providerName": "SoduWork 模型服务",
+                "providerName": "Nekowork 模型服务",
             }},
         }
         env.update(
@@ -274,7 +274,7 @@ def inject_llm_env(key: str, env: dict, llm: dict, *, mode: str = "work") -> Non
                 # default model's larger window and postpone compaction.
                 "model_context_window": context_limit,
                 "model_auto_compact_token_limit": context_limit * 4 // 5,
-                # SoduWork owns the durable event archive; do not ask an enterprise
+                # Nekowork owns the durable event archive; do not ask an enterprise
                 # gateway to retain remote Responses state as well.
                 "disable_response_storage": True,
             }, ensure_ascii=False, separators=(",", ":")),

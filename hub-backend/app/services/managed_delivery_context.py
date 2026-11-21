@@ -106,7 +106,7 @@ def prompt(readiness: dict | None) -> str:
     state = "READY" if data.get("ready") else "BLOCKED"
     return (
         "[SODUWORK MANAGED DELIVERY PREFLIGHT — " + state + "]\n"
-        "This is authoritative, sanitized evidence produced by SoduWork before this workflow run. "
+        "This is authoritative, sanitized evidence produced by Nekowork before this workflow run. "
         "Never ask the user for credentials or reveal secrets. Each AI node must work only on its "
         "declared responsibility. Credential readiness, merge permissions, deployment adapters, "
         "target hosts, health checks, rollback and human gates are verified and isolated controls. "

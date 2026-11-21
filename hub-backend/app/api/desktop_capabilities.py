@@ -43,7 +43,7 @@ async def resolve(session, client, cid):
             or str(runner.org_id or "") != str(node.org_id or "")):
         raise HTTPException(403, "电脑归属已变化，请重新选择")
     if "desktopCapabilities1" not in runner.caps:
-        raise HTTPException(409, "请更新并重启这台电脑的 SoduWork，再刷新列表")
+        raise HTTPException(409, "请更新并重启这台电脑的 Nekowork，再刷新列表")
     return target, runner
 
 
@@ -86,9 +86,9 @@ async def request(cid: str, body: dict = Body(...), client=Depends(current_clien
     uid = owner(client)
     _, runner = await resolve(session, client, cid)
     if body["operation"] == "library.call" and "desktopLibrary1" not in runner.caps:
-        raise HTTPException(409, "请更新并重启这台电脑的 SoduWork 后使用资料库")
+        raise HTTPException(409, "请更新并重启这台电脑的 Nekowork 后使用资料库")
     if body["operation"] == "conversation.history" and "desktopHistory1" not in runner.caps:
-        raise HTTPException(409, "请更新并重启这台电脑的 SoduWork 后访问本地会话")
+        raise HTTPException(409, "请更新并重启这台电脑的 Nekowork 后访问本地会话")
     packet = {**body, "targetClientId": cid, "ownerUserId": uid}
     authorization = sign_claims({"uid": uid, "cid": cid, "digest": digest(packet)},
                                 ttl_seconds=120, token_type="desktop-capability")

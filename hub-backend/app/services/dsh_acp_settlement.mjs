@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 export async function waitForSettlement(agent, subagents, signal) {
   if (typeof agent?.whenIdle !== 'function'
       || typeof subagents?.waitForChildren !== 'function') {
-    throw new Error('DeepSeek Harness child settlement interface is unavailable; repair the runtime or update SoduWork.');
+    throw new Error('DeepSeek Harness child settlement interface is unavailable; repair the runtime or update Nekowork.');
   }
   signal.throwIfAborted();
   let onAbort;
@@ -25,7 +25,7 @@ export async function waitForSettlement(agent, subagents, signal) {
       signal.throwIfAborted();
       const seq = agent.session?.seq;
       if (!Number.isSafeInteger(seq) || seq < 0) {
-        throw new Error('DeepSeek Harness session sequence is unavailable; update SoduWork.');
+        throw new Error('DeepSeek Harness session sequence is unavailable; update Nekowork.');
       }
       const joined = await Promise.race([subagents.waitForChildren(agent), cancelled]);
       signal.throwIfAborted();
@@ -117,7 +117,7 @@ export function transformBridgeSource(source, version) {
       || source.indexOf(END, end + END.length) !== -1
       || createHash('sha256').update(source.slice(start, end)).digest('hex') !== expected) {
     throw new Error('DeepSeek Harness ACP prompt interface is unsupported (' + version
-      + '); update SoduWork before running this adapter.');
+      + '); update Nekowork before running this adapter.');
   }
   const turnStart = source.indexOf(TURN_END_START);
   const turnEnd = source.indexOf(TURN_END_END, turnStart) + TURN_END_END.length;
@@ -126,7 +126,7 @@ export function transformBridgeSource(source, version) {
       || source.indexOf(TURN_END_START, turnStart + TURN_END_START.length) !== -1
       || createHash('sha256').update(turnBlock).digest('hex') !== TURN_END_HASH) {
     throw new Error('DeepSeek Harness ACP tool preview interface is unsupported (' + version
-      + '); update SoduWork before running this adapter.');
+      + '); update Nekowork before running this adapter.');
   }
   // Both complete native blocks have been reviewed. Replace by their verified
   // content so bundle layout changes cannot invalidate stored offsets.
@@ -156,7 +156,7 @@ if (process.env.SODUWORK_DSH_ACP_SETTLEMENT === '1') {
       }
       const loaded = nextLoad(url, context);
       if (loaded.format !== 'module' || loaded.source == null) {
-        throw new Error('DeepSeek Harness ACP module format is unsupported; update SoduWork.');
+        throw new Error('DeepSeek Harness ACP module format is unsupported; update Nekowork.');
       }
       const source = typeof loaded.source === 'string' ? loaded.source : Buffer.from(loaded.source).toString('utf8');
       return { ...loaded, source: transformBridgeSource(source, manifest.version) };

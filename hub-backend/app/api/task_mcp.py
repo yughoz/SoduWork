@@ -342,7 +342,7 @@ async def rpc(
                 session, client, claims)
         except ValueError as exc:
             return _fail(rid, -32003, str(exc)[:500])
-        # A per-turn @plugin capability must never inherit SoduWork's broader task
+        # A per-turn @plugin capability must never inherit Nekowork's broader task
         # administration tools. It sees only the two generic plugin gateways.
         return _ok(rid, {"tools": plugin_tools if plugin_only
                          else [*_TOOLS, *plugin_tools]})
@@ -353,7 +353,7 @@ async def rpc(
         plugin_started = time.perf_counter()
         if plugin_only and name not in {"plugin_mcp_list", "plugin_mcp_call"}:
             return _ok(rid, {"content": [{"type": "text", "text":
-                                           "本轮插件授权不能调用 SoduWork 平台需求工具"}],
+                                           "本轮插件授权不能调用 Nekowork 平台需求工具"}],
                              "isError": True})
         try:
             if name == "plugin_mcp_list":

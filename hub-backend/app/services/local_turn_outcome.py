@@ -4,7 +4,7 @@ from __future__ import annotations
 from . import declared_outputs, model_errors
 
 TRUNCATED = "模型达到单轮输出上限，本轮尚未完成；已有文件与进度已保留，请缩小当前步骤后继续。"
-RECOVERY_NOTE = "（SoduWork 自动恢复）模型输出被截断，正从同一会话保留进度续跑当前节点；最多自动恢复一次，不跳过审批或验收。"
+RECOVERY_NOTE = "（Nekowork 自动恢复）模型输出被截断，正从同一会话保留进度续跑当前节点；最多自动恢复一次，不跳过审批或验收。"
 
 
 def observe(cli: str, event: dict, terminal: dict) -> None:

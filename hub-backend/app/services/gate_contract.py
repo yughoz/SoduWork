@@ -181,10 +181,10 @@ async def prepare_context(session: AsyncSession, task: models.Task,
 
 def _artifact_evidence(artifact: am.ArtifactVersion) -> list[dict]:
     manifest = dict(artifact.manifest or {})
-    producer = {"kind": "system", "id": "soduwork", "name": artifact.created_by_name or "SoduWork"}
+    producer = {"kind": "system", "id": "soduwork", "name": artifact.created_by_name or "Nekowork"}
     common = {"role": "output", "createdAt": _ms(artifact.created_at),
               "producer": producer, "source": {"artifactVersionId": artifact.id},
-              "verification": {"state": "passed", "by": "SoduWork", "at": _ms(artifact.created_at)}}
+              "verification": {"state": "passed", "by": "Nekowork", "at": _ms(artifact.created_at)}}
     if artifact.kind == "code" and artifact.commit_sha:
         return [{"id": f"artifact:{artifact.id}:commit", "kind": "commit",
                  "title": "固定代码提交", "summary": artifact.commit_sha,

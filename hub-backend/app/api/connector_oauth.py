@@ -63,9 +63,9 @@ async def callback(state: str = Query("", max_length=256), code: str = Query("",
         connected = await service.finish(session, state, code, bool(error))
     except ValueError:
         connected = False
-    text = "账号授权已完成，请返回 SoduWork。" if connected else "账号授权未完成，请返回 SoduWork 重新连接。"
+    text = "账号授权已完成，请返回 Nekowork。" if connected else "账号授权未完成，请返回 Nekowork 重新连接。"
     # Avoid external assets and interpolated provider values so callback codes cannot leak through Referer headers.
-    return HTMLResponse('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>SoduWork</title>'
+    return HTMLResponse('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Nekowork</title>'
                         '<body><p>' + text + '</p></body></html>', headers={
                             "Cache-Control": "no-store", "Referrer-Policy": "no-referrer",
                             "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'"})

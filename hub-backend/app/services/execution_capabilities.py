@@ -17,7 +17,7 @@ from typing import Iterable
 SCHEMA_VERSION = 3
 
 CATALOG: dict[str, dict[str, str]] = {
-    "files": {"label": "文件处理", "hint": "需要可读写的 SoduWork 工作目录"},
+    "files": {"label": "文件处理", "hint": "需要可读写的 Nekowork 工作目录"},
     "terminal": {"label": "命令与构建", "hint": "需要在执行机上运行命令"},
     "repository": {"label": "代码仓库", "hint": "需要 Git 和可读写工作目录"},
     "browser": {"label": "浏览与检索", "hint": "需要已接通的浏览器自动化能力"},
@@ -136,7 +136,7 @@ def _git_path() -> str:
 def _office_candidates(env: dict | None = None) -> list[str]:
     """Only accept a managed or explicitly configured optional CLI adapter.
 
-    A global ``officecli`` command may be the hosted, credit-based product.  SoduWork must
+    A global ``officecli`` command may be the hosted, credit-based product.  Nekowork must
     never silently turn that unrelated installation into an enterprise capability.
     """
     values = os.environ if env is None else env
@@ -204,7 +204,7 @@ def _office_version(command: str) -> tuple[bool, str]:
 
 
 def _office_python_version(env: dict | None = None) -> tuple[bool, str]:
-    """Probe the dependency-free-to-SoduWork, open-source Python Office stack."""
+    """Probe the dependency-free-to-Nekowork, open-source Python Office stack."""
     values = os.environ if env is None else env
     explicit = str(values.get("SODUWORK_OFFICE_PYTHON") or "")
     candidates = [explicit, _which(("python3",)), _which(("python",)), _which(("py", "py.exe"))]
@@ -248,7 +248,7 @@ def _browser_path() -> str:
 
 
 def _skill_file(name: str, relative: str = "SKILL.md") -> str:
-    """Locate SoduWork's reviewed bundled bridge, not an arbitrary same-name user skill."""
+    """Locate Nekowork's reviewed bundled bridge, not an arbitrary same-name user skill."""
     try:
         from . import skills
         return os.path.join(skills.bundled_root(), name, *relative.split("/"))
@@ -554,7 +554,7 @@ def error_message(verdict: dict, machine: str = "这台执行机") -> str:
                 machine or "这台执行机", grant_labels)
         else:
             problem = "%s尚未满足%s" % (machine or "这台执行机", "、".join(missing))
-        return ("执行前能力预检未通过：%s。请在目标电脑的 SoduWork → Agent 管理 → Runner "
+        return ("执行前能力预检未通过：%s。请在目标电脑的 Nekowork → Agent 管理 → Runner "
                 "中点击「管理本机能力」，授权%s，然后重新探测并重试；也可改选满足要求的执行机。"
                 "企业插件审核不会自动授予本机权限。" % (problem, grant_labels))
     return ("执行前能力预检未通过：%s缺少%s。请在 Agent 管理 → Runner 中查看探测详情，"

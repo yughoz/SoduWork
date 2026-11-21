@@ -1,14 +1,14 @@
-# PRD Nekowork — Pengganti Nekorp di atas SoduWork
+# PRD Nekowork — Pengganti Nekorp di atas Nekowork
 
 - Versi: 0.1
 - Last updated: 2026-11-20
 - Owner: Kamisama / Nekorp
-- Basis: fork `yughoz/SoduWork` (MIT, mdiri-ai/SoduWork) — rebrand Nekowork
+- Basis: fork `yughoz/Nekowork` (MIT, mdiri-ai/Nekowork) — rebrand Nekowork
 - Kaneo: project NW (workspace Nekowork)
 
 ## 1. Tujuan
 
-Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine SoduWork (issue → agent → review → sign-off). V1 fokus 4 target:
+Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine Nekowork (issue → agent → review → sign-off). V1 fokus 4 target:
 
 1. **Integrasi user ke llm.nekotekno** — tiap user punya 1 token New API self-service (generate/reset/revoke, show-once).
 2. **Integrasi ke Asana** — create/complete task, resolve assignee via email mapping, cache users/projects.
@@ -28,7 +28,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
 
 | Layer | Teknologi |
 |---|---|
-| Client | Electron (SoduWork client, existing) |
+| Client | Electron (Nekowork client, existing) |
 | Hub backend | FastAPI + SQLAlchemy + Alembic (existing, kita extend) |
 | Admin console | React (hub-frontend, existing) |
 | DB | Hub DB (SQLite lokal / Postgres Docker) — tabel baru via Alembic, tanpa PocketBase |
@@ -45,7 +45,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
       |  app "Token"             |  page /tokens                |  Bearer mcp_tokens
       +────────────+─────────────+──────────────────────────────+
                    v
-            [SoduWork Hub :18989]
+            [Nekowork Hub :18989]
               ├─ existing: issues, plugins, review, audit, model catalog
               └─ NEKOWORK EXTENSIONS
                   ├─ modul_gateway   → New API (provisioning, token CRUD, saldo)
@@ -55,7 +55,7 @@ Nekowork = lapisan "Corporate AI Operations" Nekorp yang diangkut ke atas engine
                   └─ modul_token_dashboard → UI saldo (console + client app)
 ```
 
-User Nekowork = user Hub (auth existing SoduWork). Roles: `member` dan `admin` (mapping dari role Hub yang ada; kalau Hub cuma kenal admin/non-admin, member = semua non-admin).
+User Nekowork = user Hub (auth existing Nekowork). Roles: `member` dan `admin` (mapping dari role Hub yang ada; kalau Hub cuma kenal admin/non-admin, member = semua non-admin).
 
 ## 5. Modul
 
@@ -69,7 +69,7 @@ User Nekowork = user Hub (auth existing SoduWork). Roles: `member` dan `admin` (
 
 ## 5b. IM Telegram (native upstream, tanpa build baru)
 
-Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan SoduWork** (`services/im_provider_registry.py`, `im_adapters.py` — webhook secret `x-telegram-bot-api-secret-token`, chat pribadi langsung, grup pakai `/pair@bot` & `/soduwork@bot`, dedup `update_id`). Yang perlu dilakukan cuma **aktivasi**:
+Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan Nekowork** (`services/im_provider_registry.py`, `im_adapters.py` — webhook secret `x-telegram-bot-api-secret-token`, chat pribadi langsung, grup pakai `/pair@bot` & `/soduwork@bot`, dedup `update_id`). Yang perlu dilakukan cuma **aktivasi**:
 
 1. Bikin bot via BotFather → `bot_token` + `webhook_secret` disimpan NekoVault (`api/nekowork-telegram-bot`), gak pernah plaintext di chat.
 2. Set webhook ke URL publik Hub — hub lokal loopback, jadi butuh tunnel (infra cloudflared lelevo sudah ada) atau diisi pas Phase 5 deploy.
@@ -109,4 +109,4 @@ Hasil diskusi 2026-11-20: adapter Telegram **sudah ada bawaan SoduWork** (`servi
 - **New API** — gateway one-api style di `llm.nekotekno.xyz`; token user + quota + log ada di sana.
 - **Maton** — gateway API eksternal (Asana dll) yang dipakai Nekorp; auth via `MATON_API_KEY`.
 - **Show-once** — plaintext token cuma tampil sekali saat generate/reset; setelah itu masked.
-- **Harness** — runtime agent (Pi, Claude Code, dll) yang jalan di bawah Hub SoduWork.
+- **Harness** — runtime agent (Pi, Claude Code, dll) yang jalan di bawah Hub Nekowork.

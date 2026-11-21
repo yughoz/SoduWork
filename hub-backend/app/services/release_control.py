@@ -219,7 +219,7 @@ async def _cancel_old(session: AsyncSession, task_id: str, stream: str) -> None:
 async def _new_artifact(session: AsyncSession, task: models.Task, *, kind: str,
                         payload: dict, source_ref: str = "", commit: str = "",
                         branch: str = "", target: str = "", url: str = "",
-                        who: str = "SoduWork", automatic_round: int | None = None) -> tuple[am.ArtifactVersion, bool]:
+                        who: str = "Nekowork", automatic_round: int | None = None) -> tuple[am.ArtifactVersion, bool]:
     from . import artifact_version_guard
     await artifact_version_guard.lock_task(session, task.id)
     if automatic_round is not None:
@@ -269,7 +269,7 @@ async def _new_artifact(session: AsyncSession, task: models.Task, *, kind: str,
         # The review node's ensure_request reports the correct actionable configuration blocker.
         task_events.record(session, task.id, "release.approval_blocked", {
             "versionId": row.id, "action": action, "error": str(exc)[:500],
-        }, actor="SoduWork")
+        }, actor="Nekowork")
     task_events.record(session, task.id, "release.candidate",
                        {"versionId": row.id, "seq": seq, "kind": kind,
                         "commit": commit, "branch": branch}, actor=who)
@@ -277,7 +277,7 @@ async def _new_artifact(session: AsyncSession, task: models.Task, *, kind: str,
 
 
 async def ensure_code_candidate(session: AsyncSession, task: models.Task, state: dict,
-                                who: str = "SoduWork") -> tuple[am.ArtifactVersion, bool]:
+                                who: str = "Nekowork") -> tuple[am.ArtifactVersion, bool]:
     commits = state.get("commits") or []
     commit = str((commits[0] or {}).get("sha") if commits else "")
     payload = {
@@ -292,7 +292,7 @@ async def ensure_code_candidate(session: AsyncSession, task: models.Task, state:
 
 
 async def ensure_output_candidate(session: AsyncSession, task: models.Task, manifest: dict,
-                                  source_ref: str = "", who: str = "SoduWork",
+                                  source_ref: str = "", who: str = "Nekowork",
                                   automatic_round: int | None = None) -> tuple[am.ArtifactVersion, bool]:
     url = (task.artifact_url or "").strip()
     text = str((manifest or {}).get("text") or "").strip()[:20000]
@@ -307,7 +307,7 @@ async def ensure_output_candidate(session: AsyncSession, task: models.Task, mani
 
 async def ensure_requirement_candidate(
     session: AsyncSession, task: models.Task, manifest: dict,
-    source_ref: str = "", who: str = "SoduWork",
+    source_ref: str = "", who: str = "Nekowork",
 ) -> tuple[am.ArtifactVersion, bool]:
     """Freeze requirements using body, attachments, and acceptance criteria in the fingerprint so
     approval binds to the exact baseline.
@@ -385,7 +385,7 @@ async def output_manifest(session: AsyncSession, task: models.Task, *,
 async def ensure_current_output(session: AsyncSession, task: models.Task, *, source_ref: str = "",
                                 workflow_run_id: str = "",
                                 source_refs: list[str] | None = None,
-                                text: str = "", who: str = "SoduWork", allow_empty: bool = False,
+                                text: str = "", who: str = "Nekowork", allow_empty: bool = False,
                                 automatic_round: int | None = None
                                 ) -> tuple[am.ArtifactVersion, bool]:
     from . import delivery_validation
@@ -485,7 +485,7 @@ async def ensure_request(session: AsyncSession, task: models.Task, artifact: am.
             f"审批职责需要 {row.required_count} 人，但当前只能分配给 {len(assignments)} 人；请调整人员或会签人数")
     task_events.record(session, task.id, "release.approval_requested",
                        {"requestId": row.id, "versionId": artifact.id,
-                        "action": action, "environmentId": environment_id or ""}, actor="SoduWork")
+                        "action": action, "environmentId": environment_id or ""}, actor="Nekowork")
     return row
 
 
@@ -827,7 +827,7 @@ async def record_ai_review(session: AsyncSession, task: models.Task,
     artifact.manifest = {**dict(artifact.manifest or {}), "aiReview": attestation}
     artifact.state = "reviewed"
     task.reviewed_at, task.reviewed_by = _now(), None
-    task.reviewed_by_name = "SoduWork AI Code Review"
+    task.reviewed_by_name = "Nekowork AI Code Review"
     pending = list((await session.execute(select(am.ApprovalRequest).where(
         am.ApprovalRequest.artifact_version_id == artifact.id,
         am.ApprovalRequest.action.in_(("review", "merge")),
@@ -839,7 +839,7 @@ async def record_ai_review(session: AsyncSession, task: models.Task,
         "versionId": artifact.id, "commit": artifact.commit_sha,
         "reportChecksum": attestation["reportChecksum"],
         "summary": attestation["summary"][:500],
-    }, actor="SoduWork AI Code Review")
+    }, actor="Nekowork AI Code Review")
     return attestation
 
 

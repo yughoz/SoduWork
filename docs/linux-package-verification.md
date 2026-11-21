@@ -3,7 +3,7 @@
 [English](linux-package-verification.en.md) · [文档](README.zh-CN.md)
 
 签名后的 Linux 发布包含 RPM 内嵌 OpenPGP 签名、每个 DEB/RPM/tar.gz 对应的独立
-`.asc` 签名，以及公钥 `SoduWork-Linux-Signing-Key.asc`。发布清单记录主密钥完整指纹
+`.asc` 签名，以及公钥 `Nekowork-Linux-Signing-Key.asc`。发布清单记录主密钥完整指纹
 和这些文件的哈希。没有这些资产的旧版本不会因此自动获得签名。
 
 首次信任密钥前，必须通过可信渠道核对维护者发布的**完整指纹**。从同一个不可信来源
@@ -15,11 +15,11 @@
 下载同一版本的 RPM 和公钥。查看公钥并核对完整指纹后，导入系统 RPM 密钥库：
 
 ```sh
-gpg --show-keys --with-fingerprint SoduWork-Linux-Signing-Key.asc
+gpg --show-keys --with-fingerprint Nekowork-Linux-Signing-Key.asc
 # 通过独立可信渠道确认显示的完整指纹后，再继续。
-sudo rpm --import SoduWork-Linux-Signing-Key.asc
-rpmkeys --checksig --verbose SoduWork-X.Y.Z-linux.rpm
-sudo dnf --setopt=localpkg_gpgcheck=True install ./SoduWork-X.Y.Z-linux.rpm
+sudo rpm --import Nekowork-Linux-Signing-Key.asc
+rpmkeys --checksig --verbose Nekowork-X.Y.Z-linux.rpm
+sudo dnf --setopt=localpkg_gpgcheck=True install ./Nekowork-X.Y.Z-linux.rpm
 ```
 
 将 `X.Y.Z` 替换为下载版本。验签结果必须包含有效签名，不能只有摘要正确。
@@ -30,20 +30,20 @@ sudo dnf --setopt=localpkg_gpgcheck=True install ./SoduWork-X.Y.Z-linux.rpm
 ## Debian、Ubuntu 与 tar.gz 下载
 
 APT 验证软件仓库元数据的签名（`InRelease` / `Release.gpg`），不会自动验证下载目录
-中 DEB 旁边的独立签名。SoduWork 的 GitHub Release 提供独立下载文件，不是 APT
+中 DEB 旁边的独立签名。Nekowork 的 GitHub Release 提供独立下载文件，不是 APT
 仓库。安装前显式验证：
 
 ```sh
-gpg --show-keys --with-fingerprint SoduWork-Linux-Signing-Key.asc
+gpg --show-keys --with-fingerprint Nekowork-Linux-Signing-Key.asc
 # 通过独立可信渠道确认显示的完整指纹后，再继续。
-gpg --import SoduWork-Linux-Signing-Key.asc
-gpg --verify SoduWork-X.Y.Z-linux.deb.asc SoduWork-X.Y.Z-linux.deb
+gpg --import Nekowork-Linux-Signing-Key.asc
+gpg --verify Nekowork-X.Y.Z-linux.deb.asc Nekowork-X.Y.Z-linux.deb
 # 只有验签成功且签名指纹符合预期，才继续安装。
-sudo apt install ./SoduWork-X.Y.Z-linux.deb
+sudo apt install ./Nekowork-X.Y.Z-linux.deb
 ```
 
-压缩包解压前使用 `gpg --verify SoduWork-X.Y.Z-linux.tar.gz.asc
-SoduWork-X.Y.Z-linux.tar.gz` 验证。GnuPG 的密钥身份信任提示与签名错误不同，仍需独立
+压缩包解压前使用 `gpg --verify Nekowork-X.Y.Z-linux.tar.gz.asc
+Nekowork-X.Y.Z-linux.tar.gz` 验证。GnuPG 的密钥身份信任提示与签名错误不同，仍需独立
 核对签名指纹。如果以后提供 APT 仓库，还需要仓库元数据签名及限定到该仓库的
 `Signed-By` 公钥配置。
 
@@ -69,7 +69,7 @@ OpenPGP 签名要求；验收回执记录例外和哈希。已签名基线和新
 
 单独的打包验证工作流继续不签名，只输出哈希证据，不能将这些输出提升为公开发布。
 Linux CI 的真实签名回归使用临时测试密钥。测试包签名通过不表示生产密钥已配置，
-也不表示实际 SoduWork 桌面安装包已经通过完整原生安装矩阵。
+也不表示实际 Nekowork 桌面安装包已经通过完整原生安装矩阵。
 
 配置密钥后，可手动运行 **Native package validation** 并启用 `signed_linux`。
 该模式只构建 Linux，执行原生安装矩阵，将签名安装包、公钥、独立签名和仅用于验证的

@@ -32,7 +32,7 @@ const supportsIssues = (provider) => ['gitlab', 'github'].includes(String(provid
 
 const PROVIDER_META = localeMap(() => ({
   github: { mark: 'GH', label: 'GitHub', hint: '使用可读取仓库的 Personal Access Token；需要回写标签时还须有 Issue 写入权限。' },
-  gitlab: { mark: 'GL', label: 'GitLab', hint: '密码或 Personal Access Token 都可以（公司 GitLab 走 LDAP 登录，SoduWork 会自动换会话）。' },
+  gitlab: { mark: 'GL', label: 'GitLab', hint: '密码或 Personal Access Token 都可以（公司 GitLab 走 LDAP 登录，Nekowork 会自动换会话）。' },
 }))
 
 export default function Repositories() {

@@ -68,7 +68,7 @@ def milestone_brief(m: dict, idx: int, total: int, repo: dict | None = None,
             "那多半是上一条任务留下的，把这一条的提交混进去，按任务号找分支的自动合并就再也找不到它。",
             f"提交后 **push 到 `{wb}`**。⚠️ **绝不** push 到基线分支"
             f"（{'、'.join('`%s`' % b for b in dict.fromkeys([base, 'main', 'develop', 'master']))}），"
-            "**绝不**自己执行合并（`git merge` 到基线分支）——合并与发布是 SoduWork 做的，"
+            "**绝不**自己执行合并（`git merge` 到基线分支）——合并与发布是 Nekowork 做的，"
             "你只负责把自己的分支推上去。⚠️ 绝不 force push。",
         ]
     lines += [

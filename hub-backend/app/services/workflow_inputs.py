@@ -52,7 +52,7 @@ async def code_review_report(session: AsyncSession, task_id: str, started_at=Non
                              *, attachment_id: str = "") -> dict:
     """Read and strictly validate the report produced by the current AI-review attempt.
 
-    ``attachment_id`` pins the exact report to validate.  SoduWork's own Gerrit reviewer
+    ``attachment_id`` pins the exact report to validate.  Nekowork's own Gerrit reviewer
     writes the report itself and must not re-discover it by timestamp: database clocks
     are coarse (whole seconds on SQLite, transaction start on PostgreSQL), so a
     just-written file can look "older" than the node attempt that produced it.

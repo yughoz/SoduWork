@@ -188,7 +188,7 @@ async def managed_by_active_workflow(session: AsyncSession, task_id: str) -> boo
 
 
 # Public delivery entry points.
-async def check(session: AsyncSession, t, who: str = "SoduWork", force: bool = False,
+async def check(session: AsyncSession, t, who: str = "Nekowork", force: bool = False,
                 branch_hint: str = "", head_hint: str = "",
                 scm_hint: dict | None = None) -> dict:
     """Discover branch commits and create candidates and review requests idempotently. Return
@@ -345,7 +345,7 @@ async def _check_locked(session: AsyncSession, t, repo, state: dict, who: str,
 
 
 # Explicit merge after authorization.
-async def ship(session: AsyncSession, t, repo, branch: str, who: str = "SoduWork",
+async def ship(session: AsyncSession, t, repo, branch: str, who: str = "Nekowork",
                git_creds: dict | None = None, scm: dict | None = None) -> dict:
     """Merge the authorized immutable candidate into its target branch. Deployment is a separate
     command and run; merge approval does not authorize production deployment.
@@ -384,7 +384,7 @@ async def ship(session: AsyncSession, t, repo, branch: str, who: str = "SoduWork
     return {"ok": True, "branch": branch, "target": repo.merge_branch, "commit": r.get("commit", "")}
 
 
-async def _merge_approved_unleased(session: AsyncSession, t, who: str = "SoduWork") -> dict:
+async def _merge_approved_unleased(session: AsyncSession, t, who: str = "Nekowork") -> dict:
     """Refresh the candidate and merge under one task lock. New content invalidates old
     authorization before ship runs; already-merged candidates return idempotently without
     further Git operations.
@@ -415,7 +415,7 @@ async def _merge_approved_unleased(session: AsyncSession, t, who: str = "SoduWor
         return await _after_merge(session, t, merged, who)
 
 
-async def merge_approved(session: AsyncSession, t, who: str = "SoduWork") -> dict:
+async def merge_approved(session: AsyncSession, t, who: str = "Nekowork") -> dict:
     repo = await repo_for(session, t)
     scm_support.require_active(repo)
     if repo is None:
@@ -469,7 +469,7 @@ async def _after_merge(session: AsyncSession, t, merged: dict, who: str) -> dict
 
 
 # Delivery completion.
-async def settle_delivered(session: AsyncSession, t, state: dict, who: str = "SoduWork") -> None:
+async def settle_delivered(session: AsyncSession, t, state: dict, who: str = "Nekowork") -> None:
     """Complete legacy direct code-delivery tasks after merging; plugin workflows manage their own
     completion.
     """
@@ -541,7 +541,7 @@ async def sweep(session: AsyncSession) -> dict:
         try:
             before = (await release_control.view(session, t.id)).get("artifact")
             out = await check(
-                session, t, who="SoduWork",
+                session, t, who="Nekowork",
                 branch_hint=str(status.get("gitRemoteBranch") or status.get("gitBranch") or ""),
                 head_hint=str(status.get("gitHead") or ""),
                 scm_hint=scm_hint)

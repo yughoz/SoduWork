@@ -215,7 +215,7 @@ async def apply_probe(session: AsyncSession, candidate: Candidate, result: dict,
             "uncertain": False,
         }
         task_events.record(
-            session, task.id, ai_exec.EV_DISPATCHED, healed, actor="SoduWork")
+            session, task.id, ai_exec.EV_DISPATCHED, healed, actor="Nekowork")
         await execution_sessions.record_dispatch(session, task, {
             "issueId": candidate.expected_ref,
             "provider": "runner",
@@ -250,7 +250,7 @@ async def apply_probe(session: AsyncSession, candidate: Candidate, result: dict,
             "observedBootId": observed_boot,
         }
         task_events.record(
-            session, task.id, ai_exec.EV_DISPATCH_FAILED, failed, actor="SoduWork")
+            session, task.id, ai_exec.EV_DISPATCH_FAILED, failed, actor="Nekowork")
         return "released" if released else "attention", task
 
     first_at = _first_uncertain(detail, candidate.at)
@@ -268,7 +268,7 @@ async def apply_probe(session: AsyncSession, candidate: Candidate, result: dict,
             issue = "执行机暂时无法给出可靠回执"
         attention = {
             **detail,
-            "summary": issue + "；为避免重复执行，SoduWork 没有自动重派",
+            "summary": issue + "；为避免重复执行，Nekowork 没有自动重派",
             "nextAction": "请让原执行机恢复在线继续核对；确认需求未启动后再重新安排执行",
             "attentionRaised": True,
             "runnerOnline": online,
@@ -279,7 +279,7 @@ async def apply_probe(session: AsyncSession, candidate: Candidate, result: dict,
             "uncertain": True,
         }
         task_events.record(
-            session, task.id, ai_exec.EV_DISPATCH_UNCERTAIN, attention, actor="SoduWork")
+            session, task.id, ai_exec.EV_DISPATCH_UNCERTAIN, attention, actor="Nekowork")
         return "attention", task
     return "pending", task
 
@@ -301,7 +301,7 @@ async def _publish(session: AsyncSession, task: models.Task, action: str) -> Non
     elif action == "attention":
         await notify.notify_task(
             session, task,
-            "执行机回执长时间未确认。为避免重复执行，SoduWork 没有自动重派；请检查原执行机。",
+            "执行机回执长时间未确认。为避免重复执行，Nekowork 没有自动重派；请检查原执行机。",
             extra={"kind": "dispatch-attention"})
 
 

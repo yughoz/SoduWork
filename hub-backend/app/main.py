@@ -1,4 +1,4 @@
-"""SoduWork Hub FastAPI entry point."""
+"""Nekowork Hub FastAPI entry point."""
 import asyncio
 import contextlib
 import logging
@@ -209,7 +209,7 @@ async def lifespan(app: FastAPI):
                 log.warning("Codex authorization cleanup exceeded the Hub shutdown deadline")
 
 
-app = FastAPI(title="SoduWork Hub", version=settings.version, lifespan=lifespan)
+app = FastAPI(title="Nekowork Hub", version=settings.version, lifespan=lifespan)
 
 from .services.session_read_budget import SessionReadBudgetMiddleware
 app.add_middleware(SessionReadBudgetMiddleware)

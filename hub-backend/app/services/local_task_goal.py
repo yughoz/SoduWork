@@ -167,12 +167,12 @@ def work_prompt(run: dict, text: str = "") -> str:
     if not active(run):
         return text
     contract = run["goalContract"]
-    return (text + ("\n\n" if text else "") + "【SoduWork 目标执行】\n目标：" + contract["objective"]
+    return (text + ("\n\n" if text else "") + "【Nekowork 目标执行】\n目标：" + contract["objective"]
             + "\n完成标准：" + (contract["acceptance"] or "完成实际产出并用真实工具验证结果。")
             + "\n读取现有文件和会话进度，只继续未完成部分；将长输出分成小段实际写入并验证。"
             "不得重放已完成工具或外部动作，不得把中间计划当成完成。"
             "所有操作仍受原任务范围、权限与审批约束；外部阻断需准确说明。"
-            "正常结束后 SoduWork 会另发独立交付复核指令。")
+            "正常结束后 Nekowork 会另发独立交付复核指令。")
 
 
 def _hash(value: object) -> str:
@@ -349,7 +349,7 @@ def _review_prompt(run: dict) -> str:
     state = run["goalState"]
     state["reviewNonce"] = secrets.token_hex(24)
     contract = run["goalContract"]
-    return ("【SoduWork 独立交付复核】本轮先用真实工具检查已完成产物与必要验证结果，"
+    return ("【Nekowork 独立交付复核】本轮先用真实工具检查已完成产物与必要验证结果，"
             "检查范围必须符合原权限，不重放外部动作、不更改权限。不要仅复述上一轮结论。\n目标："
             + contract["objective"] + "\n完成标准：" + (contract["acceptance"] or "实际产出可用且必要验证通过。")
             + "\n已声明产物：" + "、".join(run.get("expectedOutputPaths") or [])

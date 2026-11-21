@@ -425,7 +425,7 @@ def attachment_to_api(a) -> dict[str, Any]:
         "isImage": resource_access.is_inline_image(ct),
         "url": resource_access.attachment_url(a.id),
         "createdAt": _ms(a.created_at),
-        # Uploader identity: device ID, agent:SoduWork, or agent:multica.
+        # Uploader identity: device ID, agent:Nekowork, or agent:multica.
         # Group AI outputs separately from human attachments.
         "uploadedBy": uploaded,
         "byAgent": by_agent,

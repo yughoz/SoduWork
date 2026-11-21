@@ -28,8 +28,8 @@ def _mcp_guidance(names) -> str:
     parts = []
     if builtin:
         parts.append(
-            "本轮使用 SoduWork 内置能力：" + "、".join(builtin) +
-            "。这些能力由 SoduWork 直接提供，无需用户配置外部 MCP。")
+            "本轮使用 Nekowork 内置能力：" + "、".join(builtin) +
+            "。这些能力由 Nekowork 直接提供，无需用户配置外部 MCP。")
     if external:
         parts.append(
             "本轮依赖的企业 MCP：" + "、".join(external) +

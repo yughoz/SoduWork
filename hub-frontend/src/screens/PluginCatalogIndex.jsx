@@ -75,7 +75,7 @@ export default function PluginCatalogIndex({ items = [], queues, categories = []
           </FilterSelect>
           <label><span className="plugin-sr-only">{tx("插件来源")}</span><FilterSelect aria-label={tx("插件来源")} resetValue="all" value={source} onChange={(e) => setSource(e.target.value)}>
             <option value="all">{tx("全部来源")}</option><option value="enterprise">{tx("企业提交")}</option>
-            <option value="builtin">{tx("SoduWork 内置")}</option><option value="external">{tx("外部导入")}</option>
+            <option value="builtin">{tx("Nekowork 内置")}</option><option value="external">{tx("外部导入")}</option>
           </FilterSelect></label>
           {catalogType === 'plugin' && <label><span className="plugin-sr-only">{tx("能力类型")}</span><FilterSelect aria-label={tx("能力类型")} resetValue="all" value={kind} onChange={(e) => setKind(e.target.value)}>
             <option value="all">{tx("全部类型")}</option><option value="skill">{tx("AI 能力")}</option>

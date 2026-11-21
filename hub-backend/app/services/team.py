@@ -503,7 +503,7 @@ async def my_teammates(session: AsyncSession, client: models.Client) -> dict:
     """
     me = await session.get(models.User, client.user_ref) if client.user_ref else None
     if me is None or not me.is_active:
-        return {"mates": [], "reason": "本 SoduWork 还没绑定用户，请让管理员分配归属"}
+        return {"mates": [], "reason": "本 Nekowork 还没绑定用户，请让管理员分配归属"}
     members_u = await _company_members(session, me)
     unit_ids = {u.org_id for u in members_u if u.org_id}
     units = (await session.execute(select(models.OrgUnit).where(models.OrgUnit.id.in_(unit_ids)))).scalars().all() if unit_ids else []
@@ -533,7 +533,7 @@ async def my_teammates(session: AsyncSession, client: models.Client) -> dict:
              for u in members_u if u.id != me.id]
     mates.sort(key=lambda m: (not m["canReceive"], m["org"] or "未分组",
                               m["name"] or "", m["id"]))
-    return {"mates": mates, "orgUnits": org_units, "reason": "" if any(m["hasBox"] for m in mates) else "其他同事尚无可接收需求的 SoduWork"}
+    return {"mates": mates, "orgUnits": org_units, "reason": "" if any(m["hasBox"] for m in mates) else "其他同事尚无可接收需求的 Nekowork"}
 
 
 async def message_mate(session: AsyncSession, client: models.Client,

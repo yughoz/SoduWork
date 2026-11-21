@@ -24,7 +24,7 @@ async def _employee(
     if user is None or not user.is_active:
         raise HTTPException(
             status_code=400,
-            detail="本 SoduWork 尚未绑定有效员工，请让管理员分配归属")
+            detail="本 Nekowork 尚未绑定有效员工，请让管理员分配归属")
     return user
 
 

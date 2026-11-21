@@ -45,7 +45,7 @@ html,body,#root{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:max(var(--font-min-readable, 14.5px), 14px);line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
 button{font-family:inherit}
 
-/* SoduWork product logo */
+/* Nekowork product logo */
 .logo-box{display:block;width:28px;height:28px;object-fit:contain;flex-shrink:0}
 
 

@@ -2,7 +2,7 @@
 
 The domain still keeps plugins, approval policies, environments and runners independent.  This
 service is the product-facing composition layer: an administrator chooses the delivery outcome,
-and SoduWork selects a safe built-in workflow and reports the few external facts it cannot invent.
+and Nekowork selects a safe built-in workflow and reports the few external facts it cannot invent.
 """
 from __future__ import annotations
 
@@ -476,7 +476,7 @@ async def status(session: AsyncSession, project: models.Project,
     if not owner_ok:
         source_detail = "缺少项目负责人"
     elif not owner_clients:
-        source_detail = "项目负责人还没有可接收需求的 SoduWork 客户端"
+        source_detail = "项目负责人还没有可接收需求的 Nekowork 客户端"
     elif target_client is None and configured_client_id:
         source_detail = "原来选择的承办设备已失效或不再属于项目负责人，请重新选择"
     elif target_client is None:
@@ -672,7 +672,7 @@ async def launch(session: AsyncSession, project: models.Project,
 
     client_id = str(setup["launch"].get("clientId") or "")
     if not client_id:
-        raise ValueError("项目负责人还没有可接收需求的 SoduWork 客户端")
+        raise ValueError("项目负责人还没有可接收需求的 Nekowork 客户端")
     repo_id = str(body.get("repoId") or setup["launch"].get("defaultRepoId") or "")
     allowed_repos = {str(row.get("id") or "") for row in setup["launch"].get("repositories") or []}
     if MODES[mode]["requiresRepository"]:
@@ -726,7 +726,7 @@ async def apply(session: AsyncSession, project: models.Project, mode: str,
     requested = dict(config or {})
     owner = await session.get(models.User, project.owner_user_id) if project.owner_user_id else None
     if owner is None or not owner.is_active:
-        raise ValueError("请先为项目选择一位有效负责人；SoduWork 不会用当前管理员代替业务负责人")
+        raise ValueError("请先为项目选择一位有效负责人；Nekowork 不会用当前管理员代替业务负责人")
     spec = MODES[mode]
     plugin, version = await _plugin_version(session, spec["pluginKey"], project.org_id)
     if plugin is None or version is None:
@@ -756,7 +756,7 @@ async def apply(session: AsyncSession, project: models.Project, mode: str,
             raise ValueError("选择的承办设备不属于项目负责人或已经停用")
         if len(owner_clients) > 1:
             raise ValueError("项目负责人有多台设备，请明确选择默认承办设备")
-        raise ValueError("项目负责人还没有已激活的 SoduWork 客户端")
+        raise ValueError("项目负责人还没有已激活的 Nekowork 客户端")
     requested_kind = str(requested.get("agentKind") or "").strip()
     if requested_kind:
         from . import ai_exec

@@ -23,7 +23,7 @@ router = APIRouter(prefix="/api/v1", tags=["plugins"])
 def _external_mcp_names(names) -> list[str]:
     """Return connector names that require administrator/client setup.
 
-    SoduWork-owned MCP capabilities use the same signed grant as connectors, but
+    Nekowork-owned MCP capabilities use the same signed grant as connectors, but
     they are resolved by the Hub and must never be looked up in the external
     MCP registry.  Keep this boundary in one place for both remote plugin
     declarations and personal connection requests.
@@ -41,7 +41,7 @@ async def _client_actor(session: AsyncSession, client: Client):
 
     user = await session.get(User, str(client.user_ref or "")) if client.user_ref else None
     if user is None or not user.is_active or not user.org_id:
-        raise HTTPException(status_code=403, detail="当前 SoduWork 尚未绑定企业账号和组织，不能提交企业插件")
+        raise HTTPException(status_code=403, detail="当前 Nekowork 尚未绑定企业账号和组织，不能提交企业插件")
     return SimpleNamespace(
         id=user.id, user_id=user.id, client_id=client.id,
         display_name=user.display_name or user.username,
@@ -356,13 +356,13 @@ async def client_plugin_conversation_grant(
             application_mcp[version_id] = [server]
         if body.get("resourceProtocol") != 1 and any(
                 dict(item.get("resourceBundle") or {}).get("resources") for item in items):
-            raise ValueError("这个插件需要完整文件支持，请先更新 SoduWork 客户端后重试；本轮尚未执行")
+            raise ValueError("这个插件需要完整文件支持，请先更新 Nekowork 客户端后重试；本轮尚未执行")
         remote_names = sorted({
             str(name) for item in items
             for name in dict(item.get("capabilities") or {}).get("mcpServers") or []
             if str(name).strip() and str(name) not in application_mcp.get(item.get("versionId"), [])
         })
-        # SoduWork-owned capabilities are carried in the signed grant, but they
+        # Nekowork-owned capabilities are carried in the signed grant, but they
         # are not administrator-managed connector rows.  Keep the dependency
         # check explicitly scoped to external MCP names so a built-in such as
         # ``soduwork-media`` can never be turned into a user binding requirement
@@ -425,7 +425,7 @@ async def client_preflight_plugin(
     client: Client = Depends(current_client),
     session: AsyncSession = Depends(get_session),
 ):
-    """Identify Codex, Claude Code, or SoduWork packages without storing or executing them."""
+    """Identify Codex, Claude Code, or Nekowork packages without storing or executing them."""
     actor = await _client_actor(session, client)
     try:
         parsed = plugin_packages.parse(await _client_plugin_bytes(file))

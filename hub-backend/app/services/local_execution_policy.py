@@ -33,5 +33,5 @@ def enforce(ref: str, message: dict | None, rendered: list[dict], kill_tree) -> 
         target=kill_tree, args=(ref,), name="ai_local:policy:" + ref[:8], daemon=True)
     _THREADS.add(thread)
     thread.start()
-    return [{"kind": "out", "tool": "SoduWork 执行门禁",
+    return [{"kind": "out", "tool": "Nekowork 执行门禁",
              "text": "已阻止本步：" + str(violation.get("reason") or "违反节点执行策略")[:500]}]

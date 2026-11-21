@@ -18,7 +18,7 @@ function friendlyError(message) {
   const text = String(message || '').trim()
   if (!text) return ''
   if (/当前电脑上的在线 Agent|没有满足.*在线 Agent|没有可用.*执行机/.test(text)) {
-    return tx("没有找到满足本次验证要求的在线执行机。SoduWork 会自动使用组织内可用的 Runner；请确认任一执行机在线并已安装所需 Agent，随后重试。")
+    return tx("没有找到满足本次验证要求的在线执行机。Nekowork 会自动使用组织内可用的 Runner；请确认任一执行机在线并已安装所需 Agent，随后重试。")
   }
   return text
 }
@@ -55,7 +55,7 @@ export function PublicationEvaluationPanel({
         detail: tx("点击“审核通过”时会一并确认这些证据，不需要再逐项点通过") }
       : active
         ? { state: 'active', icon: 'activity', title: tx("正在自动验证"),
-          detail: tx("SoduWork 已选择合适的 Agent 与执行机，完成后会自动更新") }
+          detail: tx("Nekowork 已选择合适的 Agent 与执行机，完成后会自动更新") }
         : { state: 'pending', icon: 'activity', title: tx("还需完成自动验证"),
           detail: tx("{0}/{1} 项完成；默认由平台自动选择 Agent、模型和执行机", [completedCount, gate.caseCount || cases.length]) }
 
@@ -399,7 +399,7 @@ function EvaluationLaunchModal({ version, caseItem, busy, onClose, onStart }) {
       <span>{selectedMachine
         ? `${selectedMachine.label} \u00b7 ${machineReason(selectedMachine)}`
         : machines.length
-          ? tx("{0} 台在线执行机，SoduWork 将按能力与负载自动选择", [machines.length])
+          ? tx("{0} 台在线执行机，Nekowork 将按能力与负载自动选择", [machines.length])
           : catalog.reason || tx("当前组织没有可用于评测的在线执行机，请先启动 Runner")}</span>
     </div>
     {declaredSecrets.length > 0 && <section className="evaluation-launch-secrets">

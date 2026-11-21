@@ -240,7 +240,7 @@ export function BindingForm({ plugin, binding, onClose, onSaved }) {
           (routeMode === 'fixed' && !agentKind) || (breakingUpgrade && !confirmBreaking)} onClick={save}>
         {busy ? tx("正在检查可用性…") : binding ? tx("检查并保存") : tx("检查并启用")}
       </button></>}>
-    <p className="plugin-modal-intro">{tx("确定使用范围和执行策略即可启用。SoduWork 会在保存前检查 Agent、Runner、权限与连接，避免错误配置影响执行。")}</p>
+    <p className="plugin-modal-intro">{tx("确定使用范围和执行策略即可启用。Nekowork 会在保存前检查 Agent、Runner、权限与连接，避免错误配置影响执行。")}</p>
     <div className="binding-setup-steps" aria-label={tx("启用流程")}>
       <span><i>1</i><b>{tx("使用范围")}</b><small>{tx("给谁使用")}</small></span>
       <span><i>2</i><b>{tx("执行策略")}</b><small>{tx("怎么完成")}</small></span>
@@ -264,7 +264,7 @@ export function BindingForm({ plugin, binding, onClose, onSaved }) {
     {upgrade && <CompatibilityNotice data={upgrade} confirm={confirmBreaking}
       onConfirm={setConfirmBreaking} />}
     <section className="binding-setup-section">
-      <header><i>2</i><span><b>{tx("选择执行策略")}</b><small>{tx("推荐让 SoduWork 根据在线状态与能力自动选择；只有合规或专机要求时才固定底座。")}</small></span></header>
+      <header><i>2</i><span><b>{tx("选择执行策略")}</b><small>{tx("推荐让 Nekowork 根据在线状态与能力自动选择；只有合规或专机要求时才固定底座。")}</small></span></header>
       <div className="binding-route-choice" role="radiogroup" aria-label={tx("执行策略")}>
         <button type="button" role="radio" aria-checked={routeMode === 'auto'}
           className={routeMode === 'auto' ? 'on' : ''} onClick={() => chooseRouteMode('auto')}>
@@ -293,7 +293,7 @@ export function BindingForm({ plugin, binding, onClose, onSaved }) {
       </details>}
     </section>
     <section className="binding-setup-section binding-readiness-section">
-      <header><i>3</i><span><b>{tx("补齐运行条件")}</b><small>{tx("只显示这个插件真正需要的连接和密钥；其余条件由 SoduWork 自动检查。")}</small></span></header>
+      <header><i>3</i><span><b>{tx("补齐运行条件")}</b><small>{tx("只显示这个插件真正需要的连接和密钥；其余条件由 Nekowork 自动检查。")}</small></span></header>
       {declaredSecrets.length === 0 && declaredMcpServers.length === 0 && <div className="binding-auto-route"><Icon name="shield" /><span>
         <b>{tx("无需额外配置")}</b><small>{tx("保存时仍会检查版本、在线 Runner、模型和项目权限。")}</small>
       </span></div>}

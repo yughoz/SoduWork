@@ -85,7 +85,7 @@ def fields_view(fields: dict) -> dict:
 async def owner(session, client):
     user = await session.get(models.User, client.user_ref) if client.user_ref else None
     if not user or not user.is_active:
-        raise HTTPException(403, "请先绑定并登录 SoduWork 账号")
+        raise HTTPException(403, "请先绑定并登录 Nekowork 账号")
     return user
 
 

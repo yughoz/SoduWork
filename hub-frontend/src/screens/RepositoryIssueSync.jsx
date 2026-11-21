@@ -208,7 +208,7 @@ export default function RepositoryIssueSync({ row, onClose, onUpdated }) {
           <p className="rc-issue-note">{tx('同步的 Issue 对当前团队全员可见，团队成员均可认领，无需关联 GitHub 成员。')}</p>
         </section> : <section className="rc-issue-members" aria-label={tx('仓库成员关联')}>
           <div className="rc-issue-members-title"><h4>{tx('仓库成员关联')}</h4><span>{tx('已关联 {0} / {1}', [data.mappedMembers || 0, data.totalMembers || 0])}</span></div>
-          <p className="rc-issue-note">{tx('仅已验证身份或明确关联的仓库成员可查看并认领。同名不会自动授权；待关联成员需选择对应的 SoduWork 账号。')}</p>
+          <p className="rc-issue-note">{tx('仅已验证身份或明确关联的仓库成员可查看并认领。同名不会自动授权；待关联成员需选择对应的 Nekowork 账号。')}</p>
           {(data.members || []).length ? <div className="rc-issue-member-list">
             {data.members.map((member) => {
               const key = member.externalUserId

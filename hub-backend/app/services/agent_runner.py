@@ -218,7 +218,7 @@ async def _collect_files(session: AsyncSession, task_id: str, ws: str) -> list[s
         session.add(models.Attachment(
             task_id=task_id, filename=row["filename"], content_type=row["content_type"],
             size=row["size"], storage_key=row["storage_key"], backend=row["backend"],
-            uploaded_by="agent:SoduWork", role="output",
+            uploaded_by="agent:Nekowork", role="output",
             source_ref="agent-runner:" + task_id,
         ))
     return [row["filename"] for row in rows]
@@ -237,7 +237,7 @@ async def start(session: AsyncSession, t: models.Task, actor_name: str) -> dict:
     # acceptable because start() is a low-frequency, user-initiated operation.
     async with _START_LOCK:
         if is_running(t.id):
-            raise ValueError("这个任务已有一轮 SoduWork 执行在进行中")
+            raise ValueError("这个任务已有一轮 Nekowork 执行在进行中")
         if len(_RUNNING) >= _MAX_CONCURRENT:
             raise ValueError(f"执行槽已满（同时最多 {_MAX_CONCURRENT} 个），稍后再试")
         cfg = await llm.load(session, force=True)
@@ -305,7 +305,7 @@ async def _run_bg(task_id: str, title: str, owner_box: str,
                 task_events.record(s, task_id, status, {
                     "summary": summary, "files": files, "seconds": round(dur, 1),
                     "by": actor_name, "artifactUrl": artifact_url,
-                }, actor="agent:SoduWork")
+                }, actor="agent:Nekowork")
                 await s.commit()
 
                 # Notify the reviewer so they can inspect the delivered artifacts and approve the result.
@@ -319,9 +319,9 @@ async def _run_bg(task_id: str, title: str, owner_box: str,
             ok = status == "agent.done"
             if ok:
                 what = artifact_url or (f"{len(files)} 个产出已挂到任务附件" if files else "已完成")
-                text = f"🤖 SoduWork 完成了「{title}」：{what}" + ("（可在任务详情里审核）" if artifact_url or files else "")
+                text = f"🤖 Nekowork 完成了「{title}」：{what}" + ("（可在任务详情里审核）" if artifact_url or files else "")
             else:
-                text = f"🤖 SoduWork 执行「{title}」没成功：{summary[:80]}"
+                text = f"🤖 Nekowork 执行「{title}」没成功：{summary[:80]}"
             for box in {b for b in (owner_box, creator_box) if b}:
                 await hub.publish(box, {"type": "notice", "text": text, "taskId": task_id})
         except Exception:  # noqa: BLE001 - Log cleanup failures without raising them.

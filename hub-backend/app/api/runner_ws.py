@@ -152,7 +152,7 @@ async def _auth(token: str, peer: str, device: str = "", secret: str = "",
             except device_auth.DeviceAuthError as exc:
                 if diagnostic is not None:
                     diagnostic.update(code=exc.code, status=exc.status)
-                return False, "SoduWork 设备身份或密钥不对"
+                return False, "Nekowork 设备身份或密钥不对"
         if runner_id and runner_key:
             if await runner_registry.verify_key(s, runner_id, runner_key):
                 return True, ""

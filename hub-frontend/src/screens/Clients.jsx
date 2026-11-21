@@ -27,7 +27,7 @@ const AUTH_STATES = localeMap(() => ({
   },
   pending: {
     label: '待激活',
-    help: "选择归属用户并保存后，这台 SoduWork 才能读取需求和企业资源。",
+    help: "选择归属用户并保存后，这台 Nekowork 才能读取需求和企业资源。",
   },
   revoked: {
     label: '已停用',
@@ -136,7 +136,7 @@ function DeviceFleet() {
       <button className="btn btn-ghost xs" onClick={() => load(false)}>{tx("重试")}</button></div>}
     {loading && !data && <div className="en-state"><span className="en-spinner" /><div><b>{tx("正在读取终端")}</b><span>{tx("只加载当前筛选和当前页")}</span></div></div>}
     {data && !items.length && <div className="en-empty"><Icon name="monitor" /><b>{tx("没有符合条件的终端")}</b>
-      <span>{counts.all ? tx("换一个筛选条件或清空搜索词。") : tx("启动 SoduWork 客户端后，终端会自动登记到这里。")}</span></div>}
+      <span>{counts.all ? tx("换一个筛选条件或清空搜索词。") : tx("启动 Nekowork 客户端后，终端会自动登记到这里。")}</span></div>}
     {!!items.length && <div ref={listRef} className="en-table-wrap admin-viewport-list" tabIndex={0} role="region" aria-label={tx("员工终端")}><table className="en-table">
       <thead><tr><th>{tx("终端")}</th><th>{tx("归属成员")}</th><th>{tx("连接状态")}</th><th>{tx("设备身份")}</th><th>{tx("系统 / 版本")}</th><th>{tx("最后心跳")}</th><th className="admin-action-heading">{tx("操作")}</th></tr></thead>
       <tbody>{items.map((c) => {
@@ -292,7 +292,7 @@ function ClientDetail({ client, onClose, onChanged }) {
     setBusy('update')
     try {
       const result = await api.requestClientUpdate(client.id)
-      if (result.alreadyCurrent) toast(tx("这台 SoduWork 已经是最新版本"))
+      if (result.alreadyCurrent) toast(tx("这台 Nekowork 已经是最新版本"))
       else {
         toast(result.delivered
           ? tx("升级任务已送达，客户端将安全下载并请用户确认安装")
@@ -321,7 +321,7 @@ function ClientDetail({ client, onClose, onChanged }) {
           <span className={'status-dot ' + (client.online ? 'on' : 'off')}><i />{client.online ? tx("在线") : tx("离线")}</span></span>}
         foot={<>
           {can('client.update') && <button className="btn btn-primary" disabled={busy === 'update'} onClick={() => setConfirm({ title: tx("升级完整客户端"), text: client.online ? tx("系统会创建可追踪的升级任务，客户端下载并校验完整安装包后，由用户确认重启安装。确定下发？") : tx("设备当前离线。升级任务会持久排队，设备下次上线后自动领取，不会丢失。确定排队？"), confirmText: tx("确认升级"), run: requestUpdate })} title={tx("升级完整客户端")}><Icon name="external" />{tx("升级客户端")}</button>}
-          {can('client.control') && <button className="btn btn-ghost" disabled={busy === 'reload'} onClick={() => setConfirm({ text: tx("将强制该 SoduWork 立即刷新，会打断用户正在做的事。确定？"), run: () => push({ type: 'command', action: 'reload' }, 'reload') })}><Icon name="refresh" />{tx("强制刷新")}</button>}
+          {can('client.control') && <button className="btn btn-ghost" disabled={busy === 'reload'} onClick={() => setConfirm({ text: tx("将强制该 Nekowork 立即刷新，会打断用户正在做的事。确定？"), run: () => push({ type: 'command', action: 'reload' }, 'reload') })}><Icon name="refresh" />{tx("强制刷新")}</button>}
           <button className="btn btn-ghost" onClick={onClose}>{tx("关闭")}</button>
         </>}>
           {!d && <div className="muted">{tx("加载中…")}</div>}
@@ -358,7 +358,7 @@ function ClientDetail({ client, onClose, onChanged }) {
           )}
 
           {can('client.assign') && (
-            <div><label className="f-lbl">{tx("归属用户（决定 SoduWork 所属部门）")}</label>
+            <div><label className="f-lbl">{tx("归属用户（决定 Nekowork 所属部门）")}</label>
               <div className="client-detail-input-action">
                 <SelectMenu className="f-in" value={owner} onChange={(e) => setOwner(e.target.value)}>
                   <option value="">{tx("未分配")}</option>
@@ -372,7 +372,7 @@ function ClientDetail({ client, onClose, onChanged }) {
           {can('client.control') && (
             <div><label className="f-lbl">{tx("发一条通知（客户端气泡显示）")}</label>
               <div className="client-detail-input-action">
-                <input className="f-in" value={notice} onChange={(e) => setNotice(e.target.value)} placeholder={tx("例：请重启一下 SoduWork 更新配置")} />
+                <input className="f-in" value={notice} onChange={(e) => setNotice(e.target.value)} placeholder={tx("例：请重启一下 Nekowork 更新配置")} />
                 <button className="btn btn-primary" disabled={busy === 'notice' || !notice.trim()} onClick={async () => {
                   const text = notice.trim()
                   if (!text) return

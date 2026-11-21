@@ -59,7 +59,7 @@ async def _notify(session: AsyncSession, task, args: dict) -> dict:
         raise workflow_contracts.WorkflowConfigurationError("notify 需要 message 参数")
     cid = str(getattr(task, "owner_client_id", "") or "")
     if not cid:
-        raise ValueError("需求没有归属 SoduWork，通知没有收件人")
+        raise ValueError("需求没有归属 Nekowork，通知没有收件人")
     from .task_access import publish_owner
     delivered = await publish_owner(session, task, {"type": "notice",
                             "text": f"「{task.title}」流程提醒：{message[:400]}",

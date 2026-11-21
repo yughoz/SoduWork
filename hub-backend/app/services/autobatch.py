@@ -228,10 +228,10 @@ async def _dispatch_flow(session: AsyncSession, g: dict, client, repo) -> dict:
         session.add(models.Milestone(task_id=batch.id, seq=i, title=t.title[:300],
                                      accept=(t.note or "").strip()[:2000], src_task_id=t.id))
     for t in rows:
-        ev.record(session, t.id, "ai.batched", {"batchId": batch.id}, actor="SoduWork")
+        ev.record(session, t.id, "ai.batched", {"batchId": batch.id}, actor="Nekowork")
     ev.record(session, batch.id, "plugin.autobatch",
               {"count": len(rows), "sourceTaskIds": [t.id for t in rows],
-               "flowBindingId": binding.id}, actor="SoduWork")
+               "flowBindingId": binding.id}, actor="Nekowork")
     instruction = ("这一批是测试平台推过来的 bug 合并修复。要求：只修清单里列出的问题，"
                    "一条一条修、每条单独提交，提交信息里带上对应的 bug 序号或标题；"
                    "不要顺手重构或改动无关代码。")
@@ -287,7 +287,7 @@ async def run_once(session: AsyncSession, dry: bool | None = None) -> dict:
         work_dir, _why = workdirs.auto_dir(client, repo)
         if not work_dir:
             done.append({**g, "dispatched": False,
-                         "error": "没有可用的干活目录（负责人那台 SoduWork 没设工作目录，工程也没配）"})
+                         "error": "没有可用的干活目录（负责人那台 Nekowork 没设工作目录，工程也没配）"})
             continue
         # Reuse the manual dispatch implementation for instructions, milestones, and events.
         # Match api.tasks._repo_ctx fields: path, branch, and flow.

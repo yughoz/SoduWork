@@ -27,7 +27,7 @@ def is_native_model_kind(kind: str) -> bool:
 
 
 def supports_soduwork_model_kind(kind: str) -> bool:
-    """Whether SoduWork may select and inject a model for this Agent kind."""
+    """Whether Nekowork may select and inject a model for this Agent kind."""
     kind = str(kind or "").strip().lower()
     return kind == CODEX_KIND or kind in GATEWAY_MODEL_KINDS
 
@@ -47,7 +47,7 @@ def validate_runtime_model(kind: str, model: str) -> dict:
         return validate_native_model(kind, model)
     if kind not in GATEWAY_MODEL_KINDS:
         return {"ok": False, "model": model,
-                "detail": "this agent does not support a SoduWork-selected model"}
+                "detail": "this agent does not support a Nekowork-selected model"}
     if len(model) > 160 or any(ord(char) < 32 for char in model):
         return {"ok": False, "model": model, "detail": "invalid gateway model name"}
     return {"ok": True, "model": model,
@@ -61,7 +61,7 @@ def validate_native_model(kind: str, model: str) -> dict:
         return {"ok": True, "model": "", "detail": "use agent default model"}
     if kind != CODEX_KIND:
         return {"ok": False, "model": model,
-                "detail": "this agent does not support a SoduWork-selected model"}
+                "detail": "this agent does not support a Nekowork-selected model"}
     if not _SAFE_MODEL.fullmatch(model):
         return {"ok": False, "model": model, "detail": "invalid Codex model name"}
     return {"ok": True, "model": model, "detail": f"Codex model {model} is available"}
@@ -84,7 +84,7 @@ def runtime_options(kind: str, model: str = "", reasoning_effort: str = "") -> d
         raise ValueError(str(model_state["detail"]))
     effort = normalize_reasoning_effort(reasoning_effort)
     if effort and kind != CODEX_KIND:
-        raise ValueError("only Codex supports a SoduWork-selected reasoning effort")
+        raise ValueError("only Codex supports a Nekowork-selected reasoning effort")
     out = {"kind": kind}
     if model:
         out["model"] = str(model).strip()

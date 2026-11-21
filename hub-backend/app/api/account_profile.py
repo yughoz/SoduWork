@@ -282,7 +282,7 @@ async def export_download(request_id: str, client: Client = Depends(authenticate
     except Exception:
         raise account_security.error(503, "EXPORT_UNAVAILABLE", "导出暂时不可读取，请重新导出") from None
     return Response(content, media_type="application/zip", headers={
-        "Cache-Control": "no-store", "Content-Disposition": 'attachment; filename="SoduWork-personal-data.zip"'})
+        "Cache-Control": "no-store", "Content-Disposition": 'attachment; filename="Nekowork-personal-data.zip"'})
 
 
 @router.post("/me/deletion", status_code=202)

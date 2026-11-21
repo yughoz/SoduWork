@@ -5,7 +5,7 @@ export default {
   '无执行权限': 'No execution access', '请先澄清需求': "Clarify this issue first", '正在交付': 'Delivery in progress',
   '还没有项目需求': "No project issues yet",
   '创建第一项需求后，可通过前置依赖组织串行与并行关系。': "Create an issue, then use dependencies to organize sequential and parallel delivery.",
-  '请填写需求标题': "Enter an issue title", '请选择接收需求的 SoduWork': "Select the SoduWork that will receive this issue",
+  '请填写需求标题': "Enter an issue title", '请选择接收需求的 Nekowork': "Select the Nekowork that will receive this issue",
   '需求没有创建：': "Issue was not created: ", '添加项目需求': "Add project issue",
   '创建需求': "Create issue", '需求标题': "Issue title", '前置需求': 'Prerequisites',
   '新需求进入需求池待整理；澄清后设为待交付。选定的前置需求交付后，才能安排执行。': "New issues enter Intake. Clarify them and mark them Ready for delivery. Selected prerequisites must be delivered before execution can begin.",

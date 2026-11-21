@@ -26,7 +26,7 @@ def templates() -> tuple[dict, ...]:
         rows.append({
             "key": "connector-" + key, "providerId": key, "kind": "mcp",
             "name": value["name"], "description": value["description"],
-            "category": value.get("category", "其他"), "source": "SoduWork 连接器",
+            "category": value.get("category", "其他"), "source": "Nekowork 连接器",
             "trust": "reviewed", "configurable": True,
             "risk": "write" if any(not t.get("readOnly") for t in tools) else "read",
             "permissions": ["仅调用所列平台工具", "凭据只用于当前账号连接"],

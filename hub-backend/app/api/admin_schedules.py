@@ -117,7 +117,7 @@ async def create_ai_schedule(body: dict = Body(default_factory=dict),
     if not s.assignee_id:
         raise HTTPException(status_code=400, detail="请先选择执行底座")
     if not s.owner_client_id:
-        raise HTTPException(status_code=400, detail="请选任务落在哪台 SoduWork 上")
+        raise HTTPException(status_code=400, detail="请选任务落在哪台 Nekowork 上")
     try:
         from ..services import schedules as sch
         await sch.validate_execution(
