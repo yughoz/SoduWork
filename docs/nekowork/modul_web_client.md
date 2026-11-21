@@ -1,10 +1,20 @@
 # PRD Nekowork — Web Client (kerja dari mana aja via Runner desktop)
 
-- Versi: 0.1 (draft — menunggu konfirmasi scope)
-- Last updated: 2026-11-21
+- Versi: 0.2 (MVP terimplementasi — commit `a3bc7b40`)
+- Last updated: 2026-11-22
 - Owner: Kamisama / Nekorp
 - Basis riset: repo `~/Projects/SoduWork` (cloud-conversations, account-conversations, runner_ws, remote_screen)
 - Kaneo: project NW
+
+## 0. Status implementasi MVP (2026-11-22)
+
+- `POST /api/v1/web/login` — password login browser; device web stabil per user (`web-<sha16>`), rotate secret tiap login, rate limit 5/60s. Token `Device <token>` dipakai ke semua endpoint desktop existing (quota/scoping/audit tidak duplikat).
+- SPA `/app` (vanilla JS + polling 2,5s): daftar chat, chat baru (PC + agent + model), kirim (`ai-say`), stop (`ai-stop`), kartu izin inline (sekali / sesi / tolak / pilihan), transkrip incremental `cloud-execution-sync/{handoffId}?since=`.
+- Pipe permission runner→hub: `_session_snapshots` kirim `accessControl` + `pendingPermissions`; di-ingest ke meta `ExecutionSession`; expose via `session_api` → `detail.conversation.execution.pendingPermissions`.
+- `POST /api/v1/web/tasks/{tid}/permission` — forward `job.permission` ke runner via `runner_hub.call_sync`; owner check; audit event `web.permission`.
+- Tests `test_web_client.py` 7/7 OK; deploy PM2; `https://nekowork.nekoding.xyz/app/` 200; smoke login real 200.
+- Catatan scope: mode dari web = **standard default**; selector `full` belum ada karena `job.access` di-guard `_localParent` (hanya desktop lokal boleh ganti mode mid-run) — jalur benar = access mode saat launch (menyusul). Live updates polling, WS menyusul. RunnerNode wajib punya `owner_user_id` agar tampil di `/cloud-environments`.
+
 
 ## 1. Masalah
 
