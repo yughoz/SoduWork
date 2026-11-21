@@ -15,6 +15,7 @@ import { ja as modelJa, ko as modelKo } from './model-capabilities.js'
 import { ja as quotaJa, ko as quotaKo } from './quota-management.js'
 import { ja as accessCatalogJa, ko as accessCatalogKo } from './access-catalog.js'
 import { ja as operationsJa, ko as operationsKo } from './operations-overview.js'
+import { id as idShell } from './indonesian.js'
 const ja = {
   '更多': 'その他',
   '登录状态已变更，请重试本次操作': 'ログイン状態が変わりました。この操作をもう一度実行してください。',
@@ -104,4 +105,5 @@ const shellMessages = locale => Object.fromEntries(Object.entries(dictionary['zh
 export const messagesByLocale = Object.freeze({
   'ja-JP': Object.freeze({ ...shellMessages('ja-JP'), ...automationTemplatesJa, ...ja, ...connectorJa, ...cloudRunnerJa, ...modelJa, ...quotaJa, ...accessCatalogJa, ...operationsJa, ...governanceJa, ...insightsMetricsJa, ...usageCenterJa, ...modelRuntimeOverviewJa, ...capabilityCatalogJa, ...legalJa }),
   'ko-KR': Object.freeze({ ...shellMessages('ko-KR'), ...automationTemplatesKo, ...ko, ...connectorKo, ...cloudRunnerKo, ...modelKo, ...quotaKo, ...accessCatalogKo, ...operationsKo, ...governanceKo, ...insightsMetricsKo, ...usageCenterKo, ...modelRuntimeOverviewKo, ...capabilityCatalogKo, ...legalKo }),
+  'id-ID': Object.freeze({ ...idShell }),
 });

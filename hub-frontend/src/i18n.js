@@ -5,11 +5,11 @@ import { messagesByLocale } from './locales/extra-languages.js'
 import quotaMessages from './locales/quota-management.js'
 import { serverMessages } from './locales/server-messages.js'
 
-export const LOCALES = Object.freeze({ 'zh-CN': '简体中文', 'en-US': 'English', 'ja-JP': '日本語', 'ko-KR': '한국어' })
+export const LOCALES = Object.freeze({ 'zh-CN': '简体中文', 'en-US': 'English', 'ja-JP': '日本語', 'ko-KR': '한국어', 'id-ID': 'Indonesia' })
 const STORAGE_KEY = 'soduwork.locale'
 const SOURCE_LOCALE = 'zh-CN'
 const FALLBACK = 'en-US'
-const FALLBACKS = Object.freeze({ 'zh-CN': 'zh-CN', 'en-US': 'en-US', 'ja-JP': 'en-US', 'ko-KR': 'en-US' })
+const FALLBACKS = Object.freeze({ 'zh-CN': 'zh-CN', 'en-US': 'en-US', 'ja-JP': 'en-US', 'ko-KR': 'en-US', 'id-ID': 'en-US' })
 const subscribers = new Set()
 const missing = new Set()
 let locale = readLocale()
@@ -27,6 +27,7 @@ export function normalizeLocale(value) {
   if (primary === 'en') return 'en-US'
   if (primary === 'ja') return 'ja-JP'
   if (primary === 'ko' || primary === 'kr') return 'ko-KR'
+  if (primary === 'id') return 'id-ID'
   // zh, zh-CN, zh-SG, zh-MY, zh-CHS, zh-Hans, zh-TW, zh-HK, zh-Hant…
   if (primary === 'zh') return SOURCE_LOCALE
   return FALLBACK
