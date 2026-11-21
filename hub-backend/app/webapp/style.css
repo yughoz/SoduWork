@@ -76,3 +76,8 @@ dialog menu { display:flex; justify-content:flex-end; gap:8px; padding:0; margin
 .toast { position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
   background:#242b3d; border:1px solid var(--line); border-radius:10px;
   padding:10px 16px; z-index:9; }
+
+/* Collapsible thinking block */
+details.think { margin: 4px 0; }
+details.think summary { cursor: pointer; color: var(--muted, #8b93a7); font-size: 12px; user-select: none; }
+.bubble.think-body { white-space: pre-wrap; opacity: .8; font-size: 13px; }

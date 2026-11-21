@@ -109,17 +109,29 @@ function renderMessages(conversation, items) {
     box.innerHTML = `<div class="empty muted">Belum ada pesan.</div>`;
     return;
   }
-  box.innerHTML = items.map((it) => {
+  /* Merge consecutive stream chunks (thinking/say arrive token-by-token). */
+  const blocks = [];
+  for (const it of items) {
     const k = it.kind || "";
-    if (k === "user") return `<div class="msg user"><div class="bubble">${esc(it.text)}</div></div>`;
-    if (k === "tool" || k === "toolUse" || k === "tool_result") {
-      const label = it.tool || k;
-      return `<div class="tool" title="${esc(it.text)}">🔧 ${esc(label)} — ${esc((it.text || "").slice(0, 120))}</div>`;
+    if (k === "step" || k === "turn-end") continue;
+    const text = it.text || it.full || "";
+    const last = blocks[blocks.length - 1];
+    if (last && last.k === k && k !== "user" && k !== "tool") last.text += text;
+    else blocks.push({ k, text, tool: it.tool, isError: it.isError });
+  }
+  box.innerHTML = blocks.map((b) => {
+    if (b.k === "user") return `<div class="msg user"><div class="bubble">${esc(b.text)}</div></div>`;
+    if (b.k === "tool" || b.k === "toolUse" || b.k === "tool_result") {
+      const label = b.tool || b.k;
+      return `<div class="tool" title="${esc(b.text)}">🔧 ${esc(label)} — ${esc(b.text.slice(0, 120))}</div>`;
     }
-    if (k === "error" || it.isError) {
-      return `<div class="msg assistant err-text"><div class="bubble">${esc(it.text || "Terjadi kesalahan.")}</div></div>`;
+    if (b.k === "error" || b.isError) {
+      return `<div class="msg assistant err-text"><div class="bubble">${esc(b.text || "Terjadi kesalahan.")}</div></div>`;
     }
-    return `<div class="msg assistant"><div class="bubble">${esc(it.text || it.full || "")}</div></div>`;
+    if (b.k === "thinking") {
+      return `<details class="think"><summary>💭 berpikir…</summary><div class="bubble think-body">${esc(b.text)}</div></details>`;
+    }
+    return `<div class="msg assistant"><div class="bubble">${esc(b.text)}</div></div>`;
   }).join("");
   box.scrollTop = box.scrollHeight;
 }
