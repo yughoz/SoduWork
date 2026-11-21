@@ -174,7 +174,10 @@
     const refresh = document.getElementById('usageRefresh');
     if (refresh) refresh.classList.add('is-loading');
     try {
-      const result = await SoduWorkAPI.myUsage(days);
+      const [result] = await Promise.all([
+        SoduWorkAPI.myUsage(days),
+        SoduWorkAPI.clientAuthMe?.().catch(() => null),
+      ]);
       if (current !== seq || document.getElementById('usageBody') !== box) return;
       if (refresh) {
         refresh.classList.remove('has-error');
@@ -255,6 +258,53 @@
     }).join('');
   }
 
+  /* Remaining-quota view: pure so tests can drive it without an API. */
+  function quotaView(quota, fmt) {
+    if (!quota || quota.enabled === false) return null;
+    const unlimited = quota.totalLimited === false || !Number.isFinite(Number(quota.limit));
+    const limit = Number(quota.limit);
+    const used = Math.max(0, Number(quota.used) || 0);
+    const remaining = unlimited ? null : Math.max(0, limit - used);
+    const pct = unlimited || !(limit > 0) ? null : Math.min(100, Math.max(0, Math.round(used * 100 / limit)));
+    const models = (quota.models || []).slice(0, 8).map((row) => ({
+      label: [row.provider, row.model].filter(Boolean).join(' / '),
+      remaining: row.remaining === null || row.remaining === undefined ? null : Math.max(0, Number(row.remaining) || 0),
+    }));
+    return {
+      unlimited, remaining, limit: unlimited ? null : limit, pct,
+      usedLine: quota.totalLimited === false ? fmt.tx('总额度不限额')
+        : Number.isFinite(limit) ? fmt.tx('已用 {used} / {limit} Tokens')
+          .replace('{used}', fmt.num(used)).replace('{limit}', fmt.num(limit)) : '',
+      timing: fmt.date(quota.resetsAt) ? fmt.tx('下次恢复 {date}').replace('{date}', fmt.date(quota.resetsAt)) : '',
+      models,
+    };
+  }
+
+  function quotaCardHTML(view) {
+    if (!view) return '';
+    const figure = view.unlimited
+      ? '<b>' + esc(tr('不限额')) + '</b>'
+      : '<b>' + compact(view.remaining) + '</b><em>/ ' + precise(view.limit) + ' tokens</em>';
+    const bar = view.pct === null ? '' : '<i class="usage-quota-bar"><em style="width:' + view.pct + '%"' +
+      (view.pct >= 100 ? ' data-quota-empty="true"' : '') + '></em></i>';
+    const rows = view.models.length ? '<div class="usage-quota-models">' + view.models.map((row) =>
+      '<span><b>' + esc(row.label) + '</b><em>' + esc(row.remaining === null ? tr('不限额')
+        : tr('剩余 {tokens} Tokens').replace('{tokens}', precise(row.remaining))) + '</em></span>').join('') + '</div>' : '';
+    return '<section class="usage-surface usage-quota"><div class="usage-surface-head"><div>' +
+      '<span data-i18n="eyebrow.remaining_quota">REMAINING QUOTA</span><b>' + esc(tr('剩余额度')) + '</b></div>' +
+      '<em>' + esc(view.timing) + '</em></div>' +
+      '<div class="usage-quota-main"><div class="usage-quota-fig">' + figure + '</div>' + bar +
+      '<small>' + esc(view.usedLine) + '</small>' + rows + '</div></section>';
+  }
+
+  function quotaDate(value) {
+    const parsed = value && new Date(value);
+    return parsed && !Number.isNaN(parsed.getTime())
+      ? parsed.toLocaleString((globalThis.SoduWorkI18n?.getLocale() || 'zh-CN'), {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+      }) : '';
+  }
+
   function render(box, payload) {
     const summary = payload.summary || {};
     const sources = payload.bySource || [];
@@ -262,6 +312,8 @@
     const total = Number(summary.tokens || 0);
     const quality = payload.quality || {};
     const coverage = Number(quality.coveragePct || 0);
+    const view = quotaView((global.SoduWorkAPI?.clientAuthSnapshot?.() || {}).quota,
+      { tx: tr, num: precise, date: quotaDate });
     box.innerHTML =
       '<section class="usage-overview">' +
         '<div class="usage-total"><span>过去 ' + esc(payload.days || days) + ' 天</span>' +
@@ -276,7 +328,7 @@
           sourceRail(sources, total) + '</div>' +
         '<div class="usage-trend-wrap"><div class="usage-section-label"><span>每日节奏</span><em>最近 14 个活跃日</em></div>' +
           trendChart(payload.trend || []) + '</div>' +
-      '</section>' +
+      '</section>' + quotaCardHTML(view) +
       '<div class="usage-columns">' +
         '<section class="usage-surface"><div class="usage-surface-head"><div><span data-i18n="eyebrow.work_scenes">WORK SCENES</span><b>用在哪些工作</b></div>' +
           '<em>场景自动归集</em></div>' + metricRows(sources, total, 'source') + '</section>' +

@@ -204,3 +204,18 @@
 @media(prefers-reduced-motion:reduce){
   .usage-refresh.is-loading svg,.usage-sk{animation:none}.usage-rail>i,.usage-trend>span>i{transition:none}
 }
+
+/* Remaining-quota card (usage panel). */
+.usage-quota .usage-surface-head>em{color:var(--ink-4);font-size:max(var(--font-min-readable,14.5px),12px)}
+.usage-quota-main{display:grid;gap:10px;padding:4px 18px 14px}
+.usage-quota-fig{display:flex;align-items:baseline;gap:8px;min-width:0}
+.usage-quota-fig b{font-size:clamp(24px,3.4cqw,34px);line-height:1.15}
+.usage-quota-fig em{font-style:normal;color:var(--ink-4);font-size:max(var(--font-min-readable,14.5px),12px)}
+.usage-quota-bar{display:block;height:6px;border-radius:999px;background:color-mix(in srgb,var(--ink-4) 16%,transparent);overflow:hidden}
+.usage-quota-bar em{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--usage-mint));transition:width .3s ease}
+.usage-quota-bar em[data-quota-empty="true"]{background:#e5484d}
+.usage-quota-main>small{color:var(--ink-4);font-size:max(var(--font-min-readable,14.5px),12px)}
+.usage-quota-models{display:grid;gap:6px;margin:0;padding:0}
+.usage-quota-models span{display:flex;justify-content:space-between;gap:12px;min-width:0;font-size:max(var(--font-min-readable,14.5px),12.5px)}
+.usage-quota-models b{font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.usage-quota-models em{font-style:normal;color:var(--ink-3);white-space:nowrap}

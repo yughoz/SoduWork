@@ -1217,6 +1217,7 @@
     "上次保存结果尚未确认，请先到自动化管理中查询，避免重复提交。": "The previous save is unconfirmed. Check automation management before submitting again.",
     "服务端未返回自动化编号，请到自动化管理中确认保存结果": "No automation ID was returned. Check automation management to confirm the save.",
     "启用自动化": "Enable automation",
+    "剩余额度": "Remaining quota",
     "读取服务配置超时，请重试": "Reading the service configuration timed out. Please try again",
     "客户端服务配置无效": "The client service configuration is invalid",
     "读取文件失败，请重试": "Reading the file failed. Please try again",
