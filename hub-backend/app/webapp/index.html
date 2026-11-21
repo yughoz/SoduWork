@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nekowork Web</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Login -->
+<div id="login" class="login-wrap hidden">
+  <form id="login-form" class="login-card">
+    <h1>Nekowork</h1>
+    <p class="muted">Masuk dengan akun Nekorp.</p>
+    <label>Akun
+      <input id="f-account" name="account" autocomplete="username" required>
+    </label>
+    <label>Kata sandi
+      <input id="f-password" name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <div id="login-err" class="err hidden"></div>
+    <button type="submit" id="login-btn">Masuk</button>
+  </form>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <aside class="sidebar">
+    <div class="side-head">
+      <span id="who" class="who"></span>
+      <button id="logout" class="ghost" title="Keluar">Keluar</button>
+    </div>
+    <button id="new-chat" class="new-chat">+ Chat baru</button>
+    <div id="chat-list" class="chat-list"></div>
+  </aside>
+  <main class="main">
+    <header class="chat-head">
+      <div>
+        <div id="chat-title" class="chat-title">Pilih atau buat chat</div>
+        <div id="chat-meta" class="muted small"></div>
+      </div>
+      <div class="head-actions">
+        <button id="stop" class="danger hidden">Stop</button>
+      </div>
+    </header>
+    <div id="perm-banner" class="perm hidden"></div>
+    <div id="messages" class="messages">
+      <div class="empty muted">Belum ada percakapan. Klik “+ Chat baru”, pilih PC, lalu kirim pesan pertama.</div>
+    </div>
+    <form id="composer" class="composer">
+      <textarea id="input" rows="2" placeholder="Tulis pesan… (Enter kirim, Shift+Enter baris baru)"></textarea>
+      <button type="submit" id="send">Kirim</button>
+    </form>
+  </main>
+</div>
+
+<!-- Dialog chat baru -->
+<dialog id="dlg">
+  <form id="dlg-form" method="dialog">
+    <h3>Chat baru</h3>
+    <label>Pelaksana (PC)
+      <select id="d-runner" required></select>
+    </label>
+    <label>Agent
+      <select id="d-agent" required></select>
+    </label>
+    <label>Model
+      <input id="d-model" placeholder="default agent" list="d-model-list">
+      <datalist id="d-model-list"></datalist>
+    </label>
+    <div id="dlg-err" class="err hidden"></div>
+    <menu>
+      <button value="cancel" formnovalidate>Batal</button>
+      <button value="ok" id="d-ok">Buat</button>
+    </menu>
+  </form>
+</dialog>
+
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>

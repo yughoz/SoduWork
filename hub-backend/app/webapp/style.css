@@ -1,0 +1,78 @@
+:root { --bg:#0f1115; --panel:#171a21; --line:#262b36; --txt:#e6e9ef; --mut:#8b93a3;
+  --acc:#4f8cff; --ok:#3fb96f; --warn:#e2a03f; --bad:#e25c5c; --user:#1f2a44; }
+* { box-sizing:border-box; }
+html,body { height:100%; }
+body { margin:0; background:var(--bg); color:var(--txt);
+  font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+.hidden { display:none !important; }
+.muted { color:var(--mut); } .small { font-size:12px; }
+button { cursor:pointer; border:1px solid var(--line); background:#1d2230; color:var(--txt);
+  border-radius:8px; padding:8px 14px; font:inherit; }
+button:hover { background:#242b3d; }
+button.danger { border-color:#5b2b2b; color:#ff9c9c; }
+button.ghost { background:transparent; border-color:transparent; color:var(--mut); padding:4px 8px; }
+button:disabled { opacity:.5; cursor:default; }
+input,select,textarea { background:#12151d; border:1px solid var(--line); color:var(--txt);
+  border-radius:8px; padding:9px 11px; font:inherit; width:100%; }
+textarea { resize:vertical; min-height:52px; }
+label { display:block; margin:10px 0; font-size:13px; color:var(--mut); }
+label input,label select { margin-top:5px; color:var(--txt); }
+.err { background:#3a1d1d; border:1px solid #5b2b2b; color:#ffb3b3;
+  border-radius:8px; padding:8px 11px; margin:8px 0; font-size:13px; }
+
+/* Login */
+.login-wrap { display:flex; align-items:center; justify-content:center; height:100vh; }
+.login-card { width:320px; background:var(--panel); border:1px solid var(--line);
+  border-radius:14px; padding:26px; }
+.login-card h1 { margin:0 0 4px; font-size:20px; }
+.login-card button { width:100%; margin-top:12px; background:var(--acc); border-color:var(--acc); }
+
+/* Layout */
+#app { display:grid; grid-template-columns:260px 1fr; height:100vh; }
+.sidebar { background:var(--panel); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; min-height:0; }
+.side-head { display:flex; justify-content:space-between; align-items:center;
+  padding:12px 14px; border-bottom:1px solid var(--line); }
+.who { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.new-chat { margin:12px; }
+.chat-list { overflow-y:auto; flex:1; padding:0 8px 12px; }
+.chat-item { padding:9px 10px; border-radius:8px; cursor:pointer; margin-bottom:2px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat-item:hover { background:#1d2230; }
+.chat-item.active { background:#24304d; }
+.chat-item .st { font-size:11px; margin-left:6px; }
+
+/* Chat */
+.main { display:flex; flex-direction:column; min-width:0; min-height:0; }
+.chat-head { display:flex; justify-content:space-between; align-items:center;
+  padding:12px 18px; border-bottom:1px solid var(--line); gap:12px; }
+.chat-title { font-weight:600; max-width:52ch; overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap; }
+.head-actions { display:flex; gap:8px; align-items:center; }
+.head-actions select { width:auto; padding:7px 9px; }
+.perm { margin:10px 18px 0; border:1px solid #6b5426; background:#2e2614;
+  border-radius:10px; padding:12px 14px; }
+.perm .pt { font-weight:600; color:#ffd58a; }
+.perm .pd { color:var(--mut); font-size:13px; margin:4px 0 8px; word-break:break-word; }
+.perm .opts { display:flex; gap:8px; flex-wrap:wrap; }
+.messages { flex:1; overflow-y:auto; padding:18px; min-height:0; }
+.msg { max-width:78ch; margin:0 auto 14px; }
+.bubble { border-radius:12px; padding:10px 14px; white-space:pre-wrap; word-break:break-word; }
+.user .bubble { background:var(--user); margin-left:auto; max-width:70%; width:fit-content; }
+.assistant .bubble { background:var(--panel); border:1px solid var(--line); }
+.tool { color:var(--mut); font-size:12.5px; padding:4px 8px; border-left:2px solid var(--line);
+  margin:0 auto 8px; max-width:78ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.err-text .bubble { border-color:#5b2b2b; }
+.empty { text-align:center; margin-top:18vh; }
+.composer { display:flex; gap:10px; padding:12px 18px 16px; border-top:1px solid var(--line); }
+.composer textarea { flex:1; }
+.composer button { min-width:90px; background:var(--acc); border-color:var(--acc); }
+
+/* Dialog + toast */
+dialog { background:var(--panel); color:var(--txt); border:1px solid var(--line);
+  border-radius:14px; padding:22px; width:360px; }
+dialog::backdrop { background:rgba(0,0,0,.55); }
+dialog menu { display:flex; justify-content:flex-end; gap:8px; padding:0; margin:14px 0 0; }
+.toast { position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+  background:#242b3d; border:1px solid var(--line); border-radius:10px;
+  padding:10px 16px; z-index:9; }

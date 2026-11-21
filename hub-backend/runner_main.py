@@ -1291,7 +1291,8 @@ class Runner:
             # A silent Agent launch changes neither output sequence nor state
             # (preflight may already say running). Report its marker once too.
             state_mark = ":".join((state, str(run.get("executionStartedAt") or 0),
-                                   str(run.get("round") or 1), str(run.get("admissionKey") or "")))
+                                   str(run.get("round") or 1), str(run.get("admissionKey") or ""),
+                                   str(len(run.get("pendingPermissions") or []))))
             cli = str(run.get("cli") or "")
             agent = agents.get(cli) or {}
             last_seq, last_state = self._session_marks.get(ref, (0, ""))
@@ -1375,6 +1376,18 @@ class Runner:
                 "error": live.get("error") or "",
                 "failureKind": run.get("failureKind") or "",
                 "failurePath": run.get("failurePath") or "",
+                "accessControl": {"mode": str((run.get("appliedAccessPolicy")
+                                               or run.get("accessPolicy") or {}).get("mode") or ""),
+                                  "policyRevision": int((run.get("accessPolicy") or {}).get("revision") or 0)},
+                "pendingPermissions": [
+                    {"requestId": p.get("requestId"), "policyRevision": p.get("policyRevision"),
+                     "action": p.get("action"), "kind": p.get("kind"), "tool": p.get("tool"),
+                     "target": str(p.get("target") or "")[:300],
+                     "title": str(p.get("title") or "")[:300],
+                     "reason": str(p.get("reason") or "")[:200],
+                     "options": p.get("options"), "allowSession": bool(p.get("allowSession")),
+                     "expiresAt": p.get("expiresAt"), "createdAt": p.get("createdAt")}
+                    for p in (run.get("pendingPermissions") or []) if isinstance(p, dict)][:8],
             })
             # Advance only through events actually sent; leave state pending while a backlog remains.
             more = sent_seq < seq

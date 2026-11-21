@@ -333,6 +333,9 @@ def session_api(row: am.ExecutionSession, *, items: list | None = None) -> dict:
         "failureKind": str(meta.get("failureKind") or ""),
         "failurePath": str(meta.get("failurePath") or ""),
         "identity": dict(meta.get("executionIdentity") or {}),
+        "accessControl": dict(meta.get("accessControl") or {}),
+        "pendingPermissions": [dict(p) for p in (meta.get("pendingPermissions") or [])
+                               if isinstance(p, dict)],
         # Keep cumulative usage and first-start time separate from per-step context occupancy.
         "usage": dict(meta.get("usage") or {}), "firstStarted": meta.get("firstStarted") or 0,
         "items": items or [], "ok": True, "persisted": True,
@@ -876,7 +879,9 @@ async def ingest_runner_snapshots(session: AsyncSession, runner, snapshots: list
                           ("usage", "usage"), ("firstStarted", "firstStarted"),
                           ("ctxWindow", "ctxWindow"), ("ctxWindowKnown", "ctxWindowKnown"),
                           ("error", "error"), ("failureKind", "failureKind"),
-                          ("failurePath", "failurePath")):
+                          ("failurePath", "failurePath"),
+                          ("accessControl", "accessControl"),
+                          ("pendingPermissions", "pendingPermissions")):
             if snap.get(src) is not None:
                 meta[dest] = snap[src]
         from . import execution_identity

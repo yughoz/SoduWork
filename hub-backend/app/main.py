@@ -16,6 +16,7 @@ from .api import admin, agents, ai_proxy, aidesk, approvals, attachments, capabi
 from .api import admin_cloud_runners, client_auth, cloud_environments, cloud_conversations, conversation_handoffs, deliveries, memory_records, session_memory
 from .api import account_profile, admin_mail, client_email_auth, quotas, legal_documents
 from .api import remote_screen
+from .api import web_client
 from .api import conversation_projects
 from .api import account_conversations
 from .api import conversation_content_migrations
@@ -351,7 +352,8 @@ for _r in (cloud_execution_sync.router, legal_documents.router, legal_documents.
            trace.router, trace.admin_router, evolution.router, evolution.admin_router, task_mcp.router,
            operations.router, identity.router, reports.router,
            capabilities.router, capabilities.admin_router, jiyong_data.router,
-           nekowork.router, nekowork_mcp.router, nekowork_titen.router):
+           nekowork.router, nekowork_mcp.router, nekowork_titen.router,
+           web_client.router):
     app.include_router(_r)
 app.include_router(personal_conversation_relay.router)
 app.include_router(conversation_content_migrations.router)
@@ -366,6 +368,10 @@ def _mount_frontend() -> None:
     from pathlib import Path
 
     from fastapi.staticfiles import StaticFiles
+
+    webapp = Path(__file__).resolve().parent / "webapp"
+    if (webapp / "index.html").is_file():
+        app.mount("/app", StaticFiles(directory=str(webapp), html=True), name="webapp")
 
     class _FrontendStaticFiles(StaticFiles):
         """Revalidate index.html on every request; cache content-hashed assets immutably."""
