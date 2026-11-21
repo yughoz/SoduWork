@@ -20,7 +20,7 @@
       "goalMode": "native",
       "group": "recommended",
       "order": 10,
-      "summary": "低延迟办公与连续对话，原生支持目标执行",
+      "summary": "Low-latency office work and continuous conversation with native goal execution",
       "runner": {
         "adapter": "native"
       },
@@ -28,9 +28,9 @@
         "installer": "npm",
         "pkg": "@earendil-works/pi-coding-agent",
         "version": "0.84.4",
-        "blurb": "轻快，原生支持技能（Agent Skills，和 Claude Code 同一套标准）。",
-        "warn": "npm 上的 pi 是个圆周率玩具、@oh-my-pi 那个是第三方 fork —— 认准上面这个全名。",
-        "config_how": "Nekowork 替它写 ~/.pi/agent/models.json（它只认这个文件）。里面的密钥只写成变量名，明文不落盘。",
+        "blurb": "Lightweight and fast, with native skill support (Agent Skills — the same standard as Claude Code).",
+        "warn": "The 'pi' package on npm is a pi-day toy and @oh-my-pi is a third-party fork — use the exact full package name above.",
+        "config_how": "Nekowork writes ~/.pi/agent/models.json for it (the only file it reads). Keys are stored as variable names only, never in plaintext.",
         "config_path": "~/.pi/agent/models.json"
       }
     },
@@ -53,7 +53,7 @@
       "goalMode": "native",
       "group": "recommended",
       "order": 20,
-      "summary": "深度工程与完整交付，使用企业模型持续执行",
+      "summary": "Deep engineering and complete delivery with continuous execution on enterprise models",
       "runner": {
         "adapter": "acp",
         "bins": [
@@ -71,9 +71,9 @@
         "installer": "npm",
         "pkg": "@agentclientprotocol/codex-acp",
         "source": "https://github.com/agentclientprotocol/codex-acp",
-        "blurb": "Apache-2.0 开源的 Codex Agent Harness；通过 ACP 接入，使用 Nekowork 分配的企业模型。",
-        "warn": "Codex Harness 使用 OpenAI Responses 协议；所选企业模型网关必须提供 /responses 接口。",
-        "config_how": "Nekowork 每次派活时把模型、网关和临时凭据注入独立进程，明文不落盘，也不读取个人 Codex 账号。",
+        "blurb": "Apache-2.0 open-source Codex agent harness; connects over ACP and uses enterprise models assigned by Nekowork.",
+        "warn": "Codex Harness speaks the OpenAI Responses protocol; the selected enterprise model gateway must provide a /responses endpoint.",
+        "config_how": "Nekowork injects the model, gateway and short-lived credentials into an isolated process on every dispatch — nothing in plaintext on disk, and your personal Codex account is never read.",
         "config_path": "",
         "install_how": ""
       }
@@ -97,16 +97,16 @@
       "goalMode": "native",
       "group": "more",
       "order": 30,
-      "summary": "开放工程 Agent，使用企业模型执行代码与命令",
+      "summary": "Open engineering agent that executes code and commands on enterprise models",
       "runner": {
         "adapter": "native"
       },
       "install": {
         "installer": "managed",
         "pkg": "opencode-ai",
-        "source": "OpenCode 官方原生发行版",
-        "blurb": "开源编码 Agent；按需安装，使用企业模型执行代码与命令。",
-        "config_how": "不用配。Nekowork 在派活那一刻把模型配置塞进它的环境变量里，不落文件——写成文件会被这台机器的透明加密弄成密文，它自己就读不了了。",
+        "source": "OpenCode official native distribution",
+        "blurb": "Open-source coding agent; installs on demand and runs code and commands with enterprise models.",
+        "config_how": "No setup needed. Nekowork injects the model configuration into its environment at dispatch time and writes no files — anything written to a file would be transparently encrypted by this machine and become unreadable to it.",
         "config_path": ""
       }
     },
@@ -129,16 +129,56 @@
       "goalMode": "native",
       "group": "more",
       "order": 50,
-      "summary": "使用本机 Codex 账号，保留原生规划与执行能力",
+      "summary": "Uses the local Codex account, keeping native planning and execution",
       "runner": {
         "adapter": "native"
       },
       "install": {
         "installer": "npm",
         "pkg": "@openai/codex",
-        "blurb": "OpenAI 官方 CLI。用它自己的账号（ChatGPT 登录或 OpenAI key），不吃 Nekowork 这边的模型配置。",
-        "warn": "这是个人账号版。需要使用企业模型时，请安装旁边的 Codex Harness；企业网关需支持 OpenAI Responses 接口。",
-        "config_how": "它自己管登录。没登录过的话，去执行机上跑一次 codex login 按提示登录（或给它环境变量 OPENAI_API_KEY）。个人登录与企业 Codex Harness 完全隔离。",
+        "blurb": "Official OpenAI CLI. Uses its own account (ChatGPT login or OpenAI key) and ignores Nekowork's model configuration.",
+        "warn": "This is the personal-account edition. To use enterprise models, install Codex Harness next to it; the enterprise gateway must support the OpenAI Responses protocol.",
+        "config_how": "It manages its own login. If not signed in yet, run codex login once on the execution machine (or set OPENAI_API_KEY). Personal login stays fully isolated from the enterprise Codex Harness.",
+        "config_path": ""
+      }
+    },
+    {
+      "accessControl": {
+        "schema": "soduwork.access-policy/v1",
+        "supported": true,
+        "modes": [
+          "standard",
+          "readonly",
+          "full"
+        ],
+        "approval": "native-acp",
+        "sandbox": false
+      },
+      "id": "hermes",
+      "displayName": "Hermes",
+      "transport": "runner",
+      "modelMode": "account",
+      "goalMode": "native",
+      "group": "recommended",
+      "order": 40,
+      "summary": "Nous Research agent with skills, browser tools and schedulers; runs on its own provider config",
+      "runner": {
+        "adapter": "acp",
+        "bins": [
+          "hermes",
+          "hermes.cmd",
+          "hermes.exe"
+        ],
+        "args": [
+          "acp",
+          "--accept-hooks"
+        ]
+      },
+      "install": {
+        "installer": "manual",
+        "blurb": "Hermes Agent (Nous Research); connects over ACP using its own providers, skills and memory.",
+        "warn": "Hermes manages its own model providers and account; the Nekowork model catalog does not apply to it.",
+        "config_how": "No setup. Nekowork launches `hermes acp` on the runner host; sign in once by running `hermes setup` there. --accept-hooks auto-approves first-run shell hooks so headless runs never stall on a prompt.",
         "config_path": ""
       }
     },
@@ -161,7 +201,7 @@
       "goalMode": "native",
       "group": "more",
       "order": 60,
-      "summary": "通过 ACP 接入，使用企业模型完成自主执行",
+      "summary": "Connects over ACP for autonomous execution with enterprise models",
       "runner": {
         "adapter": "acp",
         "bins": [
@@ -183,9 +223,9 @@
         "pkg": "@qwen-code/qwen-code",
         "version": "0.27.4",
         "source": "",
-        "blurb": "Apache-2.0 开源编码 Agent；通过 ACP 接入，支持OpenAI 兼容模型。",
+        "blurb": "Apache-2.0 open-source coding agent; connects over ACP and supports OpenAI-compatible models.",
         "warn": "",
-        "config_how": "Nekowork 每次派活时通过环境变量注入模型配置和密钥，明文不落盘。",
+        "config_how": "Nekowork injects model configuration and keys via environment variables at dispatch time — nothing in plaintext on disk.",
         "config_path": "",
         "install_how": ""
       }
@@ -209,7 +249,7 @@
       "goalMode": "native",
       "group": "more",
       "order": 70,
-      "summary": "轻量 Harness，使用企业模型完成持续执行",
+      "summary": "Lightweight harness for continuous execution on enterprise models",
       "runner": {
         "adapter": "acp",
         "bins": [
@@ -228,9 +268,9 @@
         "pkg": "@openma/deepseek-harness-acp",
         "version": "0.4.41",
         "source": "",
-        "blurb": "MIT 开源的 DeepSeek 官方 Agent 框架（dsh）；通过 ACP 接入，支持OpenAI 兼容模型或个人 DeepSeek Key。",
+        "blurb": "MIT-licensed official DeepSeek agent framework (dsh); connects over ACP and supports OpenAI-compatible models or a personal DeepSeek key.",
         "warn": "",
-        "config_how": "Nekowork 每次派活时通过环境变量注入模型配置和密钥，明文不落盘。",
+        "config_how": "",
         "config_path": "",
         "install_how": ""
       }
@@ -254,7 +294,7 @@
       "goalMode": "native",
       "group": "more",
       "order": 90,
-      "summary": "Kimi 官方编码助手，通过 ACP 使用企业模型和插件工具。",
+      "summary": "Kimi's official coding assistant; uses enterprise models and plugin tools over ACP.",
       "runner": {
         "adapter": "acp",
         "bins": [
@@ -281,9 +321,9 @@
         "pkg": "@moonshot-ai/kimi-code",
         "version": "2.6.2",
         "source": "https://github.com/MoonshotAI/kimi-code",
-        "blurb": "Kimi 官方编码助手，通过 ACP 接入，使用已授权的企业模型。",
+        "blurb": "Kimi's official coding assistant; connects over ACP and uses authorized enterprise models.",
         "warn": "",
-        "config_how": "模型配置仅注入当前执行进程；账号和会话数据按执行环境隔离。",
+        "config_how": "Model configuration is injected only into the current execution process; account and session data stay isolated per execution environment.",
         "config_path": ""
       }
     }

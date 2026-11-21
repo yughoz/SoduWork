@@ -4,7 +4,7 @@
 // intent and projects its durable receipt; observing a terminal never resends.
 const goalContract = require('../conversation/goal-contract');
 const STATUSES = new Set(['working', 'reviewing', 'completed', 'paused', 'blocked', 'disabled']);
-const SUPPORTED = new Set(['codex', 'codex-harness', 'opencode', 'dsh', 'kimi', 'qwen']);
+const SUPPORTED = new Set(['codex', 'codex-harness', 'opencode', 'dsh', 'kimi', 'qwen', 'hermes']);
 const clean = value => String(value || '').trim();
 const count = value => Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : 0;
 

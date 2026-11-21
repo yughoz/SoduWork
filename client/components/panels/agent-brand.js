@@ -11,6 +11,7 @@
     qwen: 'QW',
     kimi: 'KM',
     dsh: 'DS',
+    hermes: 'HE',
   });
   // Brand artwork is local and pinned by client/assets/agent-brands/sources.json.
   const ICONS = Object.freeze({
@@ -35,7 +36,8 @@
     qwen: 'Qwen Code',
     kimi: 'Kimi Code',
     dsh: 'DeepSeek Harness',
-    custom: '自定义 Agent',
+    hermes: 'Hermes',
+    custom: 'Custom Agent',
   });
 
   function _text(value) {
@@ -59,6 +61,7 @@
     if (/qwen/.test(text)) return 'qwen';
     if (/kimi|moonshot/.test(text)) return 'kimi';
     if (/(^|[-:./])codex($|[-:./])|chatgpt/.test(text)) return 'codex';
+    if (/(^|[-:./])hermes($|[-:./])/.test(text)) return 'hermes';
     if (/(^|[-:./])pi($|[-:./])|pi[-:./]*coding[-:./]*agent/.test(text)) return 'pi';
     return 'custom';
   }
