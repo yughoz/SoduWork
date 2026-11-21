@@ -1497,7 +1497,13 @@ class Runner:
                                                or getattr(self, "_capture_pending", []))
                     self._admission_wake.set()
             else:
-                log.warning("Runner event delivery awaits reconciliation: %s", str(message.get("code") or "")[:80])
+                code = str(message.get("code") or "")
+                if code == "DELIVERY_FORBIDDEN":
+                    # Permanently rejected packet (e.g. stale task/ref after re-enroll):
+                    # drop it instead of retrying forever. ponytail: per-kind nack policy
+                    # lives hub-side; only FORBIDDEN is treated as final here.
+                    await asyncio.to_thread(self._event_outbox.acknowledge, message)
+                log.warning("Runner event delivery awaits reconciliation: %s", code[:80])
             return
         if op in {"runner.probe", "job.dispatch"}:
             log.info("收到后台指令：%s", op)

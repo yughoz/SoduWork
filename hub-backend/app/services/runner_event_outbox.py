@@ -221,10 +221,19 @@ class Outbox:
 
     def acknowledge(self, message: dict) -> bool:
         """Delete only the exact packet the authenticated Hub committed."""
+        seq = message.get("deliverySeq")
+        digest = str(message.get("digest") or "")
         with self._connect() as connection:
-            result = connection.execute("""DELETE FROM packets WHERE ref=?
-                AND delivery_seq=? AND digest=? AND EXISTS (SELECT 1 FROM streams
+            if digest:
+                result = connection.execute("""DELETE FROM packets WHERE ref=?
+                    AND delivery_seq=? AND digest=? AND EXISTS (SELECT 1 FROM streams
                     WHERE ref=packets.ref AND stream_id=?)""", (
-                str(message.get("ref") or ""), message.get("deliverySeq"),
-                str(message.get("digest") or ""), str(message.get("streamId") or "")))
+                    str(message.get("ref") or ""), seq, digest,
+                    str(message.get("streamId") or "")))
+            else:
+                # Digest-less nack (DELIVERY_FORBIDDEN drop): delete the exact
+                # ref+seq packet; the Hub rejected it permanently, so retrying
+                # can never succeed.
+                result = connection.execute("DELETE FROM packets WHERE ref=? AND delivery_seq=?",
+                                            (str(message.get("ref") or ""), seq))
             return result.rowcount == 1
