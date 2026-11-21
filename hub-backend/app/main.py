@@ -371,7 +371,15 @@ def _mount_frontend() -> None:
 
     webapp = Path(__file__).resolve().parent / "webapp"
     if (webapp / "index.html").is_file():
-        app.mount("/app", StaticFiles(directory=str(webapp), html=True), name="webapp")
+        class _NoCacheStatic(StaticFiles):
+            """Serve /app assets with Cache-Control: no-cache so updates land
+            without waiting out CDN/browser TTLs (CF caches by extension)."""
+            def file_response(self, *args, **kwargs):
+                resp = super().file_response(*args, **kwargs)
+                resp.headers["Cache-Control"] = "no-cache"
+                return resp
+
+        app.mount("/app", _NoCacheStatic(directory=str(webapp), html=True), name="webapp")
 
     class _FrontendStaticFiles(StaticFiles):
         """Revalidate index.html on every request; cache content-hashed assets immutably."""

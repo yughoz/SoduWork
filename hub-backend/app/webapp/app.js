@@ -30,7 +30,7 @@ function toast(msg, ms = 2600) {
 function esc(s) {
   const d = document.createElement("div");
   d.textContent = String(s ?? "");
-  return d.innerHTML;
+  return d.innerHTML.replace(/"/g, "&quot;");
 }
 
 /* ---------- Auth ---------- */
@@ -103,9 +103,8 @@ async function loadChats() {
 }
 
 /* ---------- Chat view ---------- */
-function renderMessages(conversation, page) {
+function renderMessages(conversation, items) {
   const box = $("#messages");
-  const items = (page && page.items) || [];
   if (!items.length) {
     box.innerHTML = `<div class="empty muted">Belum ada pesan.</div>`;
     return;
@@ -160,6 +159,7 @@ async function answerPermission(p, decision, optionId) {
   } catch (e) { toast("Gagal: " + e.message); }
   refreshChat();
 }
+let msgs = [];
 async function refreshChat() {
   if (!active) return;
   try {
@@ -173,14 +173,18 @@ async function refreshChat() {
     const mode = (exec.accessControl && exec.accessControl.mode) || "standard";
     const st = ST_LABEL[exec.status] || exec.status || "baru";
     $("#chat-meta").textContent = `${st} · mode ${mode}`;
-    renderMessages(c, r.page);
+    const items = (r.page && r.page.items) || [];
+    if (items.length) msgs = active.loadedFull ? msgs.concat(items) : items;
+    active.loadedFull = true;
+    renderMessages(c, msgs);
     renderPermission(c);
   } catch (e) {
-    if (String(e.message).includes("409")) { toast("Eksekusi berpindah, muat ulang."); active.since = 0; }
+    if (String(e.message).includes("409")) { toast("Eksekusi berpindah, muat ulang."); active.since = 0; active.loadedFull = false; msgs = []; }
   }
 }
 async function openChat(id) {
-  active = { handoffId: id, taskId: null, ref: "", since: 0 };
+  active = { handoffId: id, taskId: null, ref: "", since: 0, loadedFull: false };
+  msgs = [];
   $("#messages").innerHTML = `<div class="empty muted">Memuat…</div>`;
   loadChats();
   await refreshChat();
